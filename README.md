@@ -1,1 +1,1 @@
-# Frontend_Capstone
+Frontend Capstone Project w/ Rebecca Blanchard, Amy Benner, and Cory Snapp
