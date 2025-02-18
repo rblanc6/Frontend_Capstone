@@ -21,7 +21,8 @@ const registerApi = api.injectEndpoints({
 });
 
 const storeToken = (state, { payload }) => {
-  window.sessionStorage.setItem("token", payload.token);
+  //   window.sessionStorage.setItem("token", payload.token);
+  window.localStorage.setItem("token", payload.token);
 };
 
 const registerSlice = createSlice({
