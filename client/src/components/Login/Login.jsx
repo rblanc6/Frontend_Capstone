@@ -1,5 +1,5 @@
 import { useLoginMutation } from "./LoginSlice";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { confirmLogin } from "../../app/confirmLoginSlice";
@@ -10,7 +10,7 @@ export default function Login({ setToken }) {
   const [error, setError] = useState(null);
   // const [successMessage, setSuccessMessage] = useState(null);
   const [loginUser] = useLoginMutation();
-//   const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   async function handleSubmit(e) {
@@ -23,7 +23,7 @@ export default function Login({ setToken }) {
         setError(error);
       } else {
         dispatch(confirmLogin());
-        // navigate("/home");
+        navigate("/home");
       }
       // setSuccessMessage(result.message);
     } catch (error) {
