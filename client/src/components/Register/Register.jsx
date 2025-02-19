@@ -25,7 +25,7 @@ export default function Register() {
     try {
       const response = await registerUser(form).unwrap();
       console.log(response);
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       setError(error.data);
       console.error(error.data);

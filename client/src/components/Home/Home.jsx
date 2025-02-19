@@ -12,8 +12,8 @@ import {
     const [updateUser] = useUpdateUserMutation();
     const [userArr, setUserArr] = useState();
     const logout = () => {
-      window.localStorage.removeItem("token");
-      // window.sessionStorage.removeItem("token");
+      // window.localStorage.removeItem("token");
+      window.sessionStorage.removeItem("token");
       history.push("/");
     };
   
@@ -22,8 +22,8 @@ import {
         setUserArr(data);
       }
     }, [data]);
-    const token = window.localStorage.getItem("token");
-    // const token = window.sessionStorage.getItem("token");
+    // const token = window.localStorage.getItem("token");
+    const token = window.sessionStorage.getItem("token");
     console.log("Here is my token", token);
   
     return (
