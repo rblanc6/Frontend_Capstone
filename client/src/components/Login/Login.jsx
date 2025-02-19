@@ -23,7 +23,7 @@ export default function Login({ setToken }) {
         setError(error);
       } else {
         dispatch(confirmLogin());
-        navigate("/home");
+        navigate("/");
       }
       // setSuccessMessage(result.message);
     } catch (error) {

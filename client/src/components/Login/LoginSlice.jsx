@@ -19,8 +19,8 @@ const loginApi = api.injectEndpoints({
 });
 
 const storeToken = (state, { payload }) => {
-  window.localStorage.setItem("token", payload);
-  //   window.sessionStorage.setItem("token", payload);
+  // window.localStorage.setItem("token", payload);
+    window.sessionStorage.setItem("token", payload);
 };
 
 const loginSlice = createSlice({
