@@ -5,6 +5,9 @@ import { Route, Routes } from "react-router-dom";
 import Login from "../components/Login/Login";
 import Home from "../components/Home/Home";
 import Recipes from "../components/Recipes/Recipes";
+import Account from "../components/Account/Account";
+import SingleRecipe from "../components/SingleRecipe/SingleRecipe";
+import { ProtectedRoute } from "../components/ProtectedRoutes";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -14,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/recipes" element={<Recipes />}></Route>
+        <Route path="/recipes/:id" element={<SingleRecipe />}></Route>
         <Route
           path="/register"
           element={<Register token={token} setToken={setToken} />}
@@ -22,6 +26,9 @@ function App() {
           path="/login"
           element={<Login token={token} setToken={setToken} />}
         ></Route>
+        <Route path="/account" element={<ProtectedRoute />}>
+          <Route path="/account" element={<Account />} />
+        </Route>
       </Routes>
     </>
   );
