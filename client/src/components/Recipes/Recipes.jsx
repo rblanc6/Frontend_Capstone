@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useGetRecipesQuery } from "./RecipesSlice";
 import { useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 
 export default function Recipes() {
   const { data, isSuccess, isLoading, error } = useGetRecipesQuery();
@@ -8,7 +9,13 @@ export default function Recipes() {
     recipeSearch: "",
   });
   const navigate = useNavigate();
-  const [recipeArr, setRecipeArr] = useState();
+  const [recipeArr, setRecipeArr] = useState([]);
+
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 12;
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = recipeArr.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(recipeArr.length / itemsPerPage);
 
   const seeRecipeDetails = (id) => {
     navigate(`/recipes/${id}`);
@@ -35,6 +42,11 @@ export default function Recipes() {
     }
   };
 
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % recipeArr.length;
+    setItemOffset(newOffset);
+  };
+
   return (
     <article>
       <h2>Recipes</h2>
@@ -55,26 +67,47 @@ export default function Recipes() {
         {isLoading && "Loading recipes..."}
         {error && "Error loading recipes..."}
       </p>
-
-      <div className="grid-container">
-        <ul className="books">
-          {recipeArr?.map((p) => (
-            <li key={p.id}>
-              <p className="booktitle">{p.name} </p>
-              <p className="bookauthor">{p.description}</p>
-              {/* <figure>
-                <img src={p.photo} alt={p.name} className="bookimage" />
-              </figure> */}
-
+      <div className="container text-center">
+        <div className="row">
+          {currentItems?.map((recipe) => (
+            <div className="col-md-3" key={recipe.id}>
+              <img src={recipe.photo} className="img-thumbnail" />
+              <h5>{recipe.name}</h5>
               <button
-                className="detailbutton"
-                onClick={() => seeRecipeDetails(p.id)}
+                className="btn btn-outline-dark"
+                onClick={() => seeRecipeDetails(recipe.id)}
               >
                 Click for Recipe
               </button>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
+        
+        <nav aria-label="Page navigation example">
+          <ul className="pagination justify-content-center">
+            <li className="page-item">
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel="next >"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                pageCount={pageCount}
+                previousLabel="< previous"
+                containerClassName="pagination"
+                activeClassName="active"
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                nextClassName="page-item"
+                nextLinkClassName="page-link"
+                previousClassName="page-item"
+                previousLinkClassName="page-link"
+                breakClassName="page-item"
+                breakLinkClassName="page-link"
+              />
+            </li>
+          </ul>
+        </nav>
+        
       </div>
     </article>
   );
