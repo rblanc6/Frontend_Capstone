@@ -47,15 +47,16 @@ export default function Recipes() {
     setItemOffset(newOffset);
   };
 
+  console.log(currentItems);
   return (
-    <article>
+    <>
       <h2>Recipes</h2>
       <form>
         <label>
-          <p className="searchbar">
+          <p>
             Search by Name or Ingredient:{" "}
             <input
-              className="inputfield"
+              className="form-control"
               name="recipeSearch"
               value={recipeFilter.recipeSearch}
               onChange={update}
@@ -67,22 +68,29 @@ export default function Recipes() {
         {isLoading && "Loading recipes..."}
         {error && "Error loading recipes..."}
       </p>
-      <div className="container text-center">
-        <div className="row">
+      <div>
+        <div className="row g-2">
           {currentItems?.map((recipe) => (
-            <div className="col-md-3" key={recipe.id}>
-              <img src={recipe.photo} className="img-thumbnail" />
-              <h5>{recipe.name}</h5>
-              <button
-                className="btn btn-outline-dark"
-                onClick={() => seeRecipeDetails(recipe.id)}
-              >
-                Click for Recipe
-              </button>
+            <div className="col-4" key={recipe.id}>
+                
+              <div className="card" style={{padding: "0"}}>
+                <img src={recipe.photo} className="card-img-top" />
+                <div className="card-body">
+                    <h5 className="card-title">{recipe.name}</h5>
+                    <p className="card-text">{recipe.description}</p>
+                  <button
+                    className="btn btn-outline-primary btn-sm "
+                    onClick={() => seeRecipeDetails(recipe.id)}
+                  >
+                    Click for Recipe
+                  </button>
+                  </div>
+                
+              </div>
             </div>
           ))}
         </div>
-        
+        <br />
         <nav aria-label="Page navigation example">
           <ul className="pagination justify-content-center">
             <li className="page-item">
@@ -107,8 +115,7 @@ export default function Recipes() {
             </li>
           </ul>
         </nav>
-        
       </div>
-    </article>
+    </>
   );
 }
