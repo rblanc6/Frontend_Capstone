@@ -25,11 +25,15 @@ export default function Register() {
     try {
       const response = await registerUser(form).unwrap();
       console.log(response);
-      navigate("/login");
     } catch (error) {
-      setError(error.data);
-      console.error(error.data);
+      if (error.data && error.data.message === "Email already in use") {
+        setError("This email is already in use. Please use a different one.");
+      } else {
+        setError(error.data);
+        console.error(error.data);
+      }
     }
+    navigate("/login");
   };
 
   return (

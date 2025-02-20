@@ -1,46 +1,51 @@
-// import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   useGetRecipeQuery,
-  useGetInstructionsQuery,
-  useGetIngredientsQuery,
-  useGetCategoriesQuery,
+  //   useGetInstructionsQuery,
+  //   useGetIngredientsQuery,
+  //   useGetCategoriesQuery,
 } from "./SingleRecipeSlice";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAddFavoriteRecipeMutation } from "../Recipes/RecipesSlice";
 
-export default function SingleRecipe() {
+export default function SingleRecipe(recipeId) {
   const { id } = useParams();
   const { data: recipe } = useGetRecipeQuery(id);
-  const { data: instructions } = useGetInstructionsQuery(id);
-  const { data: ingredients } = useGetIngredientsQuery(id);
-  const { data: categories } = useGetCategoriesQuery(id);
+  // const { data: instructions } = useGetInstructionsQuery(id);
+  // const { data: ingredients } = useGetIngredientsQuery(id);
+  // const { data: categories } = useGetCategoriesQuery(id);
   const navigate = useNavigate();
+
+  const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteRecipe] = useAddFavoriteRecipeMutation();
 
   const handleFavorite = async (event) => {
     event.preventDefault();
     try {
       await favoriteRecipe({
-        id,
-        favorite: !recipe.favorite,
-      });
+        recipeId,
+      }).unwrap();
+      setIsFavorite(true);
+      alert("Recipe added to favorites!");
     } catch (error) {
-      console.error("Error during making it your favorite recipe", error);
+      console.error("Error adding favorite recipe", error);
     }
+    console.log(favoriteRecipe);
   };
 
   const returnToList = () => {
     navigate("/recipes");
   };
 
-  const { name, description, photo, favorite } = recipe;
+  const { favorite } = [recipe];
+  // const { name, description, photo, favorite } = [recipe];
   return (
     <>
       <div>
         <div>
-          <h4>{name}</h4>
-          <p>{description}</p>
-          <h4>{ingredients}</h4>
+          {/* <h4>{name}</h4>
+          <p>{description}</p> */}
+          {/* <h4>{ingredients}</h4>
           <ul>
             {ingredients &&
               ingredients.map((ingredient, index) => (
@@ -60,19 +65,21 @@ export default function SingleRecipe() {
               categories.map((category, index) => (
                 <li key={index}>{category}</li>
               ))}
-          </ul>
-          <p>Favorite: {favorite ? "💖" : "💔"}</p>
+          </ul> */}
+
           <p>
             {sessionStorage.getItem("token") && (
               <button onClick={handleFavorite}>
+                {" "}
+                <p>Favorite: {favorite ? "💖" : "💔"}</p>
                 {favorite ? "Remove from Favorites" : "Add to Favorites"}
               </button>
             )}
           </p>
         </div>
-        <div>
+        {/* <div>
           <img src={photo} alt={name} />
-        </div>
+        </div> */}
       </div>
       <br />
       <div>

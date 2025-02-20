@@ -50,3 +50,7 @@ export const {
   useGetIngredientsQuery,
   useGetCategoriesQuery,
 } = recipeDetailsApi;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
