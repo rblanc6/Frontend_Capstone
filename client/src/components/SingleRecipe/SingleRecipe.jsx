@@ -1,65 +1,74 @@
-import { useEffect, useState } from "react";
-import { useGetRecipeQuery } from "./SingleRecipeSlice";
+// import { useEffect, useState } from "react";
+import {
+  useGetRecipeQuery,
+  useGetInstructionsQuery,
+  useGetIngredientsQuery,
+  useGetCategoriesQuery,
+} from "./SingleRecipeSlice";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAddFavoriteRecipeMutation } from "../Recipes/RecipesSlice";
 
 export default function SingleRecipe() {
   const { id } = useParams();
-  const { data, isSuccess, error } = useGetRecipeQuery(id);
+  const { data: recipe } = useGetRecipeQuery(id);
+  const { data: instructions } = useGetInstructionsQuery(id);
+  const { data: ingredients } = useGetIngredientsQuery(id);
+  const { data: categories } = useGetCategoriesQuery(id);
   const navigate = useNavigate();
   const [favoriteRecipe] = useAddFavoriteRecipeMutation();
 
-  const [singleRecipe, setSingleRecipe] = useState({});
-
-  useEffect(() => {
-    if (isSuccess) {
-      setSingleRecipe(data);
-    }
-  }, [data]);
-
-  async function handleFavorite(event) {
+  const handleFavorite = async (event) => {
     event.preventDefault();
     try {
-      const result = await favoriteRecipe({
+      await favoriteRecipe({
         id,
-        favorite: false,
+        favorite: !recipe.favorite,
       });
     } catch (error) {
       console.error("Error during making it your favorite recipe", error);
     }
-  }
+  };
 
   const returnToList = () => {
     navigate("/recipes");
   };
+
+  const { name, description, photo, favorite } = recipe;
   return (
     <>
       <div>
         <div>
-          <h3>{singleRecipe.name}</h3>
-          <h5>{singleRecipe.categories}</h5>
-          <p>{singleRecipe.description}</p>
-          <p>{singleRecipe.instructions}</p>
-          {/* <p>{singleRecipe.ingredients}</p> */}
-          <p>Favorite: {singleRecipe.favorite ? "💖" : "💔"}</p>
+          <h3>{name}</h3>
+          <p>{description}</p>
+          <h4>{ingredients}</h4>
+          <ul>
+            {ingredients.map((ingredient, index) => (
+              <li key={index}>{ingredient}</li>
+            ))}
+          </ul>
+          <h4>{instructions}</h4>
+          <ul>
+            {instructions.map((instruction, index) => (
+              <li key={index}>{instruction}</li>
+            ))}
+          </ul>
+          <h5>{categories}</h5>
+          <p>Favorite: {favorite ? "💖" : "💔"}</p>
           <p>
-            {sessionStorage.getItem("token") && singleRecipe.favorite ? (
+            {sessionStorage.getItem("token") && (
               <button onClick={handleFavorite}>
-                Favorite
+                {favorite ? "Remove from Favorites" : "Add to Favorites"}
               </button>
-            ) : (
-              ""
             )}
           </p>
         </div>
         <div>
-          <img src={singleRecipe.photo} alt={singleRecipe.name} />
+          <img src={photo} alt={name} />
         </div>
       </div>
+      <br />
       <div>
-        <button onClick={returnToList}>
-          Return to Recipes List
-        </button>
+        <button onClick={returnToList}>Return to Recipes List</button>
       </div>
     </>
   );

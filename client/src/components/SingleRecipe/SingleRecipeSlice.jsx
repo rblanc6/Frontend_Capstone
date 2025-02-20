@@ -11,7 +11,42 @@ const recipeDetailsApi = api.injectEndpoints({
       }),
       providesTags: ["Recipe"],
     }),
+
+    getInstructions: builder.query({
+      query: (id) => ({
+        url: `/instructions/${id}`,
+        method: "GET",
+        transformResponse: (response) => response.data.instructions,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+      providesTags: ["Recipe"],
+    }),
+
+    getIngredients: builder.query({
+      query: (id) => ({
+        url: `/ingredients/${id}`,
+        method: "GET",
+        transformResponse: (response) => response.data.recipeIngredient,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+      providesTags: ["Recipe"],
+    }),
+
+    getCategories: builder.query({
+      query: (id) => ({
+        url: `/categories/${id}`,
+        method: "GET",
+        transformResponse: (response) => response.data.categories,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+      providesTags: ["Recipe"],
+    }),
   }),
 });
 
-export const { useGetRecipeQuery} = recipeDetailsApi;
+export const {
+  useGetRecipeQuery,
+  useGetInstructionsQuery,
+  useGetIngredientsQuery,
+  useGetCategoriesQuery,
+} = recipeDetailsApi;
