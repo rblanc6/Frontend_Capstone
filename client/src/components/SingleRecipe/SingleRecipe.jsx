@@ -38,21 +38,29 @@ export default function SingleRecipe() {
     <>
       <div>
         <div>
-          <h3>{name}</h3>
+          <h4>{name}</h4>
           <p>{description}</p>
           <h4>{ingredients}</h4>
           <ul>
-            {ingredients.map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
+            {ingredients &&
+              ingredients.map((ingredient, index) => (
+                <li key={index}>{ingredient}</li>
+              ))}
           </ul>
           <h4>{instructions}</h4>
           <ul>
-            {instructions.map((instruction, index) => (
-              <li key={index}>{instruction}</li>
-            ))}
+            {instructions &&
+              instructions.map((instruction, index) => (
+                <li key={index}>{instruction}</li>
+              ))}
           </ul>
-          <h5>{categories}</h5>
+          <h4>{categories}</h4>
+          <ul>
+            {categories &&
+              categories.map((category, index) => (
+                <li key={index}>{category}</li>
+              ))}
+          </ul>
           <p>Favorite: {favorite ? "💖" : "💔"}</p>
           <p>
             {sessionStorage.getItem("token") && (
