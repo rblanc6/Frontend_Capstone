@@ -2,10 +2,9 @@ import { useGetUserQuery } from "./AccountSlice";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-
 export default function Account() {
   const { id } = useParams();
-  const { data,isSuccess } = useGetUserQuery(id);
+  const { data, isSuccess } = useGetUserQuery(id);
   const [user, setUser] = useState("");
 
   useEffect(() => {
