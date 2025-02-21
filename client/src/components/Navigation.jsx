@@ -29,7 +29,6 @@ export default function NavBar({ token }) {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                
               {/* <li className="nav-item">
                 <Link to="/" className="nav-link active" aria-current="page">
                   Home
@@ -57,7 +56,8 @@ export default function NavBar({ token }) {
               {auth2 && (
                 <>
                   <li className="nav-item dropdown">
-                    <a
+                    <Link
+                      to="/account"
                       className="nav-link dropdown-toggle"
                       href="#"
                       role="button"
@@ -65,30 +65,42 @@ export default function NavBar({ token }) {
                       aria-expanded="false"
                     >
                       Account
-                    </a>
+                    </Link>
                     <ul className="dropdown-menu">
                       <li>
-                        <a className="dropdown-item" href="#">
+                        <Link
+                          to="/share-recipe"
+                          className="dropdown-item"
+                          href="#"
+                        >
                           Share Recipe
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#">
+                        <Link
+                          to="/my-recipes"
+                          className="dropdown-item"
+                          href="#"
+                        >
                           My Recipes
-                        </a>
+                        </Link>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#">
+                        <Link
+                          to="/favorites"
+                          className="dropdown-item"
+                          href="#"
+                        >
                           My Favorites
-                        </a>
+                        </Link>
                       </li>
                       <li>
                         <hr className="dropdown-divider"></hr>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#">
+                        <Link to="/account" className="dropdown-item" href="#">
                           Account Details
-                        </a>
+                        </Link>
                       </li>
                       <li>
                         <Link to="/" onClick={logout} className="dropdown-item">
@@ -103,7 +115,6 @@ export default function NavBar({ token }) {
           </div>
         </div>
       </nav>
-     
     </>
   );
 }
