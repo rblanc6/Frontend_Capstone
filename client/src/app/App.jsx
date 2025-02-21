@@ -7,6 +7,7 @@ import Home from "../components/Home/Home";
 import Recipes from "../components/Recipes/Recipes";
 import Account from "../components/Account/Account";
 import SingleRecipe from "../components/SingleRecipe/SingleRecipe";
+import Favorites from "../components/Account/Favorites";
 import { ProtectedRoute } from "../components/ProtectedRoutes";
 import NavBar from "../components/Navigation";
 
@@ -30,6 +31,9 @@ function App() {
         ></Route>
         <Route path="/account" element={<ProtectedRoute />}>
           <Route path="/account" element={<Account />} />
+        </Route>
+        <Route path="/favorites" element={<ProtectedRoute />}>
+          <Route path="/favorites" element={<Favorites />} />
         </Route>
       </Routes>
     </>
