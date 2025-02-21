@@ -38,9 +38,6 @@ export default function Home() {
           </li>
         ))}
       </ul>
-      <Link to="/login" onClick={logout}>
-        Logout
-      </Link>
     </div>
   );
 }
