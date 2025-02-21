@@ -5,6 +5,7 @@ import ReactPaginate from "react-paginate";
 
 export default function Recipes() {
   const { data, isSuccess, isLoading, error } = useGetRecipesQuery();
+  console.log(data)
   const [recipeFilter, setRecipeFilter] = useState({
     recipeSearch: "",
   });
