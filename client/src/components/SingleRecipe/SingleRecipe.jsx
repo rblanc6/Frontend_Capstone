@@ -39,7 +39,7 @@ export default function SingleRecipe() {
       console.error("Error adding favorite recipe", error);
     }
   };
-  console.log(favoriteRecipe);
+  // console.log(favoriteRecipe);
 
   const [recipeArr, setRecipeArr] = useState([]);
   useEffect(() => {
@@ -55,55 +55,101 @@ export default function SingleRecipe() {
   return (
     <>
       <div>
-        <div>
-          <img src={recipeArr.photo} alt={recipeArr.name} />
-        </div>
-        <h4>{recipeArr.name}</h4>
-        <p>{recipeArr.description}</p>
-
-        <h4>Ingredients</h4>
-        <ul>
-          {recipeArr?.ingredient?.map((ing) => {
-            return (
-              <li key={ing.id}>
-                {ing.quantity} {ing.unit.name} of {ing.ingredient.name}{" "}
-              </li>
-            );
-          })}
-        </ul>
-        <h4>Instructions</h4>
-        <ul>
-          {recipeArr?.instructions?.map((inst) => {
-            return <li key={inst.id}> {inst.instruction}</li>;
-          })}
-        </ul>
-        <h4>Categories</h4>
-        <ul>
-          {recipeArr?.categories?.map((cat) => {
-            return <li key={cat.id}> {cat.name}</li>;
-          })}
-        </ul>
-
-        <p>
-          {sessionStorage.getItem("token") && (
-            <button onClick={handleFavorite}>
+        <div className="card">
+          <img
+            src={recipeArr.photo}
+            className="card-img-top"
+            style={{ width: "100%", height: "300px", objectFit: "cover" }}
+            alt={recipeArr.name}
+          ></img>
+          <div className="card-body">
+            <h5 className="card-title">
+              {recipeArr.name}
+              {sessionStorage.getItem("token") && (
+                <button onClick={handleFavorite} className="btn">
+                  {" "}
+                  <span>
+                    {isFavorite ? (
+                      <i
+                        className="bi bi-heart-fill"
+                        style={{ color: "red" }}
+                      ></i>
+                    ) : (
+                      <i className="bi bi-heart"></i>
+                    )}
+                  </span>
+                </button>
+              )}
+            </h5>
+            <p className="card-text" className="lead">
+              {recipeArr.description}
+            </p>
+            {recipeArr?.categories?.map((cat) => {
+              return <p key={cat.id}>Categories: {cat.name}</p>;
+            })}
+          </div>
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item">
               {" "}
-              <span>
-                Favorite:{" "}
-                {isFavorite ? (
-                  <i className="bi bi-heart-fill" style={{ color: "red" }}></i>
-                ) : (
-                  <i className="bi bi-heart"></i>
-                )}
-              </span>
-            </button>
-          )}
-        </p>
-      </div>
-      <br />
-      <div>
+              <h5>Ingredients</h5>
+              <ul className="list-group list-group-flush">
+                {recipeArr?.ingredient?.map((ing) => {
+                  return (
+                    <li key={ing.id} className="list-group-item">
+                      {ing.quantity} {ing.unit.name} of {ing.ingredient.name}{" "}
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+            <li className="list-group-item">
+              <h5>Instructions</h5>
+              <ol className="list-group list-group-flush list-group-numbered">
+                {recipeArr?.instructions?.map((inst) => {
+                  return (
+                    <li key={inst.id} className="list-group-item">
+                      {" "}
+                      {inst.instruction}
+                    </li>
+                  );
+                })}
+              </ol>
+            </li>
+          </ul>
+        </div>
+
         <button onClick={returnToList}>Return to Recipes List</button>
       </div>
+      <h4>Reviews</h4>
+      <ul>
+        {recipeArr?.review?.map((rev) => {
+          return (
+            <li key={rev.id}>
+              {" "}
+              {rev.review}
+              <br />- {rev.user.firstName} {rev.user.lastName[0]}
+              <br />
+              <h5>Comments:</h5>
+              {rev.comments?.length > 0 ? (
+                <ul>
+                  {rev.comments.map((comment) => (
+                    <li key={comment.id}>
+                      {comment.comment}
+                      <br />- {comment.user.firstName}{" "}
+                      {comment.user.lastName[0]}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No comments yet.</p> // If there are no comments
+              )}
+              {/* {rev.comments?.comment?.user?.firstName}
+              {console.log("Where are my comments?", rev.comments)} */}
+              <hr></hr>
+            </li>
+          );
+        })}
+      </ul>
     </>
   );
 }
