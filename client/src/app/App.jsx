@@ -8,12 +8,14 @@ import Recipes from "../components/Recipes/Recipes";
 import Account from "../components/Account/Account";
 import SingleRecipe from "../components/SingleRecipe/SingleRecipe";
 import { ProtectedRoute } from "../components/ProtectedRoutes";
+import NavBar from "../components/Navigation";
 
 function App() {
   const [token, setToken] = useState(null);
 
   return (
     <>
+    <NavBar/>
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/recipes" element={<Recipes />}></Route>
