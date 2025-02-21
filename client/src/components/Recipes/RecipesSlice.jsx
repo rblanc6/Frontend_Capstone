@@ -6,7 +6,7 @@ const recipesApi = api.injectEndpoints({
       query: () => ({
         url: "/recipes",
         method: "GET",
-        transformResponse: (response) => response.data.recipes,
+        transformResponse: (response) => response.data,
         transformErrorResponse: (response) => response.data.error,
       }),
       providesTags: ["Recipe"],
@@ -61,7 +61,7 @@ const recipesApi = api.injectEndpoints({
     }),
 
     addFavoriteRecipe: builder.mutation({
-      query: ({ recipeId }) => ({
+      query: ({ recipeId, favorite }) => ({
         url: "/recipes/favorite",
         mode: "cors",
         method: "POST",
@@ -71,9 +71,10 @@ const recipesApi = api.injectEndpoints({
         },
         body: {
           recipe: recipeId,
+          favorite,
         },
       }),
-      invalidatesTags: ["Recipe"],
+      invalidatesTags: ["Recipe", "FavoriteRecipes"],
     }),
 
     updateRecipe: builder.mutation({
@@ -134,7 +135,7 @@ const recipesApi = api.injectEndpoints({
         transformResponse: (response) => response.data.recipes,
         transformErrorResponse: (response) => response.data.error,
       }),
-      invalidatesTags: ["Recipe"],
+      invalidatesTags: ["Recipe", "FavoriteRecipes"],
     }),
   }),
 });
