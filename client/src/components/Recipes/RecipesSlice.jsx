@@ -40,6 +40,15 @@ const recipesApi = api.injectEndpoints({
       providesTags: ["Recipe"],
     }),
 
+    getCategories: builder.query({
+      query: () => ({
+        url: `/recipes/categories`,
+        method: "GET",
+        transformResponse: (response) => response.data,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+    }),
+
     postRecipe: builder.mutation({
       query: ({ name, description, instructions, photo, categories }) => ({
         url: "/recipes/recipe",
@@ -150,4 +159,5 @@ export const {
   useRemoveCategoryFromRecipeMutation,
   useGetFavoriteRecipesQuery,
   useGetUserRecipesQuery,
+  useGetCategoriesQuery,
 } = recipesApi;

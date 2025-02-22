@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useGetRecipesQuery } from "../Recipes/RecipesSlice";
 
 export default function Account() {
   const { id } = useParams();
@@ -25,22 +24,18 @@ export default function Account() {
         <h2>
           Welcome {user.firstName} {user.lastName}
         </h2>
-  
-                <b>Email address:</b> {user.email}
-                <br />
-                <b>Favorites:</b>
-                <ul className="list-group list-group-flush">
-                  {user?.favorites?.map((fav) => {
-                    return (
-                      <li key={fav.id} className="list-group-item">
-                        <Link to={`/recipes/${fav.recipeId}`}>
-                          {fav.recipe.name}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-            
+        <b>Email address:</b> {user.email}
+        <br />
+        <b>Favorites:</b>
+        <ul className="list-group list-group-flush">
+          {user?.favorites?.map((fav) => {
+            return (
+              <li key={fav.id} className="list-group-item">
+                <Link to={`/recipes/${fav.recipeId}`}>{fav.recipe.name}</Link>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </>
   );
