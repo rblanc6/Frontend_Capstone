@@ -4,7 +4,7 @@ const recipeDetailsApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getRecipe: builder.query({
       query: (id) => ({
-        url: `/recipes/${id}`,
+        url: `/recipes/recipe/${id}`,
         method: "GET",
         transformResponse: (response) => response.data,
         transformErrorResponse: (response) => response.data.error,

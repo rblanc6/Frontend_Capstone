@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+// import { useParams } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { useGetCategoriesQuery } from "../Recipes/RecipesSlice";
 import { usePostRecipeMutation } from "../Recipes/RecipesSlice";
 
@@ -9,7 +9,12 @@ export default function NewRecipe() {
   const { data, isSuccess } = useGetCategoriesQuery();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [form, setForm] = useState();
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [instructions, setInstructions] = useState("");
+  const [ingredient, setIngredient] = useState("");
+  const [photo, setPhoto] = useState(null);
+  // const [form, setForm] = useState();
   const [addRecipe] = usePostRecipeMutation();
 
   useEffect(() => {
@@ -21,23 +26,25 @@ export default function NewRecipe() {
     setSelectedCategory(e.target.value);
   };
 
-  async function handleSubmit(event) {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const newRecipe = await addRecipe({
-        name,
-        description,
-        instructions,
-        ingredient,
-        photo,
-        categories,
-      }).unwrap();
-      console.log("categories", categories);
-    } catch (error) {
-      console.error(error);
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("instructions", instructions);
+    formData.append("ingredient", ingredient);
+    formData.append("category", selectedCategory);
+    if (photo) {
+      formData.append("photo", photo);
+      try {
+        await addRecipe(formData);
+        console.log("Recipe added successfully", addRecipe);
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }
-  console.log(data);
+    console.log(data);
+  };
 
   return (
     <>
@@ -50,8 +57,8 @@ export default function NewRecipe() {
             <input
               type="text"
               id="recipeName"
-              //   value={name}
-              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Recipe Name"
             />
             <small id="help" className="form-text text-muted">
@@ -60,13 +67,42 @@ export default function NewRecipe() {
           </div>
           <div className="description">
             <label>Description</label>
-            <textarea
+            <input
               type="text"
               id="description"
-              // value={description}
-              name="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder="Description"
-            ></textarea>
+            ></input>
+          </div>
+          <div className="instructions">
+            <label>Instructions</label>
+            <input
+              type="text"
+              id="instructions"
+              value={instructions}
+              onChange={(e) => setInstructions(e.target.value)}
+              placeholder="Instructions"
+            ></input>
+          </div>
+          <div className="ingredient">
+            <label>Ingredients</label>
+            <input
+              type="text"
+              id="ingredient"
+              value={ingredient}
+              onChange={(e) => setIngredient(e.target.value)}
+              placeholder="Ingredients"
+            ></input>
+          </div>
+          <div className="photo">
+            <label>Photo</label>
+            <input
+              type="file"
+              id="photo"
+              onChange={(e) => setPhoto(e.target.files[0])}
+              placeholder="Upload a Photo"
+            />
           </div>
           <div className="dropdown">
             <select
