@@ -1,24 +1,94 @@
 import { useEffect, useState } from "react";
-import { useGetRecipeQuery } from "./SingleRecipeSlice";
+import { useSelector } from "react-redux";
+import { useGetRecipeQuery, usePostReviewMutation } from "./SingleRecipeSlice";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   useAddFavoriteRecipeMutation,
   useDeleteFavoriteRecipeMutation,
 } from "../Recipes/RecipesSlice";
+import { getLogin } from "../../app/confirmLoginSlice";
 
 export default function SingleRecipe() {
   const { id } = useParams();
   const { data, isSuccess } = useGetRecipeQuery(id);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [favoriteRecipe] = useAddFavoriteRecipeMutation();
   const [deleteFavoriteRecipe] = useDeleteFavoriteRecipeMutation();
+  const [addReview] = usePostReviewMutation();
+  const [review, setReview] = useState("");
+  const [rating, setRating] = useState(0);
   const [isFavorite, setIsFavorite] = useState(
     JSON.parse(sessionStorage.getItem(`favorite-${id}`)) ||
       data?.favorite ||
       false
   );
-
+  const auth = useSelector(getLogin);
   console.log(data);
+
+  const handleStarClick = (value) => {
+    setRating(value);
+    highlightStars(value);
+  };
+
+  // const highlightStars = (value) => {
+  //   const stars = document.querySelectorAll(".star");
+  //   stars.forEach((star) => {
+  //     const starValue = parseInt(star.getAttribute("data-value"));
+  //     if (starValue <= value) {
+  //       star.textContent = "★";
+  //       star.classList.add("active");
+  //     } else {
+  //       star.textContent = "☆";
+  //       star.classList.remove("active");
+  //     }
+  //   });
+  // };
+
+  const stars = document.querySelectorAll(".star");
+  const ratingValue = document.getElementById("rating-value");
+  stars.forEach((star) => {
+    star.addEventListener("mouseover", () => {
+      const value = parseInt(star.getAttribute("data-value"));
+      highlightStars(value);
+    });
+    star.addEventListener("mouseout", () => {
+      const currentRating = parseInt(ratingValue.textContent);
+      highlightStars(currentRating);
+    });
+    star.addEventListener("click", () => {
+      const value = parseInt(star.getAttribute("data-value"));
+      ratingValue.textContent = value;
+      highlightStars(value);
+    });
+  });
+  function highlightStars(value) {
+    stars.forEach((star) => {
+      const starValue = parseInt(star.getAttribute("data-value"));
+      if (starValue <= value) {
+        star.textContent = "★";
+        star.classList.add("active");
+      } else {
+        star.textContent = "☆";
+        star.classList.remove("active");
+      }
+    });
+  }
+
+  async function postReview(event) {
+    event.preventDefault();
+
+    try {
+      await addReview({ review, rating, recipe: id }).unwrap();
+      // setRecipeArr((prevRecipeArr) => ({
+      //   ...prevRecipeArr,
+      //   review: [...prevRecipeArr.review, newReview],  
+      // }));
+      // setReview("");
+      // setRating(0);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const handleFavorite = async (event) => {
     event.preventDefault();
@@ -48,9 +118,9 @@ export default function SingleRecipe() {
     }
   }, [data, isSuccess]);
 
-  const returnToList = () => {
-    navigate("/recipes");
-  };
+  // const returnToList = () => {
+  //   navigate("/recipes");
+  // };
 
   return (
     <>
@@ -118,9 +188,83 @@ export default function SingleRecipe() {
           </ul>
         </div>
 
-        <button onClick={returnToList}>Return to Recipes List</button>
+        {/* <button onClick={returnToList}>Return to Recipes List</button> */}
       </div>
+      <br />
       <h4>Reviews</h4>
+
+      {auth && (
+        <>
+          <form onSubmit={postReview}>
+            <div className="mb-3">
+              <label
+                htmlFor="exampleFormControlTextarea1"
+                className="form-label"
+              >
+                Leave a review:
+              </label>
+              <textarea
+                className="form-control"
+                id="exampleFormControlTextarea1"
+                rows="3"
+                name="review"
+                value={review}
+                onChange={(e) => setReview(e.target.value)}
+              ></textarea>
+            </div>
+
+            <div className="rating">
+              <span
+                className="star"
+                data-value="1"
+                onClick={() => handleStarClick(1)}
+              >
+                &#9734;
+              </span>
+              <span
+                className="star"
+                data-value="2"
+                onClick={() => handleStarClick(2)}
+              >
+                &#9734;
+              </span>
+              <span
+                className="star"
+                data-value="3"
+                onClick={() => handleStarClick(3)}
+              >
+                &#9734;
+              </span>
+              <span
+                className="star"
+                data-value="4"
+                onClick={() => handleStarClick(4)}
+              >
+                &#9734;
+              </span>
+              <span
+                className="star"
+                data-value="5"
+                onClick={() => handleStarClick(5)}
+              >
+                &#9734;
+              </span>
+            </div>
+            <p>
+              Rating: <span id="rating-value">0</span>
+            </p>
+            <button
+              className="btn btn-primary"
+              // type="submit"
+              // value="Submit"
+            >
+              Submit
+            </button>
+          </form>
+        </>
+      )}
+      <br />
+      <br />
       <ul>
         {recipeArr?.review?.map((rev) => {
           return (
