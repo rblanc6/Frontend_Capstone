@@ -81,7 +81,7 @@ export default function SingleRecipe() {
                 </button>
               )}
             </h5>
-            <p className="card-text" className="lead">
+            <p className="card-text lead">
               {recipeArr.description}
             </p>
             {recipeArr?.categories?.map((cat) => {

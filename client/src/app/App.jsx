@@ -10,13 +10,14 @@ import SingleRecipe from "../components/SingleRecipe/SingleRecipe";
 import Favorites from "../components/Account/Favorites";
 import { ProtectedRoute } from "../components/ProtectedRoutes";
 import NavBar from "../components/Navigation";
+import NewRecipe from "../components/Account/NewRecipe";
 
 function App() {
   const [token, setToken] = useState(null);
 
   return (
     <>
-    <NavBar/>
+      <NavBar />
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/recipes" element={<Recipes />}></Route>
@@ -34,6 +35,9 @@ function App() {
         </Route>
         <Route path="/favorites" element={<ProtectedRoute />}>
           <Route path="/favorites" element={<Favorites />} />
+        </Route>
+        <Route path="/share-recipe" element={<ProtectedRoute />}>
+          <Route path="/share-recipe" element={<NewRecipe />} />
         </Route>
       </Routes>
     </>

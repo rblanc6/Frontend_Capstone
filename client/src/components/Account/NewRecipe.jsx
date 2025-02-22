@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useGetCategoriesQuery } from "../Recipes/RecipesSlice";
+import { usePostRecipeMutation } from "../Recipes/RecipesSlice";
 
 export default function NewRecipe() {
   const { data, isSuccess } = useGetCategoriesQuery();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [form, setForm] = useState();
+  const [addRecipe] = usePostRecipeMutation();
 
   useEffect(() => {
     if (isSuccess) {
@@ -19,6 +21,22 @@ export default function NewRecipe() {
     setSelectedCategory(e.target.value);
   };
 
+  async function handleSubmit(event) {
+    event.preventDefault();
+    try {
+      const newRecipe = await addRecipe({
+        name,
+        description,
+        instructions,
+        ingredient,
+        photo,
+        categories,
+      }).unwrap();
+      console.log("categories", categories);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   console.log(data);
 
   return (
@@ -28,25 +46,27 @@ export default function NewRecipe() {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="recipeName">Recipe Name</label>
+            <label>Recipe Name</label>
             <input
               type="text"
               id="recipeName"
-              value={formData.name}
+              //   value={name}
+              name="name"
               placeholder="Recipe Name"
             />
             <small id="help" className="form-text text-muted">
-              We'll never share your email with anyone else.
+              We will never share your email with anyone else.
             </small>
           </div>
-          <div className="form-group">
-            <label htmlFor="Description">Description</label>
-            <input
+          <div className="description">
+            <label>Description</label>
+            <textarea
               type="text"
               id="description"
-              value={formData.description}
+              // value={description}
+              name="description"
               placeholder="Description"
-            />
+            ></textarea>
           </div>
           <div className="dropdown">
             <select

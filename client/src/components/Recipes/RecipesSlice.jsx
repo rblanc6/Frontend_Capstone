@@ -50,7 +50,14 @@ const recipesApi = api.injectEndpoints({
     }),
 
     postRecipe: builder.mutation({
-      query: ({ name, description, instructions, photo, categories }) => ({
+      query: ({
+        name,
+        description,
+        instructions,
+        ingredient,
+        photo,
+        categories,
+      }) => ({
         url: "/recipes/recipe",
         mode: "cors",
         method: "POST",
@@ -62,6 +69,7 @@ const recipesApi = api.injectEndpoints({
           name,
           description,
           instructions,
+          ingredient,
           photo,
           categories,
         },
