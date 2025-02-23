@@ -74,7 +74,7 @@ export default function Recipes() {
           {currentItems?.map((recipe) => (
             <div className="col-4" key={recipe.id}>
                 
-              <div className="card" style={{padding: "0"}}>
+              <div className="card h-100" style={{padding: "0"}}>
                 <img src={recipe.photo} className="card-img-top" />
                 <div className="card-body">
                     <h5 className="card-title">{recipe.name}</h5>

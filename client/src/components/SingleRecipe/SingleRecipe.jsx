@@ -196,12 +196,29 @@ export default function SingleRecipe() {
     <>
       <div>
         <div className="card">
-          <img
+          {recipeArr?.photo ? (
+            <img
+              src={recipeArr.photo}
+              className="card-img-top"
+              style={{ width: "100%", height: "300px", objectFit: "cover" }}
+              alt={recipeArr.name}
+            />
+          ) : (
+            <img
+              src="https://placehold.co/600x600?text=No+Photo+Available"
+              className="card-img-top"
+              style={{ width: "100%", height: "300px", objectFit: "cover" }}
+              alt="Default Food"
+            />
+          )}
+
+          {/* <img
             src={recipeArr.photo}
             className="card-img-top"
             style={{ width: "100%", height: "300px", objectFit: "cover" }}
             alt={recipeArr.name}
-          ></img>
+          ></img> */}
+
           <div className="card-body">
             <h5 className="card-title">
               {recipeArr.name}
@@ -268,7 +285,6 @@ export default function SingleRecipe() {
         </div>
       </div>
       <br />
-      <h4>Reviews</h4>
 
       {auth && (
         <>
@@ -372,6 +388,7 @@ export default function SingleRecipe() {
 
         return (
           <div key={rev.id}>
+            <h4>Reviews</h4>
             <div className="card">
               <div className="card-body">
                 <h6 className="card-title">{rev.review}</h6>
