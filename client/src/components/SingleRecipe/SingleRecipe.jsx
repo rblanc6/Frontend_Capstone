@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetRecipeQuery, usePostReviewMutation } from "./SingleRecipeSlice";
-import { useParams, useNavigate } from "react-router-dom";
+import {
+  useGetRecipeQuery,
+  usePostReviewMutation,
+  usePostCommentMutation,
+} from "./SingleRecipeSlice";
+import { useParams } from "react-router-dom";
 import {
   useAddFavoriteRecipeMutation,
   useDeleteFavoriteRecipeMutation,
@@ -15,7 +19,9 @@ export default function SingleRecipe() {
   const [favoriteRecipe] = useAddFavoriteRecipeMutation();
   const [deleteFavoriteRecipe] = useDeleteFavoriteRecipeMutation();
   const [addReview] = usePostReviewMutation();
+  const [addComment] = usePostCommentMutation();
   const [review, setReview] = useState("");
+  const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
   const [isFavorite, setIsFavorite] = useState(
     JSON.parse(sessionStorage.getItem(`favorite-${id}`)) ||
@@ -23,26 +29,11 @@ export default function SingleRecipe() {
       false
   );
   const auth = useSelector(getLogin);
-  console.log(data);
 
   const handleStarClick = (value) => {
     setRating(value);
     highlightStars(value);
   };
-
-  // const highlightStars = (value) => {
-  //   const stars = document.querySelectorAll(".star");
-  //   stars.forEach((star) => {
-  //     const starValue = parseInt(star.getAttribute("data-value"));
-  //     if (starValue <= value) {
-  //       star.textContent = "★";
-  //       star.classList.add("active");
-  //     } else {
-  //       star.textContent = "☆";
-  //       star.classList.remove("active");
-  //     }
-  //   });
-  // };
 
   const stars = document.querySelectorAll(".star");
   const ratingValue = document.getElementById("rating-value");
@@ -74,22 +65,6 @@ export default function SingleRecipe() {
     });
   }
 
-  async function postReview(event) {
-    event.preventDefault();
-
-    try {
-      await addReview({ review, rating, recipe: id }).unwrap();
-      // setRecipeArr((prevRecipeArr) => ({
-      //   ...prevRecipeArr,
-      //   review: [...prevRecipeArr.review, newReview],  
-      // }));
-      // setReview("");
-      // setRating(0);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   const handleFavorite = async (event) => {
     event.preventDefault();
     try {
@@ -109,7 +84,6 @@ export default function SingleRecipe() {
       console.error("Error adding favorite recipe", error);
     }
   };
-  // console.log(favoriteRecipe);
 
   const [recipeArr, setRecipeArr] = useState([]);
   useEffect(() => {
@@ -118,9 +92,105 @@ export default function SingleRecipe() {
     }
   }, [data, isSuccess]);
 
-  // const returnToList = () => {
-  //   navigate("/recipes");
-  // };
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState(false);
+  async function postReview(event) {
+    event.preventDefault();
+    try {
+      setErrorMessage("");
+      const user = auth;
+      const newReview = await addReview({
+        review,
+        rating,
+        recipe: id,
+        user: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      }).unwrap();
+      console.log("New Review Object:", newReview);
+      setRecipeArr((prevRecipeArr) => ({
+        ...prevRecipeArr,
+        review: [newReview, ...prevRecipeArr.review],
+      }));
+      setReview("");
+      setRating(0);
+      setSuccessMessage(true);
+    } catch (error) {
+      if (error?.data?.message) {
+        setErrorMessage(error.data.message);
+      }
+    }
+  }
+
+  const [commentSuccessMessage, setCommentSuccessMessage] = useState({});
+
+  const [activeReviewId, setActiveReviewId] = useState(null);
+  const handleButtonClick = (reviewId) => {
+    setActiveReviewId((prevId) => (prevId === reviewId ? null : reviewId));
+  };
+
+  async function postComment(event, reviewId) {
+    event.preventDefault();
+    try {
+      const user = auth;
+      const newComment = await addComment({
+        comment,
+        review: reviewId,
+        user: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      }).unwrap();
+      setRecipeArr((prevRecipeArr) => ({
+        ...prevRecipeArr,
+        review: prevRecipeArr.review.map((rev) =>
+          rev.id === newComment.reviewId
+            ? { ...rev, comments: [...rev.comments, newComment] }
+            : rev
+        ),
+      }));
+      setComment("");
+      setCommentSuccessMessage((prevState) => ({
+        ...prevState,
+        [reviewId]: "Thanks for your comment!",
+      }));
+    } catch (error) {
+      if (error?.data?.message) {
+        console.error(error.data.message);
+      }
+    }
+    setActiveReviewId(null);
+  }
+
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return totalRating / reviews.length;
+  };
+
+  const renderStarAverage = (rating) => {
+    const totalStars = 5;
+    let stars = [];
+
+    for (let i = 0; i < totalStars; i++) {
+      if (i < rating) {
+        stars.push(
+          <span key={i} className="star-rating">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="star-rating-empty">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      }
+    }
+
+    return stars;
+  };
+
+  const averageRating = calculateAverageRating(recipeArr?.review);
 
   return (
     <>
@@ -151,16 +221,25 @@ export default function SingleRecipe() {
                 </button>
               )}
             </h5>
-            <p className="card-text" className="lead">
-              {recipeArr.description}
-            </p>
+
             {recipeArr?.categories?.map((cat) => {
-              return <p key={cat.id}>Categories: {cat.name}</p>;
+              return (
+                <p key={cat.id} className="badge text-bg-secondary">
+                  {cat.name}
+                </p>
+              );
             })}
+            <div className="star-rating">
+              {renderStarAverage(Math.round(averageRating))}
+            </div>
+            <small>Average Rating: {averageRating.toFixed()} / 5</small>
+            <br />
+            <br />
+
+            <p className="card-text lead">{recipeArr.description}</p>
           </div>
           <ul className="list-group list-group-flush">
             <li className="list-group-item">
-              {" "}
               <h5>Ingredients</h5>
               <ul className="list-group list-group-flush">
                 {recipeArr?.ingredient?.map((ing) => {
@@ -187,8 +266,6 @@ export default function SingleRecipe() {
             </li>
           </ul>
         </div>
-
-        {/* <button onClick={returnToList}>Return to Recipes List</button> */}
       </div>
       <br />
       <h4>Reviews</h4>
@@ -253,47 +330,128 @@ export default function SingleRecipe() {
             <p>
               Rating: <span id="rating-value">0</span>
             </p>
-            <button
-              className="btn btn-primary"
-              // type="submit"
-              // value="Submit"
-            >
-              Submit
-            </button>
+            <button className="btn btn-primary">Submit</button>
           </form>
+          <br />
+          {successMessage && (
+            <p className="alert alert-success" role="alert">
+              Thanks for your review!
+            </p>
+          )}
+          {errorMessage && (
+            <p className="alert alert-danger" role="alert">
+              {errorMessage}
+            </p>
+          )}
         </>
       )}
-      <br />
-      <br />
-      <ul>
-        {recipeArr?.review?.map((rev) => {
-          return (
-            <li key={rev.id}>
-              {" "}
-              {rev.review}
-              <br />- {rev.user.firstName} {rev.user.lastName[0]}
-              <br />
-              <h5>Comments:</h5>
-              {rev.comments?.length > 0 ? (
-                <ul>
-                  {rev.comments.map((comment) => (
-                    <li key={comment.id}>
-                      {comment.comment}
-                      <br />- {comment.user.firstName}{" "}
-                      {comment.user.lastName[0]}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No comments yet.</p> // If there are no comments
+
+      {recipeArr?.review?.map((rev) => {
+        const renderStars = (rating) => {
+          const totalStars = 5;
+          let stars = [];
+
+          for (let i = 0; i < totalStars; i++) {
+            if (i < rating) {
+              stars.push(
+                <span key={i} className="star-rating">
+                  <i className="bi bi-star-fill"></i>
+                </span>
+              ); // Filled star
+            } else {
+              stars.push(
+                <span key={i} className="star-rating-empty">
+                  <i className="bi bi-star-fill"></i>
+                </span>
+              ); // Empty star
+            }
+          }
+
+          return stars;
+        };
+
+        return (
+          <div key={rev.id}>
+            <div className="card">
+              <div className="card-body">
+                <h6 className="card-title">{rev.review}</h6>
+                <h6 className="card-subtitle mb-2 text-body-secondary">
+                  {" "}
+                  <p className="star-rating">{renderStars(rev.rating)} </p>
+                </h6>
+                <p className="card-text">
+                  - {rev.user ? rev.user.firstName : ""}{" "}
+                  {rev.user ? rev.user.lastName[0] : ""}.
+                </p>
+              </div>
+
+              {auth && (
+                <div className="card-footer">
+                  <button
+                    onClick={() => handleButtonClick(rev.id)}
+                    className="btn btn-outline-secondary"
+                  >
+                    Leave a Comment
+                  </button>
+                  {activeReviewId === rev.id && (
+                    <form onSubmit={(e) => postComment(e, rev.id)}>
+                      <div className="mb-3">
+                        <label
+                          htmlFor="exampleFormControlTextarea1"
+                          className="form-label"
+                        ></label>
+                        <textarea
+                          className="form-control"
+                          id="exampleFormControlTextarea1"
+                          rows="3"
+                          name="comment"
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                        ></textarea>
+                      </div>
+
+                      <button className="btn btn-primary">Submit</button>
+                    </form>
+                  )}
+                  {commentSuccessMessage[rev.id] && (
+                    <>
+                      <br />
+                      <br />
+                      <p className="alert alert-success" role="alert">
+                        {commentSuccessMessage[rev.id]}
+                      </p>
+                    </>
+                  )}
+                </div>
               )}
-              {/* {rev.comments?.comment?.user?.firstName}
-              {console.log("Where are my comments?", rev.comments)} */}
-              <hr></hr>
-            </li>
-          );
-        })}
-      </ul>
+
+              {rev.comments?.length > 0 ? (
+                <div className="card-footer">
+                  <h6>Comments:</h6>
+                  <ul className="list-group list-group-flush">
+                    {rev.comments.map((comment) => (
+                      <li
+                        key={comment.id}
+                        className="list-group-item"
+                        style={{ backgroundColor: "transparent" }}
+                      >
+                        {comment.comment}
+                        <br />- {comment.user.firstName}{" "}
+                        {comment.user.lastName[0]}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+
+            <br />
+            <br />
+          </div>
+        );
+      })}
     </>
   );
 }

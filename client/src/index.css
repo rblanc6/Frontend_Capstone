@@ -82,3 +82,15 @@ button:focus-visible {
 .star:hover {
   color: gold;
 }
+
+.star-rating {
+  color: gold;
+}
+
+.star-rating-half {
+  color: gold;
+}
+
+.star-rating-empty {
+  color: #ccc;
+}
