@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 
 export default function Recipes() {
   const { data, isSuccess, isLoading, error } = useGetRecipesQuery();
-  console.log(data)
+  console.log(data);
   const [recipeFilter, setRecipeFilter] = useState({
     recipeSearch: "",
   });
@@ -73,20 +73,26 @@ export default function Recipes() {
         <div className="row g-2">
           {currentItems?.map((recipe) => (
             <div className="col-4" key={recipe.id}>
-                
-              <div className="card" style={{padding: "0"}}>
-                <img src={recipe.photo} className="card-img-top" />
+              <div className="card h-100" style={{ padding: "0" }}>
+                {recipe?.photo ? (
+                  <img src={recipe.photo} className="card-img-top" />
+                ) : (
+                  <img
+                    src="https://placehold.co/600x600?text=No+Photo+Available"
+                    className="card-img-top"
+                  />
+                )}
+
                 <div className="card-body">
-                    <h5 className="card-title">{recipe.name}</h5>
-                    <p className="card-text">{recipe.description}</p>
+                  <h5 className="card-title">{recipe.name}</h5>
+                  <p className="card-text">{recipe.description}</p>
                   <button
                     className="btn btn-outline-primary btn-sm "
                     onClick={() => seeRecipeDetails(recipe.id)}
                   >
                     Click for Recipe
                   </button>
-                  </div>
-                
+                </div>
               </div>
             </div>
           ))}

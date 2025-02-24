@@ -70,3 +70,27 @@ button:focus-visible {
 .card {
   padding: 0;
 }
+
+.rating {
+  font-size: 2em;
+}
+.star {
+  cursor: pointer;
+  color: #ccc;
+}
+.star.active,
+.star:hover {
+  color: gold;
+}
+
+.star-rating {
+  color: gold;
+}
+
+.star-rating-half {
+  color: gold;
+}
+
+.star-rating-empty {
+  color: #ccc;
+}

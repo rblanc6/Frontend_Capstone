@@ -61,7 +61,7 @@ const recipesApi = api.injectEndpoints({
     }),
 
     addFavoriteRecipe: builder.mutation({
-      query: ({ recipeId, favorite }) => ({
+      query: ({ recipeId, userId, favorite }) => ({
         url: "/recipes/favorite",
         mode: "cors",
         method: "POST",
@@ -71,6 +71,7 @@ const recipesApi = api.injectEndpoints({
         },
         body: {
           recipe: recipeId,
+          user: userId,
           favorite,
         },
       }),
