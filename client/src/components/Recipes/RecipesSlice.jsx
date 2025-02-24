@@ -49,30 +49,24 @@ const recipesApi = api.injectEndpoints({
       }),
     }),
 
+    getIngredientUnits: builder.query({
+      query: () => ({
+        url: `/recipes/units`,
+        method: "GET",
+        transformResponse: (response) => response.data,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+    }),
+
     postRecipe: builder.mutation({
-      query: ({
-        name,
-        description,
-        instructions,
-        ingredient,
-        photo,
-        categories,
-      }) => ({
+      query: (formData) => ({
         url: "/recipes/recipe",
         mode: "cors",
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
         },
-        body: {
-          name,
-          description,
-          instructions,
-          ingredient,
-          photo,
-          categories,
-        },
+        body: formData,
       }),
       invalidatesTags: ["Recipe"],
     }),
@@ -168,4 +162,5 @@ export const {
   useGetFavoriteRecipesQuery,
   useGetUserRecipesQuery,
   useGetCategoriesQuery,
+  useGetIngredientUnitsQuery,
 } = recipesApi;
