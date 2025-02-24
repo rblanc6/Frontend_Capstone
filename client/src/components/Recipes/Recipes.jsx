@@ -26,7 +26,7 @@ export default function Recipes() {
     if (isSuccess) {
       setRecipeArr(data);
     }
-  }, [data]);
+  }, [data, isSuccess]);
 
   const update = (e) => {
     setRecipeFilter({

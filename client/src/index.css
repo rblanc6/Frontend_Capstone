@@ -70,3 +70,8 @@ button:focus-visible {
 .card {
   padding: 0;
 }
+
+.custom-header h2 {
+  margin-top: 50px;
+  margin-bottom: -100px;
+}
