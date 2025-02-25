@@ -71,6 +71,7 @@ button:focus-visible {
   padding: 0;
 }
 
+
 .custom-header h2 {
   margin-top: 50px;
   margin-bottom: -100px;
@@ -80,4 +81,27 @@ button:focus-visible {
   width: 900px;
   height: 500px;
   margin: auto;
+
+.rating {
+  font-size: 2em;
 }
+.star {
+  cursor: pointer;
+  color: #ccc;
+}
+.star.active,
+.star:hover {
+  color: gold;
+}
+
+.star-rating {
+  color: gold;
+}
+
+.star-rating-half {
+  color: gold;
+}
+
+.star-rating-empty {
+  color: #ccc;
+
