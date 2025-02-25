@@ -83,7 +83,14 @@ export default function Account() {
           {user?.favorites?.slice(0, 3).map((fav) => (
             <div className="col-4" key={fav.id}>
               <div className="card h-100" style={{ padding: "0" }}>
-                
+                {fav?.recipe?.photo ? (
+                  <img src={fav.recipe.photo} className="card-img-top" />
+                ) : (
+                  <img
+                    src="https://placehold.co/600x600?text=No+Photo+Available"
+                    className="card-img-top"
+                  />
+                )}
 
                 <div className="card-body">
                   <h5 className="card-title">{fav.recipe.name}</h5>
