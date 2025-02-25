@@ -71,6 +71,17 @@ button:focus-visible {
   padding: 0;
 }
 
+
+.custom-header h2 {
+  margin-top: 50px;
+  margin-bottom: -100px;
+}
+
+.carousel {
+  width: 900px;
+  height: 500px;
+  margin: auto;
+
 .rating {
   font-size: 2em;
 }
@@ -93,4 +104,4 @@ button:focus-visible {
 
 .star-rating-empty {
   color: #ccc;
-}
+
