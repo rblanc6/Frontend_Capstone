@@ -288,6 +288,7 @@ export default function SingleRecipe() {
 
       {auth && (
         <>
+        <h4>Reviews</h4>
           <form onSubmit={postReview}>
             <div className="mb-3">
               <label
@@ -387,86 +388,88 @@ export default function SingleRecipe() {
         };
 
         return (
-          <div key={rev.id}>
-            <h4>Reviews</h4>
-            <div className="card">
-              <div className="card-body">
-                <h6 className="card-title">{rev.review}</h6>
-                <h6 className="card-subtitle mb-2 text-body-secondary">
-                  {" "}
-                  <p className="star-rating">{renderStars(rev.rating)} </p>
-                </h6>
-                <p className="card-text">
-                  - {rev.user ? rev.user.firstName : ""}{" "}
-                  {rev.user ? rev.user.lastName[0] : ""}.
-                </p>
+          <>
+            
+            <div key={rev.id}>
+              <div className="card">
+                <div className="card-body">
+                  <h6 className="card-title">{rev.review}</h6>
+                  <h6 className="card-subtitle mb-2 text-body-secondary">
+                    {" "}
+                    <p className="star-rating">{renderStars(rev.rating)} </p>
+                  </h6>
+                  <p className="card-text">
+                    - {rev.user ? rev.user.firstName : ""}{" "}
+                    {rev.user ? rev.user.lastName[0] : ""}.
+                  </p>
+                </div>
+
+                {auth && (
+                  <div className="card-footer">
+                    <button
+                      onClick={() => handleButtonClick(rev.id)}
+                      className="btn btn-outline-secondary"
+                    >
+                      Leave a Comment
+                    </button>
+                    {activeReviewId === rev.id && (
+                      <form onSubmit={(e) => postComment(e, rev.id)}>
+                        <div className="mb-3">
+                          <label
+                            htmlFor="exampleFormControlTextarea1"
+                            className="form-label"
+                          ></label>
+                          <textarea
+                            className="form-control"
+                            id="exampleFormControlTextarea1"
+                            rows="3"
+                            name="comment"
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                          ></textarea>
+                        </div>
+
+                        <button className="btn btn-primary">Submit</button>
+                      </form>
+                    )}
+                    {commentSuccessMessage[rev.id] && (
+                      <>
+                        <br />
+                        <br />
+                        <p className="alert alert-success" role="alert">
+                          {commentSuccessMessage[rev.id]}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {rev.comments?.length > 0 ? (
+                  <div className="card-footer">
+                    <h6>Comments:</h6>
+                    <ul className="list-group list-group-flush">
+                      {rev.comments.map((comment) => (
+                        <li
+                          key={comment.id}
+                          className="list-group-item"
+                          style={{ backgroundColor: "transparent" }}
+                        >
+                          {comment.comment}
+                          <br />- {comment.user.firstName}{" "}
+                          {comment.user.lastName[0]}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
 
-              {auth && (
-                <div className="card-footer">
-                  <button
-                    onClick={() => handleButtonClick(rev.id)}
-                    className="btn btn-outline-secondary"
-                  >
-                    Leave a Comment
-                  </button>
-                  {activeReviewId === rev.id && (
-                    <form onSubmit={(e) => postComment(e, rev.id)}>
-                      <div className="mb-3">
-                        <label
-                          htmlFor="exampleFormControlTextarea1"
-                          className="form-label"
-                        ></label>
-                        <textarea
-                          className="form-control"
-                          id="exampleFormControlTextarea1"
-                          rows="3"
-                          name="comment"
-                          value={comment}
-                          onChange={(e) => setComment(e.target.value)}
-                        ></textarea>
-                      </div>
-
-                      <button className="btn btn-primary">Submit</button>
-                    </form>
-                  )}
-                  {commentSuccessMessage[rev.id] && (
-                    <>
-                      <br />
-                      <br />
-                      <p className="alert alert-success" role="alert">
-                        {commentSuccessMessage[rev.id]}
-                      </p>
-                    </>
-                  )}
-                </div>
-              )}
-
-              {rev.comments?.length > 0 ? (
-                <div className="card-footer">
-                  <h6>Comments:</h6>
-                  <ul className="list-group list-group-flush">
-                    {rev.comments.map((comment) => (
-                      <li
-                        key={comment.id}
-                        className="list-group-item"
-                        style={{ backgroundColor: "transparent" }}
-                      >
-                        {comment.comment}
-                        <br />- {comment.user.firstName}{" "}
-                        {comment.user.lastName[0]}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : (
-                ""
-              )}
+              <br />
+              <br />
             </div>
-
-            <br />
-            <br />
-          </div>
+          </>
         );
       })}
     </>
