@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useGetRecipesQuery } from "../Recipes/RecipesSlice";
 import { useNavigate } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
-import header from "../../logos/header.png";
+// import header from "../../logos/header.png";
 
 export default function Home() {
   const { data, isSuccess, isLoading, error } = useGetRecipesQuery();
@@ -31,7 +31,7 @@ export default function Home() {
       <div className="container-fluid mb-4">
         <header className="text-center custom-header">
           <h2>Welcome to RACipe Hub</h2>
-          <img src={header} alt="Banner" className="img-fluid w-100" />
+          {/* <img src={header} alt="Banner" className="img-fluid w-100" style={{ width: "100%", height: "300px", objectFit: "cover" }} /> */}
         </header>
       </div>
 
@@ -44,6 +44,7 @@ export default function Home() {
           >
             <img
               className="d-block w-100"
+              style={{ width: "100%", height: "300px", objectFit: "cover" }}
               src={
                 recipe.photo ||
                 "https://placehold.co/800x400?text=No+Photo+Available"
@@ -101,6 +102,15 @@ export default function Home() {
           Show All Recipes
         </button>
       </div>
+
+      <form className="mt-4">
+        <input
+          type="email"
+          className="form-control"
+          placeholder="Enter your email"
+        />
+        <button className="btn btn-primary mt-2">Subscribe</button>
+      </form>
     </>
   );
 }
