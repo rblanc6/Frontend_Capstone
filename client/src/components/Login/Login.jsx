@@ -33,47 +33,49 @@ export default function Login({ setToken }) {
   }
   return (
     <>
-      <h2>Log In</h2>
-      <form onSubmit={handleSubmit}>
-        <table className="formtable">
-          <tbody>
-            <tr>
-              <td width="150px">
-                <label>Email: </label>
-              </td>
-              <td>
-                <input
-                  className="inputfield"
-                  value={email}
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </td>
-            </tr>
-            <tr>
-              <td width="150px">
-                <label>Password: </label>
-              </td>
-              <td>
-                <input
-                  className="inputfield"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={2}>
-                <button className="submitbutton">Submit</button>
-                {error && <p className="error">{error.data}</p>}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </form>
+      <div className="container">
+        <h2>Log In</h2>
+        <form onSubmit={handleSubmit}>
+          <table className="formtable">
+            <tbody>
+              <tr>
+                <td width="150px">
+                  <label>Email: </label>
+                </td>
+                <td>
+                  <input
+                    className="inputfield"
+                    value={email}
+                    type="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td width="150px">
+                  <label>Password: </label>
+                </td>
+                <td>
+                  <input
+                    className="inputfield"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2}>
+                  <button className="submitbutton">Submit</button>
+                  {error && <p className="error">{error.data}</p>}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
     </>
   );
 }
