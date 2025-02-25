@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <>
       <div className="container-fluid mb-4">
-      <header className="text-center custom-header">
+        <header className="text-center custom-header">
           <h2>Welcome to RACipe Hub</h2>
           <img src={header} alt="Banner" className="img-fluid w-100" />
         </header>
@@ -37,7 +37,11 @@ export default function Home() {
 
       <Carousel className="mt-3">
         {carouselRecipes.map((recipe) => (
-          <Carousel.Item key={recipe.id}>
+          <Carousel.Item
+            key={recipe.id}
+            onClick={() => seeRecipeDetails(recipe.id)}
+            style={{ cursor: "pointer" }}
+          >
             <img
               className="d-block w-100"
               src={
@@ -47,7 +51,14 @@ export default function Home() {
               alt={recipe.name}
             />
             <Carousel.Caption>
-              <h5>{recipe.name}</h5>
+              <h5>
+                <button
+                  onClick={() => seeRecipeDetails(recipe.id)}
+                  className="btn btn-link text-white"
+                >
+                  {recipe.name}
+                </button>
+              </h5>
             </Carousel.Caption>
           </Carousel.Item>
         ))}
