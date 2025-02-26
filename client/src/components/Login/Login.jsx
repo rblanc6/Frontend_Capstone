@@ -18,12 +18,19 @@ export default function Login({ setToken }) {
     try {
       const result = await loginUser({ email, password }).unwrap();
       console.log("This is the loginUser result", result);
+      console.log(result.role);
       if (result.error) {
         console.error(error);
         setError(error);
       } else {
         dispatch(confirmLogin());
-        navigate("/account");
+        sessionStorage.setItem("token", result.token);
+        sessionStorage.setItem("role", result.role);
+        if (result.role === "ADMIN") {
+          navigate("/admin");
+        } else {
+          navigate("/account");
+        }
       }
       // setSuccessMessage(result.message);
     } catch (error) {
