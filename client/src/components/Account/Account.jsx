@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useGetRecipesQuery } from "../Recipes/RecipesSlice";
 
 export default function Account() {
   const { id } = useParams();
@@ -24,6 +23,7 @@ export default function Account() {
       <div className="container">
         <h3>
           Welcome {user.firstName} {user.lastName}
+
         </h3>
         <h6>{user.email}</h6>
         <hr></hr>
