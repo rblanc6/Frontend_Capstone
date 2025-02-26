@@ -37,7 +37,7 @@ export default function Register() {
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Register</h2>
 
       <form onSubmit={submit}>

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getLogin } from "../app/confirmLoginSlice";
+import logo from "../logos/logo.jpg";
 
 export default function NavBar({ token }) {
   const auth2 = useSelector(getLogin);
@@ -14,7 +15,12 @@ export default function NavBar({ token }) {
       <nav className="navbar fixed-top navbar-expand-md bg-body-tertiary">
         <div className="container-fluid">
           <Link to="/" className="navbar-brand mb-0 h1">
-            RACipe Hub
+            <img
+              src={logo}
+              alt="RACipe Hub Logo"
+              style={{ maxHeight: "85px" }}
+              className="rounded"
+            />
           </Link>
           <button
             className="navbar-toggler"
