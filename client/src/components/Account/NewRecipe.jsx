@@ -20,7 +20,8 @@ export default function NewRecipe() {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [instructions, setInstructions] = useState("");
+  const [instructions, setInstructions] = useState([]);
+  const [instruction, setInstruction] = useState("");
   const [ingredients, setIngredients] = useState([]);
   const [ingredientName, setIngredientName] = useState("");
   const [ingredientQuantity, setIngredientQuantity] = useState("");
@@ -69,12 +70,19 @@ export default function NewRecipe() {
     setSelectedUnit("");
   };
 
+  const handleAddInstruction = () => {
+    if (instruction.trim() !== "") {
+      setInstructions((prev) => [...prev, instruction]);
+      setInstruction(""); // Clear the instruction input after adding
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
-    formData.append("instructions", JSON.stringify([instructions]));
+    formData.append("instructions", JSON.stringify(instructions));
     formData.append("ingredient", JSON.stringify(ingredients));
     formData.append("category", JSON.stringify([selectedCategory]));
     if (photo) {
@@ -136,6 +144,21 @@ export default function NewRecipe() {
               placeholder="Instructions"
             ></input>
           </div>
+          <button type="button" onClick={handleAddInstruction}>
+            Add Instruction
+          </button>
+          <div>
+            <h5>Instructions Preview:</h5>
+            <ul>
+              {Array.isArray(instructions) && instructions.length > 0 ? (
+                instructions.map((instruct, index) => (
+                  <li key={index}>{instruct}</li>
+                ))
+              ) : (
+                <li>No instructions added yet.</li>
+              )}
+            </ul>
+          </div>
           <div className="ingredient">
             <label>Ingredients</label>
             {/* Ingredient Name */}
@@ -168,9 +191,21 @@ export default function NewRecipe() {
                 </option>
               ))}
             </select>
+
             <button type="button" onClick={handleAddIngredient}>
               Add Ingredient
             </button>
+            <div>
+              <h5>Ingredients Preview:</h5>
+              <ul>
+                {ingredients.map((ingredient, index) => (
+                  <li key={index}>
+                    {ingredient.name} - {ingredient.quantity}{" "}
+                    {ingredient.unitName}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
           {/* Add Photo */}
           <div className="photo">
