@@ -11,6 +11,7 @@ import Favorites from "../components/Account/Favorites";
 import { ProtectedRoute } from "../components/ProtectedRoutes";
 import NavBar from "../components/Navigation";
 import NewRecipe from "../components/Account/NewRecipe";
+import Admin from "../components/Admin/Admin";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -30,7 +31,7 @@ function App() {
           path="/login"
           element={<Login token={token} setToken={setToken} />}
         ></Route>
-        <Route path="/account" element={<ProtectedRoute />}>
+        <Route path="/account" element={<ProtectedRoute requiredRole="USER"/>}>
           <Route path="/account" element={<Account />} />
         </Route>
         <Route path="/favorites" element={<ProtectedRoute />}>
@@ -38,6 +39,9 @@ function App() {
         </Route>
         <Route path="/share-recipe" element={<ProtectedRoute />}>
           <Route path="/share-recipe" element={<NewRecipe />} />
+        </Route>
+        <Route path="/admin" element={<ProtectedRoute requiredRole="ADMIN"/>}>
+          <Route path="/admin" element={<Admin />} />
         </Route>
       </Routes>
     </>

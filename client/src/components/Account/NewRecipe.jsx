@@ -12,7 +12,7 @@ export default function NewRecipe() {
   const { data: category, isSuccess: categorySuccess } =
     useGetCategoriesQuery();
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState([]);
 
   const { data: unit, isSuccess: unitsSuccess } = useGetIngredientUnitsQuery();
   const [units, setUnits] = useState([]);
@@ -35,7 +35,11 @@ export default function NewRecipe() {
   }, [category]);
 
   const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
+    const selectedOptions = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedCategory(selectedOptions);
   };
 
   useEffect(() => {
@@ -92,7 +96,7 @@ export default function NewRecipe() {
 
   return (
     <>
-      <div>
+      <div className="container">
         <h3>Add Recipe</h3>
 
         <form onSubmit={handleSubmit}>
@@ -181,12 +185,15 @@ export default function NewRecipe() {
           {/* Category Dropdown List */}
           <div className="dropdown">
             <select
+              className="form-select"
               id="category"
               value={selectedCategory}
-              aria-label="Categories"
+              multiple
+              size="6"
+              aria-label="Multiple select example"
               onChange={handleCategoryChange}
             >
-              <option value="">Categories</option>
+              <option disabled>Categories</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}

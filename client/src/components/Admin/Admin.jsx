@@ -5,6 +5,7 @@ import {
 } from "./AdminSlice";
 import { useEffect, useState } from "react";
 
+
 export default function Admin() {
   const { data, isSuccess } = useGetUsersQuery();
   const [deleteUser] = useDeleteUserMutation();
@@ -26,7 +27,7 @@ export default function Admin() {
   console.log("Here is my token", token);
 
   return (
-    <div>
+    <div className="container">
       <h2>Admin Dashboard</h2>
       <p>Token: {token}</p>
 
