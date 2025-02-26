@@ -31,7 +31,7 @@ function App() {
           path="/login"
           element={<Login token={token} setToken={setToken} />}
         ></Route>
-        <Route path="/account" element={<ProtectedRoute requiredRole="USER"/>}>
+        <Route path="/account" element={<ProtectedRoute />}>
           <Route path="/account" element={<Account />} />
         </Route>
         <Route path="/favorites" element={<ProtectedRoute />}>
