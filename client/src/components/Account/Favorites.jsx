@@ -11,13 +11,11 @@ export default function Account() {
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(5);
 
-
   useEffect(() => {
     if (isSuccess) {
       setUser(data);
     }
   }, [data]);
-
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
@@ -33,9 +31,9 @@ export default function Account() {
 
   return (
     <>
-      <div>
+      <div className="container">
         <h2>Favorites</h2>
-    
+
         {currentFavorites?.map((fav) => {
           return (
             <div
@@ -59,7 +57,6 @@ export default function Account() {
                       </Link>
                     </h5>
                     <p className="card-text">{fav.recipe.description}</p>
-                    
                   </div>
                 </div>
               </div>

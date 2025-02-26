@@ -51,77 +51,79 @@ export default function Recipes() {
   console.log(currentItems);
   return (
     <>
-      <h2>Recipes</h2>
-      <form>
-        <label>
-          <p>
-            Search by Name or Ingredient:{" "}
-            <input
-              className="form-control"
-              name="recipeSearch"
-              value={recipeFilter.recipeSearch}
-              onChange={update}
-            />
-          </p>
-        </label>
-      </form>
-      <p>
-        {isLoading && "Loading recipes..."}
-        {error && "Error loading recipes..."}
-      </p>
-      <div>
-        <div className="row g-2">
-          {currentItems?.map((recipe) => (
-            <div className="col-4" key={recipe.id}>
-              <div className="card h-100" style={{ padding: "0" }}>
-                {recipe?.photo ? (
-                  <img src={recipe.photo} className="card-img-top" />
-                ) : (
-                  <img
-                    src="https://placehold.co/600x600?text=No+Photo+Available"
-                    className="card-img-top"
-                  />
-                )}
+      <div className="container">
+        <h2>Recipes</h2>
+        <form>
+          <label>
+            <p>
+              Search by Name or Ingredient:{" "}
+              <input
+                className="form-control"
+                name="recipeSearch"
+                value={recipeFilter.recipeSearch}
+                onChange={update}
+              />
+            </p>
+          </label>
+        </form>
+        <p>
+          {isLoading && "Loading recipes..."}
+          {error && "Error loading recipes..."}
+        </p>
+        <div>
+          <div className="row g-2">
+            {currentItems?.map((recipe) => (
+              <div className="col-4" key={recipe.id}>
+                <div className="card h-100" style={{ padding: "0" }}>
+                  {recipe?.photo ? (
+                    <img src={recipe.photo} className="card-img-top" />
+                  ) : (
+                    <img
+                      src="https://placehold.co/600x600?text=No+Photo+Available"
+                      className="card-img-top"
+                    />
+                  )}
 
-                <div className="card-body">
-                  <h5 className="card-title">{recipe.name}</h5>
-                  <p className="card-text">{recipe.description}</p>
-                  <button
-                    className="btn btn-outline-primary btn-sm "
-                    onClick={() => seeRecipeDetails(recipe.id)}
-                  >
-                    Click for Recipe
-                  </button>
+                  <div className="card-body">
+                    <h5 className="card-title">{recipe.name}</h5>
+                    <p className="card-text">{recipe.description}</p>
+                    <button
+                      className="btn btn-outline-primary btn-sm "
+                      onClick={() => seeRecipeDetails(recipe.id)}
+                    >
+                      Click for Recipe
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          <br />
+          <nav aria-label="Page navigation example">
+            <ul className="pagination justify-content-center">
+              <li className="page-item">
+                <ReactPaginate
+                  breakLabel="..."
+                  nextLabel="next >"
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={5}
+                  pageCount={pageCount}
+                  previousLabel="< previous"
+                  containerClassName="pagination"
+                  activeClassName="active"
+                  pageClassName="page-item"
+                  pageLinkClassName="page-link"
+                  nextClassName="page-item"
+                  nextLinkClassName="page-link"
+                  previousClassName="page-item"
+                  previousLinkClassName="page-link"
+                  breakClassName="page-item"
+                  breakLinkClassName="page-link"
+                />
+              </li>
+            </ul>
+          </nav>
         </div>
-        <br />
-        <nav aria-label="Page navigation example">
-          <ul className="pagination justify-content-center">
-            <li className="page-item">
-              <ReactPaginate
-                breakLabel="..."
-                nextLabel="next >"
-                onPageChange={handlePageClick}
-                pageRangeDisplayed={5}
-                pageCount={pageCount}
-                previousLabel="< previous"
-                containerClassName="pagination"
-                activeClassName="active"
-                pageClassName="page-item"
-                pageLinkClassName="page-link"
-                nextClassName="page-item"
-                nextLinkClassName="page-link"
-                previousClassName="page-item"
-                previousLinkClassName="page-link"
-                breakClassName="page-item"
-                breakLinkClassName="page-link"
-              />
-            </li>
-          </ul>
-        </nav>
       </div>
     </>
   );
