@@ -151,3 +151,110 @@ button:focus-visible {
   /* font-size: 1.25rem;  */
   margin-bottom: 10px;
 }
+
+.button-details {
+  color: white;
+  background-color: #245e94;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out,
+    border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+a.button-details:hover {
+  color: white;
+}
+
+.button-details:hover,
+.button-details:focus {
+  background-color: #de296c;
+  border: 1px solid transparent;
+}
+
+.button-details:active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.button-details-alt {
+  color: white;
+  background-color: #de296c;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out,
+    border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+a.button-details-alt:hover {
+  color: white;
+}
+
+.button-details-alt:hover,
+.button-details-alt:hover,
+.button-details-alt:focus {
+  background-color: #245e94;
+  border: 1px solid transparent;
+}
+
+.button-details-alt:active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.button-submit {
+  color: #245e94;
+  background-color: white;
+  border-color: #245e94;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out,
+    border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.button-submit:hover,
+.button-submit:focus {
+  color: white;
+  background-color: #245e94;
+  border: 1px solid transparent;
+}
+
+.button-submit:active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+ul.pagination {
+  --bs-pagination-color: #245e94;
+  --bs-pagination-hover-color: white;
+  --bs-pagination-hover-bg: #de296c;
+  --bs-pagination-focus-color: #245e94;
+  --bs-pagination-active-color: #fff;
+  --bs-pagination-active-bg: #245e94;
+  --bs-pagination-active-border-color: #245e94;
+  --bs-pagination-disabled-color: #245e94;
+}
+
+.navbar {
+  background-color: #292b35;
+}

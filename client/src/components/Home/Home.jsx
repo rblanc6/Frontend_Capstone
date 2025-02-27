@@ -132,7 +132,7 @@ export default function Home() {
                     <h5 className="card-title">{recipe.name}</h5>
                     <button
                       onClick={() => seeRecipeDetails(recipe.id)}
-                      className="btn btn-primary"
+                      className="button-details"
                     >
                       View Recipe Details
                     </button>
@@ -142,8 +142,11 @@ export default function Home() {
             ))}
           </div>
 
-          <button onClick={seeAllRecipes} className="btn btn-secondary mt-4">
+          {/* <button onClick={seeAllRecipes} className="btn btn-secondary mt-4">
             Show All Recipes
+          </button> */}
+          <button onClick={seeAllRecipes} className="button-details-alt mt-2">
+            <strong>Show All Recipes</strong>
           </button>
 
           <form className="mt-4">
@@ -152,7 +155,7 @@ export default function Home() {
               className="form-control"
               placeholder="Enter your email"
             />
-            <button className="btn btn-primary mt-2">Subscribe</button>
+            <button className="button-submit mt-2">Subscribe</button>
           </form>
         </div>
       </div>

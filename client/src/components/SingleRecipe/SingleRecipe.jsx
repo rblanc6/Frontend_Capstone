@@ -65,16 +65,49 @@ export default function SingleRecipe() {
     });
   }
 
+  // const handleFavorite = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     if (isFavorite) {
+  //       await deleteFavoriteRecipe({ id }).unwrap();
+  //       setIsFavorite(false);
+  //       sessionStorage.setItem(`favorite-${id}`, false);
+  //     } else {
+  //       await favoriteRecipe({
+  //         recipeId: id,
+  //         favorite: true,
+  //       }).unwrap();
+  //       setIsFavorite(true);
+  //       sessionStorage.setItem(`favorite-${id}`, true);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding favorite recipe", error);
+  //   }
+  // };
+
   const handleFavorite = async (event) => {
     event.preventDefault();
+
+    // Get userId from sessionStorage or any global state/context
+    const userId = sessionStorage.getItem("userId"); // Or from your context/state
+
+    if (!userId) {
+      console.error("User not logged in.");
+      return;
+    }
+
     try {
       if (isFavorite) {
-        await deleteFavoriteRecipe({ id }).unwrap();
+        await deleteFavoriteRecipe({
+          userId, // Pass the userId along with the recipeId
+          id, // Assuming `id` is the recipe ID
+        }).unwrap();
         setIsFavorite(false);
         sessionStorage.setItem(`favorite-${id}`, false);
       } else {
         await favoriteRecipe({
-          recipeId: id,
+          userId, // Pass the userId along with the recipeId
+          recipeId: id, // Assuming `id` is the recipe ID
           favorite: true,
         }).unwrap();
         setIsFavorite(true);
@@ -195,7 +228,7 @@ export default function SingleRecipe() {
   return (
     <>
       <div className="container">
-        <div className="card" style={{ width: "42rem" }}>
+        <div className="card" style={{ minWidth: "42rem", margin: "auto" }}>
           {recipeArr?.photo ? (
             <img
               src={recipeArr.photo}
