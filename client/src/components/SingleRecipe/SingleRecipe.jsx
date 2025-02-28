@@ -9,13 +9,15 @@ import { useParams } from "react-router-dom";
 import {
   useAddFavoriteRecipeMutation,
   useDeleteFavoriteRecipeMutation,
+  useGetFavoriteRecipesQuery,
 } from "../Recipes/RecipesSlice";
 import { getLogin } from "../../app/confirmLoginSlice";
 
 export default function SingleRecipe() {
   const { id } = useParams();
   const { data, isSuccess } = useGetRecipeQuery(id);
-  // const navigate = useNavigate();
+
+  // const {data: favoriteRecipes} = useGetFavoriteRecipesQuery();
   const [favoriteRecipe] = useAddFavoriteRecipeMutation();
   const [deleteFavoriteRecipe] = useDeleteFavoriteRecipeMutation();
   const [addReview] = usePostReviewMutation();
@@ -23,12 +25,11 @@ export default function SingleRecipe() {
   const [review, setReview] = useState("");
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(
-    JSON.parse(sessionStorage.getItem(`favorite-${id}`)) ||
-      data?.favorite ||
-      false
-  );
+  // const [favoriteRecipes, setFavoriteRecipes] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
   const auth = useSelector(getLogin);
+  const { data: favoriteRecipes, isSuccess: isFavoriteRecipesFetched } =
+    useGetFavoriteRecipesQuery(auth?.userId);
 
   const handleStarClick = (value) => {
     setRating(value);
@@ -65,6 +66,46 @@ export default function SingleRecipe() {
     });
   }
 
+  // useEffect(() => {
+  //   if (auth && isSuccess) {
+  //     // Fetch favorite recipes only when the user is authenticated
+  //     const fetchFavorites = async () => {
+  //       try {
+  //         const { data: fetchedFavorites } = await useGetFavoriteRecipesQuery();
+  //         setFavoriteRecipes(fetchedFavorites);
+  //       } catch (error) {
+  //         console.error("Error fetching favorite recipes", error);
+  //       }
+  //     };
+  //     fetchFavorites();
+  //   }
+  // }, [auth, isSuccess]);
+
+  useEffect(() => {
+    if (isFavoriteRecipesFetched && favoriteRecipes) {
+      const isRecipeFavorite = favoriteRecipes.some(
+        (recipe) => recipe.recipeId === parseInt(id)
+      );
+      setIsFavorite(isRecipeFavorite);
+    }
+  }, [favoriteRecipes, isFavoriteRecipesFetched, id]);
+
+  const handleFavorite = async () => {
+    try {
+      if (isFavorite) {
+        await deleteFavoriteRecipe({ recipeId: id }).unwrap();
+        setIsFavorite(false);
+      } else {
+        await favoriteRecipe({
+          recipeId: id,
+        }).unwrap();
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error("Error adding favorite recipe", error);
+    }
+  };
+
   // const handleFavorite = async (event) => {
   //   event.preventDefault();
   //   try {
@@ -84,39 +125,6 @@ export default function SingleRecipe() {
   //     console.error("Error adding favorite recipe", error);
   //   }
   // };
-
-  const handleFavorite = async (event) => {
-    event.preventDefault();
-
-    // Get userId from sessionStorage or any global state/context
-    const userId = sessionStorage.getItem("userId"); // Or from your context/state
-
-    if (!userId) {
-      console.error("User not logged in.");
-      return;
-    }
-
-    try {
-      if (isFavorite) {
-        await deleteFavoriteRecipe({
-          userId, // Pass the userId along with the recipeId
-          id, // Assuming `id` is the recipe ID
-        }).unwrap();
-        setIsFavorite(false);
-        sessionStorage.setItem(`favorite-${id}`, false);
-      } else {
-        await favoriteRecipe({
-          userId, // Pass the userId along with the recipeId
-          recipeId: id, // Assuming `id` is the recipe ID
-          favorite: true,
-        }).unwrap();
-        setIsFavorite(true);
-        sessionStorage.setItem(`favorite-${id}`, true);
-      }
-    } catch (error) {
-      console.error("Error adding favorite recipe", error);
-    }
-  };
 
   const [recipeArr, setRecipeArr] = useState([]);
   useEffect(() => {
@@ -255,7 +263,7 @@ export default function SingleRecipe() {
           <div className="card-body">
             <h5 className="card-title">
               {recipeArr.name}
-              {sessionStorage.getItem("token") && (
+              {auth && (
                 <button onClick={handleFavorite} className="btn">
                   {" "}
                   <span>
