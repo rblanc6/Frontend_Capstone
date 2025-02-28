@@ -29,8 +29,8 @@ export default function SingleRecipe() {
   const [isFavorite, setIsFavorite] = useState(false);
   const auth = useSelector(getLogin);
   const { data: favoriteRecipes, isSuccess: isFavoriteRecipesFetched } =
-    useGetFavoriteRecipesQuery(auth?.userId);
-
+    useGetFavoriteRecipesQuery({id});
+console.log(favoriteRecipes)
   const handleStarClick = (value) => {
     setRating(value);
     highlightStars(value);

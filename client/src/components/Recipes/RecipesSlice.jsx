@@ -27,8 +27,8 @@ const recipesApi = api.injectEndpoints({
     }),
 
     getFavoriteRecipes: builder.query({
-      query: ({ userId }) => ({
-        url: `/recipes/favorites/${userId}`,
+      query: ({ id }) => ({
+        url: `/recipes/favorites/${id}`,
         method: "GET",
         headers: {
           "Content-Type": "application/json",
