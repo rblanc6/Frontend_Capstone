@@ -3,13 +3,23 @@ import { useGetRecipesQuery } from "../Recipes/RecipesSlice";
 import { useNavigate } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
 import { Link } from "react-router-dom";
-import header from "../../logos/header.png";
 
 export default function Home() {
   const { data, isSuccess, isLoading, error } = useGetRecipesQuery();
   const [featuredRecipes, setFeaturedRecipes] = useState([]);
   const [carouselRecipes, setCarouselRecipes] = useState([]);
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    if (email && email.includes("@")) {
+      setMessage("Thanks for subscribing!");
+    } else {
+      setMessage("Please enter a valid email address.");
+    }
+  };
 
   const seeRecipeDetails = (id) => navigate(`/recipes/${id}`);
   const seeAllRecipes = () => navigate(`/recipes`);
@@ -79,9 +89,7 @@ export default function Home() {
                         className="btn btn-link text-white"
                         style={{ background: "rgba(0, 0, 0, 0.4)" }}
                       >
-                        <h1 className="display-6">
-                          <strong>{recipe.name}</strong>
-                        </h1>
+                        <h2>{recipe.name}</h2>
                       </button>
                     </p>
                   </Carousel.Caption>
@@ -148,14 +156,23 @@ export default function Home() {
           <button onClick={seeAllRecipes} className="button-details-alt mt-2">
             <strong>Show All Recipes</strong>
           </button>
-
-          <form className="mt-4">
+          <br />
+          <br />
+          <h5>Join our newsletter:</h5>
+          <form>
             <input
               type="email"
               className="form-control"
               placeholder="Enter your email"
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
-            <button className="button-submit mt-2">Subscribe</button>
+            <button className="button-submit mt-2" onClick={handleClick}>
+              Subscribe
+            </button>
+            <br />
+            <br />
+            <p>{message}</p>
           </form>
         </div>
       </div>

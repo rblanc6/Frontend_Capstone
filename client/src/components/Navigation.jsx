@@ -2,13 +2,21 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getLogin } from "../app/confirmLoginSlice";
 import logo from "../logos/logo.jpg";
+import { useDispatch } from "react-redux";
+import { confirmLogout } from "../app/confirmLoginSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function NavBar({ token }) {
-  const auth2 = useSelector(getLogin);
+  const navigate = useNavigate();
+  const auth = useSelector(getLogin);
+  const dispatch = useDispatch();
+  const role = window.sessionStorage.getItem("role");
 
   const logout = () => {
     window.sessionStorage.removeItem("token");
-    history.push("/");
+    window.sessionStorage.removeItem("role");
+    dispatch(confirmLogout());
+    navigate("/");
   };
   return (
     <>
@@ -35,17 +43,12 @@ export default function NavBar({ token }) {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              {/* <li className="nav-item">
-                <Link to="/" className="nav-link active" aria-current="page">
-                  Home
-                </Link>
-              </li> */}
               <li className="nav-item">
                 <Link to="/recipes" className="nav-link" href="#">
                   Recipes
                 </Link>
               </li>
-              {!auth2 && (
+              {!auth && (
                 <>
                   <li className="nav-item">
                     <Link to="/register" className="nav-link" href="#">
@@ -59,7 +62,7 @@ export default function NavBar({ token }) {
                   </li>
                 </>
               )}
-              {auth2 && (
+              {auth && (
                 <>
                   <li className="nav-item dropdown">
                     <Link
@@ -117,6 +120,15 @@ export default function NavBar({ token }) {
                   </li>
                 </>
               )}
+            </ul>
+            <ul className="navbar-nav mb-2 mb-lg-0 justify-content-end">
+              <li className="nav-item">
+                {role === "ADMIN" && (
+                  <Link to="/admin" className="nav-link">
+                    Admin Panel
+                  </Link>
+                )}
+              </li>
             </ul>
           </div>
         </div>

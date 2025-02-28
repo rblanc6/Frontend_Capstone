@@ -33,7 +33,7 @@ export default function Register() {
         console.error(error.data);
       }
     }
-    navigate("/login");
+    navigate("/account");
   };
 
   return (
