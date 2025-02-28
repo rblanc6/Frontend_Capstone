@@ -65,16 +65,49 @@ export default function SingleRecipe() {
     });
   }
 
+  // const handleFavorite = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     if (isFavorite) {
+  //       await deleteFavoriteRecipe({ id }).unwrap();
+  //       setIsFavorite(false);
+  //       sessionStorage.setItem(`favorite-${id}`, false);
+  //     } else {
+  //       await favoriteRecipe({
+  //         recipeId: id,
+  //         favorite: true,
+  //       }).unwrap();
+  //       setIsFavorite(true);
+  //       sessionStorage.setItem(`favorite-${id}`, true);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding favorite recipe", error);
+  //   }
+  // };
+
   const handleFavorite = async (event) => {
     event.preventDefault();
+
+    // Get userId from sessionStorage or any global state/context
+    const userId = sessionStorage.getItem("userId"); // Or from your context/state
+
+    if (!userId) {
+      console.error("User not logged in.");
+      return;
+    }
+
     try {
       if (isFavorite) {
-        await deleteFavoriteRecipe({ id }).unwrap();
+        await deleteFavoriteRecipe({
+          userId, // Pass the userId along with the recipeId
+          id, // Assuming `id` is the recipe ID
+        }).unwrap();
         setIsFavorite(false);
         sessionStorage.setItem(`favorite-${id}`, false);
       } else {
         await favoriteRecipe({
-          recipeId: id,
+          userId, // Pass the userId along with the recipeId
+          recipeId: id, // Assuming `id` is the recipe ID
           favorite: true,
         }).unwrap();
         setIsFavorite(true);
@@ -195,101 +228,100 @@ export default function SingleRecipe() {
   return (
     <>
       <div className="container">
-        <div>
-          <div className="card">
-            {recipeArr?.photo ? (
-              <img
-                src={recipeArr.photo}
-                className="card-img-top"
-                style={{ width: "100%", height: "300px", objectFit: "cover" }}
-                alt={recipeArr.name}
-              />
-            ) : (
-              <img
-                src="https://placehold.co/600x600?text=No+Photo+Available"
-                className="card-img-top"
-                style={{ width: "100%", height: "300px", objectFit: "cover" }}
-                alt="Default Food"
-              />
-            )}
+        <div className="card" style={{ minWidth: "42rem", margin: "auto" }}>
+          {recipeArr?.photo ? (
+            <img
+              src={recipeArr.photo}
+              className="card-img-top"
+              style={{ width: "100%", height: "300px", objectFit: "cover" }}
+              alt={recipeArr.name}
+            />
+          ) : (
+            <img
+              src="https://placehold.co/600x600?text=No+Photo+Available"
+              className="card-img-top"
+              style={{ width: "100%", height: "300px", objectFit: "cover" }}
+              alt="Default Food"
+            />
+          )}
 
-            {/* <img
+          {/* <img
             src={recipeArr.photo}
             className="card-img-top"
             style={{ width: "100%", height: "300px", objectFit: "cover" }}
             alt={recipeArr.name}
           ></img> */}
 
-            <div className="card-body">
-              <h5 className="card-title">
-                {recipeArr.name}
-                {sessionStorage.getItem("token") && (
-                  <button onClick={handleFavorite} className="btn">
-                    {" "}
-                    <span>
-                      {isFavorite ? (
-                        <i
-                          className="bi bi-heart-fill"
-                          style={{ color: "red" }}
-                        ></i>
-                      ) : (
-                        <i className="bi bi-heart"></i>
-                      )}
-                    </span>
-                  </button>
-                )}
-              </h5>
+          <div className="card-body">
+            <h5 className="card-title">
+              {recipeArr.name}
+              {sessionStorage.getItem("token") && (
+                <button onClick={handleFavorite} className="btn">
+                  {" "}
+                  <span>
+                    {isFavorite ? (
+                      <i
+                        className="bi bi-heart-fill"
+                        style={{ color: "red" }}
+                      ></i>
+                    ) : (
+                      <i className="bi bi-heart"></i>
+                    )}
+                  </span>
+                </button>
+              )}
+            </h5>
 
-              {recipeArr?.categories?.map((cat) => {
-                return (
-                  <p key={cat.id} className="badge text-bg-secondary">
-                    {cat.name}
-                  </p>
-                );
-              })}
-              <div className="star-rating">
-                {renderStarAverage(Math.round(averageRating))}
-              </div>
-              <small>Average Rating: {averageRating.toFixed()} / 5</small>
-              <br />
-              <br />
-
-              <p className="card-text lead">{recipeArr.description}</p>
+            {recipeArr?.categories?.map((cat) => {
+              return (
+                <p key={cat.id} className="badge text-bg-secondary">
+                  {cat.name}
+                </p>
+              );
+            })}
+            <div className="star-rating">
+              {renderStarAverage(Math.round(averageRating))}
             </div>
-            <ul className="list-group list-group-flush">
-              <li className="list-group-item">
-                <h5>Ingredients</h5>
-                <ul className="list-group list-group-flush">
-                  {recipeArr?.ingredient?.map((ing) => {
-                    return (
-                      <li key={ing.id} className="list-group-item">
-                        {ing.quantity} {ing.unit.name} of {ing.ingredient.name}{" "}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </li>
-              <li className="list-group-item">
-                <h5>Instructions</h5>
-                <ol className="list-group list-group-flush list-group-numbered">
-                  {recipeArr?.instructions?.map((inst) => {
-                    return (
-                      <li key={inst.id} className="list-group-item">
-                        {" "}
-                        {inst.instruction}
-                      </li>
-                    );
-                  })}
-                </ol>
-              </li>
-            </ul>
+            <small>Average Rating: {averageRating.toFixed()} / 5</small>
+            <br />
+            <br />
+
+            <p className="card-text lead">{recipeArr.description}</p>
           </div>
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item">
+              <h5>Ingredients</h5>
+              <ul className="list-group list-group-flush">
+                {recipeArr?.ingredient?.map((ing) => {
+                  return (
+                    <li key={ing.id} className="list-group-item">
+                      {ing.quantity} {ing.unit.name} of {ing.ingredient.name}{" "}
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+            <li className="list-group-item">
+              <h5>Instructions</h5>
+              <ol className="list-group list-group-flush list-group-numbered">
+                {recipeArr?.instructions?.map((inst) => {
+                  return (
+                    <li key={inst.id} className="list-group-item">
+                      {" "}
+                      {inst.instruction}
+                    </li>
+                  );
+                })}
+              </ol>
+            </li>
+          </ul>
         </div>
+        <br />
+        <h1 className="display-6">Reviews</h1>
         <br />
 
         {auth && (
           <>
-            <h4>Reviews</h4>
             <form onSubmit={postReview}>
               <div className="mb-3">
                 <label

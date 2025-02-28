@@ -71,25 +71,49 @@ export default function Recipes() {
           {error && "Error loading recipes..."}
         </p>
         <div>
-          <div className="row g-2">
+          <div className="row g-3">
             {currentItems?.map((recipe) => (
-              <div className="col-4" key={recipe.id}>
-                <div className="card h-100" style={{ padding: "0" }}>
+              <div className="col" key={recipe.id}>
+                <div
+                  className="card h-100"
+                  style={{ padding: "0", width: "18rem", margin: "auto" }}
+                >
                   {recipe?.photo ? (
-                    <img src={recipe.photo} className="card-img-top" />
+                    <img
+                      src={recipe.photo}
+                      className="card-img-top"
+                      style={{
+                        width: "100%",
+                        height: "250px",
+                        objectFit: "cover",
+                      }}
+                    />
                   ) : (
                     <img
                       src="https://placehold.co/600x600?text=No+Photo+Available"
                       className="card-img-top"
+                      style={{
+                        width: "100%",
+                        height: "250px",
+                        objectFit: "cover",
+                      }}
                     />
                   )}
 
-                  <div className="card-body">
+                  <div className="card-body" style={{ marginBottom: "20px" }}>
                     <h5 className="card-title">{recipe.name}</h5>
                     <p className="card-text">{recipe.description}</p>
+                  </div>
+                  <div className="card-body" >
                     <button
-                      className="btn btn-outline-primary btn-sm "
+                      // className="btn btn-outline-primary btn-sm "
+                      className="button-details"
                       onClick={() => seeRecipeDetails(recipe.id)}
+                      style={{
+                        position: "absolute",
+                        bottom: "0",
+                        margin: "20px 0",
+                      }}
                     >
                       Click for Recipe
                     </button>

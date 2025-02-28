@@ -34,9 +34,18 @@ export default function Home() {
           <div className="masthead-content">
             <h1 className="display-4">The RACipe Hub</h1>
             <p className="lead">
-              <strong>A central space for all things food, offering the essence of a community-driven recipe platform.</strong>
+              <strong>
+                A central space for all things food, offering the essence of a
+                community-driven recipe platform.
+              </strong>
             </p>
-            <p><Link to="/register"><button type="button" className="btn btn-outline-light"><strong>Get Started</strong></button></Link></p>
+            <p>
+              <Link to="/register">
+                <button type="button" className="btn btn-outline-light">
+                  <strong>Get Started</strong>
+                </button>
+              </Link>
+            </p>
           </div>
         </section>
       </div>
@@ -54,7 +63,7 @@ export default function Home() {
                     className="d-block w-100"
                     style={{
                       width: "100%",
-                      height: "350px",
+                      height: "300px",
                       objectFit: "cover",
                     }}
                     src={
@@ -64,14 +73,17 @@ export default function Home() {
                     alt={recipe.name}
                   />
                   <Carousel.Caption>
-                    <h5>
+                    <p>
                       <button
                         onClick={() => seeRecipeDetails(recipe.id)}
                         className="btn btn-link text-white"
+                        style={{ background: "rgba(0, 0, 0, 0.4)" }}
                       >
-                        {recipe.name}
+                        <h1 className="display-6">
+                          <strong>{recipe.name}</strong>
+                        </h1>
                       </button>
-                    </h5>
+                    </p>
                   </Carousel.Caption>
                 </Carousel.Item>
               ))}
@@ -85,21 +97,42 @@ export default function Home() {
           <h3 className="mt-4">Featured Recipes</h3>
           <div className="row">
             {featuredRecipes.map((recipe) => (
-              <div key={recipe.id} className="col-md-4">
-                <div className="card bg-dark text-white">
-                  <img
-                    src={
-                      recipe.photo ||
-                      "https://placehold.co/600x600?text=No+Photo+Available"
-                    }
-                    className="card-img-top"
-                    alt={recipe.name}
-                  />
+              <div
+                key={recipe.id}
+                className="col-md-4"
+                style={{ marginBottom: "10px" }}
+              >
+                <div className="card bg-dark text-white h-100">
+                  {recipe?.photo ? (
+                    <img
+                      src={
+                        recipe.photo ||
+                        "https://placehold.co/600x600?text=No+Photo+Available"
+                      }
+                      className="card-img-top"
+                      alt={recipe.name}
+                      style={{
+                        width: "100%",
+                        height: "250px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src="https://placehold.co/600x600?text=No+Photo+Available"
+                      className="card-img-top"
+                      style={{
+                        width: "100%",
+                        height: "250px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  )}
                   <div className="card-body">
                     <h5 className="card-title">{recipe.name}</h5>
                     <button
                       onClick={() => seeRecipeDetails(recipe.id)}
-                      className="btn btn-primary"
+                      className="button-details"
                     >
                       View Recipe Details
                     </button>
@@ -109,8 +142,11 @@ export default function Home() {
             ))}
           </div>
 
-          <button onClick={seeAllRecipes} className="btn btn-secondary mt-4">
+          {/* <button onClick={seeAllRecipes} className="btn btn-secondary mt-4">
             Show All Recipes
+          </button> */}
+          <button onClick={seeAllRecipes} className="button-details-alt mt-2">
+            <strong>Show All Recipes</strong>
           </button>
 
           <form className="mt-4">
@@ -119,7 +155,7 @@ export default function Home() {
               className="form-control"
               placeholder="Enter your email"
             />
-            <button className="btn btn-primary mt-2">Subscribe</button>
+            <button className="button-submit mt-2">Subscribe</button>
           </form>
         </div>
       </div>
