@@ -23,9 +23,14 @@ export default function Login({ setToken }) {
         console.error(error);
         setError(error);
       } else {
-        dispatch(confirmLogin());
         sessionStorage.setItem("token", result.token);
         sessionStorage.setItem("role", result.role);
+        console.log("User data from API:", result.user);
+        dispatch(confirmLogin({id: result.user.id}));
+        console.log('User dispatched:', {
+          id: result.user.id,
+        });
+        
         if (result.role === "ADMIN") {
           navigate("/admin");
         } else {

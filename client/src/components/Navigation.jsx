@@ -125,7 +125,7 @@ export default function NavBar({ token }) {
               <li className="nav-item">
                 {role === "ADMIN" && (
                   <Link to="/admin" className="nav-link">
-                    Admin Dash
+                    <i className="bi bi-person-fill-gear"></i> Admin Dash
                   </Link>
                 )}
               </li>
