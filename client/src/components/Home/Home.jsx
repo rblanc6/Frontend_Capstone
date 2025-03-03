@@ -176,6 +176,61 @@ export default function Home() {
           </form>
         </div>
       </div>
+      <footer className="social-media-footer">
+        <div className="container text-center">
+          <h5>Follow Us</h5>
+          <div className="social-icons">
+            <a
+              href="https://www.facebook.com/profile.php?id=61573779539848"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+                alt="Facebook"
+                width="40"
+                height="40"
+              />
+            </a>
+            <a
+              href="https://x.com/RACipeHub"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/5/53/X_logo_2023_original.svg"
+                alt="Twitter"
+                width="40"
+                height="40"
+              />
+            </a>
+            <a
+              href="https://www.instagram.com/racipehub/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg"
+                alt="Instagram"
+                width="40"
+                height="40"
+              />
+            </a>
+            <a
+              href="https://www.pinterest.com/racipehub/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Pinterest_Shiny_Icon.svg"
+                alt="Pinterest"
+                width="40"
+                height="40"
+              />
+            </a>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }

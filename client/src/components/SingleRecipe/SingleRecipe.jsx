@@ -29,8 +29,8 @@ export default function SingleRecipe() {
   const [isFavorite, setIsFavorite] = useState(false);
   const auth = useSelector(getLogin);
   const { data: favoriteRecipes, isSuccess: isFavoriteRecipesFetched } =
-    useGetFavoriteRecipesQuery({id});
-console.log(favoriteRecipes)
+    useGetFavoriteRecipesQuery(auth?.userId);
+
   const handleStarClick = (value) => {
     setRating(value);
     highlightStars(value);
@@ -66,21 +66,6 @@ console.log(favoriteRecipes)
     });
   }
 
-  // useEffect(() => {
-  //   if (auth && isSuccess) {
-  //     // Fetch favorite recipes only when the user is authenticated
-  //     const fetchFavorites = async () => {
-  //       try {
-  //         const { data: fetchedFavorites } = await useGetFavoriteRecipesQuery();
-  //         setFavoriteRecipes(fetchedFavorites);
-  //       } catch (error) {
-  //         console.error("Error fetching favorite recipes", error);
-  //       }
-  //     };
-  //     fetchFavorites();
-  //   }
-  // }, [auth, isSuccess]);
-
   useEffect(() => {
     if (isFavoriteRecipesFetched && favoriteRecipes) {
       const isRecipeFavorite = favoriteRecipes.some(
@@ -93,7 +78,7 @@ console.log(favoriteRecipes)
   const handleFavorite = async () => {
     try {
       if (isFavorite) {
-        await deleteFavoriteRecipe({ recipeId: id }).unwrap();
+        await deleteFavoriteRecipe({ id: id }).unwrap();
         setIsFavorite(false);
       } else {
         await favoriteRecipe({
@@ -105,26 +90,6 @@ console.log(favoriteRecipes)
       console.error("Error adding favorite recipe", error);
     }
   };
-
-  // const handleFavorite = async (event) => {
-  //   event.preventDefault();
-  //   try {
-  //     if (isFavorite) {
-  //       await deleteFavoriteRecipe({ id }).unwrap();
-  //       setIsFavorite(false);
-  //       sessionStorage.setItem(`favorite-${id}`, false);
-  //     } else {
-  //       await favoriteRecipe({
-  //         recipeId: id,
-  //         favorite: true,
-  //       }).unwrap();
-  //       setIsFavorite(true);
-  //       sessionStorage.setItem(`favorite-${id}`, true);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error adding favorite recipe", error);
-  //   }
-  // };
 
   const [recipeArr, setRecipeArr] = useState([]);
   useEffect(() => {
