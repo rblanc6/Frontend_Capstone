@@ -10,6 +10,7 @@ export const confirmLoginSlice = createSlice({
   initialState,
   reducers: {
     confirmLogin: (state, action) => {
+      console.log('User logged in:', action.payload);
       state.value = true;
       state.user = action.payload;
     },
@@ -22,4 +23,5 @@ export const confirmLoginSlice = createSlice({
 
 export const { confirmLogin, confirmLogout } = confirmLoginSlice.actions;
 export const getLogin = (state) => state.confirmLogin.value;
+export const getUser = (state) => state.confirmLogin.user;
 export default confirmLoginSlice.reducer;
