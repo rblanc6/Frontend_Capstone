@@ -20,10 +20,10 @@ const usersApi = api.injectEndpoints({
     
 
     updateUser: builder.mutation({
-      query: ({ id, firstName, lastName, email }) => ({
+      query: ({ id, firstName, lastName, email, role }) => ({
         url: `/auth/user/${id}`,
-        method: "PATCH",
-        body: JSON.stringify({ firstName, lastName, email }),
+        method: "PUT",
+        body: JSON.stringify({ firstName, lastName, email, role }),
         headers: {
           "Content-Type": "application/json",
           // Authorization: `Bearer ${window.localStorage.getItem("token")}`,
