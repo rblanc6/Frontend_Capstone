@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, refetch } from "react";
 import { useSelector } from "react-redux";
 import {
   useGetRecipeQuery,
@@ -10,37 +10,30 @@ import {
   useAddFavoriteRecipeMutation,
   useDeleteFavoriteRecipeMutation,
   useGetFavoriteRecipesQuery,
-  useUpdateRecipeMutation,
-  useGetCategoriesQuery,
 } from "../Recipes/RecipesSlice";
 import { getLogin, getUser } from "../../app/confirmLoginSlice";
 import StarRating from "./StarRating";
+import EditRecipeForm from "./EditRecipe";
 
 export default function SingleRecipe() {
   const { id } = useParams();
   const { data, isSuccess } = useGetRecipeQuery(id);
-
-  // const {data: favoriteRecipes} = useGetFavoriteRecipesQuery();
   const [favoriteRecipe] = useAddFavoriteRecipeMutation();
   const [deleteFavoriteRecipe] = useDeleteFavoriteRecipeMutation();
-  const [updateRecipe] = useUpdateRecipeMutation();
   const [addReview] = usePostReviewMutation();
   const [addComment] = usePostCommentMutation();
-  const { data: category, isSuccess: categorySuccess } =
-    useGetCategoriesQuery();
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState([]);
   const [review, setReview] = useState("");
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
-  // const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
   const auth = useSelector(getLogin);
   const authUser = useSelector(getUser);
-  console.log("auth:", auth);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const user = useSelector((state) => state.confirmLogin.user);
-  console.log("User in component:", user);
+  // console.log("auth:", auth);
+
+  // const user = useSelector((state) => state.confirmLogin.user);
+  // console.log("User in component:", user);
 
   const { data: favoriteRecipes, isSuccess: isFavoriteRecipesFetched } =
     useGetFavoriteRecipesQuery({ id });
@@ -49,65 +42,16 @@ export default function SingleRecipe() {
   useEffect(() => {
     if (isSuccess && data) {
       setRecipeArr(data);
-      setFormData({
-        name: data.name,
-        description: data.description,
-      });
     }
   }, [data, isSuccess]);
   console.log("Recipe array", recipeArr);
 
-  useEffect(() => {
-    if (categorySuccess) {
-      setCategories(category);
-    }
-  }, [category]);
+  
 
-  const handleCategoryChange = (e) => {
-    const selectedOptions = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setSelectedCategory(selectedOptions);
-  };
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState();
   const handleEditClick = () => {
     setIsEditing(true);
   };
-  const handleCancelClick = () => {
-    setIsEditing(false);
-    setFormData({
-      name: data?.name,
-      description: data?.description,
-    });
-  };
-  const handleSaveClick = async () => {
-    try {
-      console.log("Form data before update:", formData);
-      await updateRecipe({
-        id, // Assuming the ID is passed
-        name: formData.name,
-        description: formData.description,
-      }).unwrap(); // Use unwrap() if you need to access the response or handle errors
 
-      // Optionally, update the local state with the saved data
-      console.log("Recipe updated successfully!");
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Failed to save recipe:", error);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, description, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-      [description]: value,
-    }));
-  };
 
   const isCreator =
     authUser && recipeArr?.creatorId && recipeArr.creatorId === authUser.id;
@@ -156,7 +100,7 @@ export default function SingleRecipe() {
         firstName: user.firstName,
         lastName: user.lastName,
       }).unwrap();
-      console.log("New Review Object:", newReview);
+      // console.log("New Review Object:", newReview);
       setRecipeArr((prevRecipeArr) => ({
         ...prevRecipeArr,
         review: [newReview, ...prevRecipeArr.review],
@@ -240,9 +184,9 @@ export default function SingleRecipe() {
   };
 
   const averageRating = calculateAverageRating(recipeArr?.review);
-  console.log("creator", isCreator);
-  console.log("Creator ID in recipe:", recipeArr.creatorId);
-  console.log("Logged-in user ID:", auth.id);
+  // console.log("creator", isCreator);
+  // console.log("Creator ID in recipe:", recipeArr.creatorId);
+  // console.log("Logged-in user ID:", auth.id);
 
   return (
     <>
@@ -265,55 +209,10 @@ export default function SingleRecipe() {
             )}
 
             <div className="card-body">
-              <form>
-                <label>
-                  Name:
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                  />
-                </label>
-
-                <div className="dropdown">
-                  <select
-                    className="form-select"
-                    id="category"
-                    value={selectedCategory}
-                    multiple
-                    size="6"
-                    aria-label="Multiple select example"
-                    onChange={handleCategoryChange}
-                  >
-                    <option disabled>Categories</option>
-                    {recipeArr?.categories?.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <label>
-                  Description:
-                  <textarea
-                    rows="5"
-                    cols="40"
-                    name="description"
-                    value={formData?.description}
-                    onChange={handleInputChange}
-                  />
-                </label>
-<br/>
-                <button type="button" onClick={handleSaveClick}>
-                  Save
-                </button>
-                <button type="button" onClick={handleCancelClick}>
-                  Cancel
-                </button>
-              </form>
+              <EditRecipeForm recipeId={id}/>
             </div>
+
+            
 
             {/* ADD INSTRUCTIONS AND INGREDIENTS TO FORM HERE */}
           </div>
