@@ -10,8 +10,7 @@ import {
   useAddFavoriteRecipeMutation,
   useDeleteFavoriteRecipeMutation,
   useGetFavoriteRecipesQuery,
-  useUpdateRecipeMutation,
-  useGetCategoriesQuery,
+  useUpdateRecipeMutation
 } from "../Recipes/RecipesSlice";
 import { getLogin, getUser } from "../../app/confirmLoginSlice";
 import StarRating from "./StarRating";
@@ -26,10 +25,6 @@ export default function SingleRecipe() {
   const [updateRecipe] = useUpdateRecipeMutation();
   const [addReview] = usePostReviewMutation();
   const [addComment] = usePostCommentMutation();
-  const { data: category, isSuccess: categorySuccess } =
-    useGetCategoriesQuery();
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState([]);
   const [review, setReview] = useState("");
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
@@ -42,7 +37,8 @@ export default function SingleRecipe() {
   const user = useSelector((state) => state.confirmLogin.user);
   console.log("User in component:", user);
 
-  const { data: favoriteRecipes, isSuccess: isFavoriteRecipesFetched } = useGetFavoriteRecipesQuery({ id });
+  const { data: favoriteRecipes, isSuccess: isFavoriteRecipesFetched } =
+    useGetFavoriteRecipesQuery({ id });
 
   const [recipeArr, setRecipeArr] = useState([]);
   useEffect(() => {
@@ -50,25 +46,10 @@ export default function SingleRecipe() {
       setRecipeArr(data);
       setFormData({
         name: data.name,
-        description: data.description,
       });
     }
   }, [data, isSuccess]);
   console.log("Recipe array", recipeArr);
-
-  useEffect(() => {
-    if (categorySuccess) {
-      setCategories(category);
-    }
-  }, [category]);
-
-  const handleCategoryChange = (e) => {
-    const selectedOptions = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setSelectedCategory(selectedOptions);
-  };
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState();
@@ -79,7 +60,6 @@ export default function SingleRecipe() {
     setIsEditing(false);
     setFormData({
       name: data?.name,
-      description: data?.description,
     });
   };
   const handleSaveClick = async () => {
@@ -88,9 +68,8 @@ export default function SingleRecipe() {
       await updateRecipe({
         id, // Assuming the ID is passed
         name: formData.name,
-        description: formData.description,
       }).unwrap(); // Use unwrap() if you need to access the response or handle errors
-
+      
       // Optionally, update the local state with the saved data
       console.log("Recipe updated successfully!");
       setIsEditing(false);
@@ -100,16 +79,14 @@ export default function SingleRecipe() {
   };
 
   const handleInputChange = (e) => {
-    const { name, description, value } = e.target;
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-      [description]: value,
     }));
   };
 
-  const isCreator =
-    authUser && recipeArr?.creatorId && recipeArr.creatorId === authUser.id;
+  const isCreator = authUser && recipeArr?.creatorId && recipeArr.creatorId === authUser.id;
 
   const handleStarClick = (value) => {
     setRating(value);
@@ -127,7 +104,7 @@ export default function SingleRecipe() {
   const handleFavorite = async () => {
     try {
       if (isFavorite) {
-        await deleteFavoriteRecipe({ id: id }).unwrap();
+        await deleteFavoriteRecipe({ recipeId: id }).unwrap();
         setIsFavorite(false);
       } else {
         await favoriteRecipe({
@@ -246,24 +223,24 @@ export default function SingleRecipe() {
   return (
     <>
       <div className="container">
-        {isEditing ? (
-          <div className="card" style={{ minWidth: "42rem", margin: "auto" }}>
-            {recipeArr?.photo ? (
-              <img
-                src={recipeArr.photo}
-                className="card-img-top"
-                style={{ width: "100%", height: "300px", objectFit: "cover" }}
-                alt={recipeArr.name}
-              />
-            ) : (
-              <img
-                src="https://placehold.co/600x600?text=No+Photo+Available"
-                className="card-img-top"
-                style={{ width: "100%", height: "300px", objectFit: "cover" }}
-              />
-            )}
+        <div className="card" style={{ minWidth: "42rem", margin: "auto" }}>
+          {recipeArr?.photo ? (
+            <img
+              src={recipeArr.photo}
+              className="card-img-top"
+              style={{ width: "100%", height: "300px", objectFit: "cover" }}
+              alt={recipeArr.name}
+            />
+          ) : (
+            <img
+              src="https://placehold.co/600x600?text=No+Photo+Available"
+              className="card-img-top"
+              style={{ width: "100%", height: "300px", objectFit: "cover" }}
+            />
+          )}
 
-            <div className="card-body">
+          <div className="card-body">
+            {isEditing ? (
               <form>
                 <label>
                   Name:
@@ -274,37 +251,6 @@ export default function SingleRecipe() {
                     onChange={handleInputChange}
                   />
                 </label>
-
-                <div className="dropdown">
-                  <select
-                    className="form-select"
-                    id="category"
-                    value={selectedCategory}
-                    multiple
-                    size="6"
-                    aria-label="Multiple select example"
-                    onChange={handleCategoryChange}
-                  >
-                    <option disabled>Categories</option>
-                    {recipeArr?.categories?.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <label>
-                  Description:
-                  <textarea
-                    rows="5"
-                    cols="40"
-                    name="description"
-                    value={formData?.description}
-                    onChange={handleInputChange}
-                  />
-                </label>
-<br/>
                 <button type="button" onClick={handleSaveClick}>
                   Save
                 </button>
@@ -312,30 +258,12 @@ export default function SingleRecipe() {
                   Cancel
                 </button>
               </form>
-            </div>
-
-            {/* ADD INSTRUCTIONS AND INGREDIENTS TO FORM HERE */}
-          </div>
-        ) : (
-          <div className="card" style={{ minWidth: "42rem", margin: "auto" }}>
-            {recipeArr?.photo ? (
-              <img
-                src={recipeArr.photo}
-                className="card-img-top"
-                style={{ width: "100%", height: "300px", objectFit: "cover" }}
-                alt={recipeArr.name}
-              />
             ) : (
-              <img
-                src="https://placehold.co/600x600?text=No+Photo+Available"
-                className="card-img-top"
-                style={{ width: "100%", height: "300px", objectFit: "cover" }}
-              />
-            )}
-
-            <div className="card-body">
               <h5 className="card-title">
                 {recipeArr.name}{" "}
+                {isCreator && (
+                  <i className="bi bi-pencil" onClick={handleEditClick}></i>
+                )}
                 {auth && (
                   <button onClick={handleFavorite} className="btn">
                     {" "}
@@ -350,58 +278,54 @@ export default function SingleRecipe() {
                       )}
                     </span>
                   </button>
-                )}{" "}
-                {isCreator && (
-                  <i className="bi bi-pencil" onClick={handleEditClick}></i>
                 )}
               </h5>
+            )}
 
-              {recipeArr?.categories?.map((cat) => {
-                return (
-                  <p key={cat.id} className="badge text-bg-secondary">
-                    {cat.name}
-                  </p>
-                );
-              })}
-              <div className="star-rating">
-                {renderStarAverage(Math.round(averageRating))}
-              </div>
-              <small>Average Rating: {averageRating.toFixed()} / 5</small>
-              <br />
-              <br />
-
-              <p className="card-text lead">{recipeArr.description}</p>
+            {recipeArr?.categories?.map((cat) => {
+              return (
+                <p key={cat.id} className="badge text-bg-secondary">
+                  {cat.name}
+                </p>
+              );
+            })}
+            <div className="star-rating">
+              {renderStarAverage(Math.round(averageRating))}
             </div>
-            <ul className="list-group list-group-flush">
-              <li className="list-group-item">
-                <h5>Ingredients</h5>
-                <ul className="list-group list-group-flush">
-                  {recipeArr?.ingredient?.map((ing) => {
-                    return (
-                      <li key={ing.id} className="list-group-item">
-                        {ing.quantity} {ing.unit.name} of {ing.ingredient.name}{" "}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </li>
-              <li className="list-group-item">
-                <h5>Instructions</h5>
-                <ol className="list-group list-group-flush list-group-numbered">
-                  {recipeArr?.instructions?.map((inst) => {
-                    return (
-                      <li key={inst.id} className="list-group-item">
-                        {" "}
-                        {inst.instruction}
-                      </li>
-                    );
-                  })}
-                </ol>
-              </li>
-            </ul>
-          </div>
-        )}
+            <small>Average Rating: {averageRating.toFixed()} / 5</small>
+            <br />
+            <br />
 
+            <p className="card-text lead">{recipeArr.description}</p>
+          </div>
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item">
+              <h5>Ingredients</h5>
+              <ul className="list-group list-group-flush">
+                {recipeArr?.ingredient?.map((ing) => {
+                  return (
+                    <li key={ing.id} className="list-group-item">
+                      {ing.quantity} {ing.unit.name} of {ing.ingredient.name}{" "}
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+            <li className="list-group-item">
+              <h5>Instructions</h5>
+              <ol className="list-group list-group-flush list-group-numbered">
+                {recipeArr?.instructions?.map((inst) => {
+                  return (
+                    <li key={inst.id} className="list-group-item">
+                      {" "}
+                      {inst.instruction}
+                    </li>
+                  );
+                })}
+              </ol>
+            </li>
+          </ul>
+        </div>
         <br />
         <h1 className="display-6">Reviews</h1>
         <br />

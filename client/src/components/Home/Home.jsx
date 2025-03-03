@@ -42,16 +42,19 @@ export default function Home() {
       <div className="masthead-container">
         <section className="masthead">
           <div className="masthead-content">
-            <h1 className="display-4">The RACipe Hub</h1>
+            <h1
+              className="display-6"
+              style={{ fontVariantCaps: "small-caps", fontWeight: "bold" }}
+            >
+              The RACipe Hub
+            </h1>
             <p className="lead">
-              <strong>
-                A central space for all things food, offering the essence of a
-                community-driven recipe platform.
-              </strong>
+              A central space for all things food, offering the essence of a
+              community-driven recipe platform.
             </p>
             <p>
               <Link to="/register">
-                <button type="button" className="btn btn-outline-light">
+                <button type="button" className="button-details-alt">
                   <strong>Get Started</strong>
                 </button>
               </Link>
@@ -62,7 +65,8 @@ export default function Home() {
       <div className="container">
         <div className="home-container">
           <div>
-            <Carousel className="mt-3">
+          <h3 className="mt-4">Trending Now</h3>
+            <Carousel >
               {carouselRecipes.map((recipe) => (
                 <Carousel.Item
                   key={recipe.id}
@@ -101,6 +105,9 @@ export default function Home() {
             {isLoading && "Loading recipes..."}
             {error && "Error loading recipes."}
           </p>
+          <div>
+            <p className="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur commodo dignissim lorem non consequat. Duis pharetra euismod dignissim.</p><p>Donec libero libero, sagittis non arcu et, aliquam sagittis ligula. Vivamus ornare augue id magna luctus, nec aliquet erat laoreet. Aliquam erat volutpat. Praesent vitae turpis nec dui ultricies rhoncus nec sit amet leo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+          </div>
 
           <h3 className="mt-4">Featured Recipes</h3>
           <div className="row">

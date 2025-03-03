@@ -4,12 +4,12 @@ import {
   useUpdateUserMutation,
 } from "./AdminSlice";
 import { useEffect, useState } from "react";
-
 export default function Admin() {
   const { data, isSuccess } = useGetUsersQuery();
   const [deleteUser] = useDeleteUserMutation();
   const [updateUser] = useUpdateUserMutation();
   const [userArr, setUserArr] = useState();
+
   const [editUser, setEditUser] = useState(null);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -18,11 +18,13 @@ export default function Admin() {
     role: "",
   });
 
+
   useEffect(() => {
     if (isSuccess) {
       setUserArr(data, isSuccess);
     }
   }, [data, isSuccess]);
+
 
   const token = window.sessionStorage.getItem("token");
   console.log("Here is my token", token);
@@ -36,6 +38,7 @@ export default function Admin() {
       setExpandUser(userId);
     }
   };
+
 
   const handleClickEdit = (user) => {
     setEditUser(user.id);
@@ -60,10 +63,12 @@ export default function Admin() {
     }
   };
 
+
   return (
     <div className="container">
       <h2>Admin Dashboard</h2>
       <p style={{ wordWrap: "break-word" }}>Token: {token}</p>
+
 
       <h3>User List:</h3>
 
@@ -93,8 +98,8 @@ export default function Admin() {
                       Delete
                     </button>
                   </div>
-                </td>
-              </tr>
+               </td>
+             </tr>
 
               {expandUser === user.id && (
                 <tr>
