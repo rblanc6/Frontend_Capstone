@@ -29,6 +29,7 @@ export default function SingleRecipe() {
   const auth = useSelector(getLogin);
   const authUser = useSelector(getUser);
   const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState();
 
   // console.log("auth:", auth);
 
@@ -51,7 +52,12 @@ export default function SingleRecipe() {
   const handleEditClick = () => {
     setIsEditing(true);
   };
-
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    setFormData({
+      name: data?.name,
+    });
+  };
 
   const isCreator =
     authUser && recipeArr?.creatorId && recipeArr.creatorId === authUser.id;
@@ -209,7 +215,9 @@ export default function SingleRecipe() {
             )}
 
             <div className="card-body">
-              <EditRecipeForm recipeId={id}/>
+              <EditRecipeForm id={id}/>  <button type="button" onClick={handleCancelClick}>
+                  Cancel
+                </button>
             </div>
 
             
@@ -258,9 +266,9 @@ export default function SingleRecipe() {
 
               {recipeArr?.categories?.map((cat) => {
                 return (
-                  <p key={cat.id} className="badge text-bg-secondary">
+                  <p key={cat.id} style={{marginRight: "6px"}} className="badge text-bg-secondary">
                     {cat.name}
-                  </p>
+                  </p> 
                 );
               })}
               <div className="star-rating">
