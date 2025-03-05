@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   value: window.sessionStorage.getItem("token") ? true : false,
-  user: null,
+  user: window.sessionStorage.getItem("user") 
+    ? JSON.parse(window.sessionStorage.getItem("user")) 
+    : null,
 };
 
 export const confirmLoginSlice = createSlice({
@@ -13,10 +15,12 @@ export const confirmLoginSlice = createSlice({
       console.log('User logged in:', action.payload);
       state.value = true;
       state.user = action.payload;
+      window.sessionStorage.setItem("user", JSON.stringify(action.payload));
     },
     confirmLogout: (state) => {
       state.value = false;
       state.user = null;
+      window.sessionStorage.removeItem("user");
     },
   },
 });
