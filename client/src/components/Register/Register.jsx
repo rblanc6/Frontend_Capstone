@@ -4,6 +4,7 @@ import { useRegisterMutation } from "./RegisterSlice";
 import { confirmLogin } from "../../app/confirmLoginSlice";
 import { useDispatch } from "react-redux";
 
+
 export default function Register() {
   const [form, setForm] = useState({
     firstName: "",
