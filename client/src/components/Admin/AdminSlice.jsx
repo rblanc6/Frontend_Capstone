@@ -19,9 +19,9 @@ const usersApi = api.injectEndpoints({
     }),
     
 
-    updateUser: builder.mutation({
+    updateUserAdmin: builder.mutation({
       query: ({ id, firstName, lastName, email, role }) => ({
-        url: `/auth/user/${id}`,
+        url: `/admin/user/${id}`,
         method: "PUT",
         body: JSON.stringify({ firstName, lastName, email, role }),
         headers: {
@@ -56,6 +56,6 @@ const usersApi = api.injectEndpoints({
 
 export const {
   useGetUsersQuery,
-  useUpdateUserMutation,
+  useUpdateUserAdminMutation,
   useDeleteUserMutation,
 } = usersApi;

@@ -1,16 +1,31 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useGetRecipeQuery } from "./SingleRecipeSlice";
-import { useUpdateRecipeMutation } from "../Recipes/RecipesSlice";
-
+import { useUpdateRecipeMutation, useGetCategoriesQuery } from "../Recipes/RecipesSlice";
 export default function EditRecipeForm() {
-  const { recipeId } = useParams();
+    const { data: category, isSuccess: categorySuccess } =
+    useGetCategoriesQuery();
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const { id } = useParams();
   const {
     data: currentRecipe,
     error: fetchError,
     isLoading,
-  } = useGetRecipeQuery(recipeId);
-
+  } = useGetRecipeQuery(id);
+  useEffect(() => {
+    if (categorySuccess) {
+      setCategories(category);
+    }
+  }, [categorySuccess]); // Fix dependency
+  
+  const handleCategoryChange = (e) => {
+    const selectedOptions = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedCategory(selectedOptions);
+  };
   const [recipe, setRecipe] = useState({
     name: "",
     description: "",
@@ -20,34 +35,22 @@ export default function EditRecipeForm() {
     photo: "",
     creatorId: "",
   });
-
   const [error, setError] = useState(null);
-
-  console.log("Recipe ID from URL:", recipeId); // Ensure this is not undefined
-
+  console.log("Recipe ID from URL:", id); // Ensure this is not undefined
   // Use the updateRecipe mutation hook
   const [updateRecipe, { isLoading: isUpdating, error: updateError }] =
     useUpdateRecipeMutation();
-
   // When currentRecipe data is fetched, populate the form fields
   useEffect(() => {
     if (currentRecipe) {
-      setRecipe({
-        name: currentRecipe.name,
-        description: currentRecipe.description,
-        ingredients: currentRecipe.ingredients.map((ingredient) => ({
-          name: ingredient.name,
-          quantity: ingredient.quantity,
-          unitName: ingredient.unit.name,
-        })),
-        instructions: currentRecipe.instructions,
-        categories: currentRecipe.categories,
-        photo: currentRecipe.photo,
-        creatorId: currentRecipe.creatorId, // Ensure this comes from the backend or user context
-      });
+      setRecipe((prevRecipe) => ({
+        ...prevRecipe,
+        categories: currentRecipe.categories || [],
+      }));
+      setSelectedCategory(currentRecipe.categories?.map(cat => cat.id) || []);
     }
   }, [currentRecipe]);
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRecipe((prevState) => ({
@@ -55,7 +58,6 @@ export default function EditRecipeForm() {
       [name]: value,
     }));
   };
-
   const handleIngredientChange = (index, e) => {
     const { name, value } = e.target;
     const newIngredients = [...recipe.ingredients];
@@ -65,7 +67,6 @@ export default function EditRecipeForm() {
       ingredients: newIngredients,
     }));
   };
-
   const handleAddIngredient = () => {
     setRecipe((prevState) => ({
       ...prevState,
@@ -75,7 +76,6 @@ export default function EditRecipeForm() {
       ],
     }));
   };
-
   const handleRemoveIngredient = (index) => {
     const newIngredients = [...recipe.ingredients];
     newIngredients.splice(index, 1);
@@ -84,39 +84,29 @@ export default function EditRecipeForm() {
       ingredients: newIngredients,
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const updatedData = {
-      name: recipe.name,
-      description: recipe.description,
-      ingredients: recipe.ingredients,
-      instructions: recipe.instructions,
-      categories: recipe.categories,
-      photo: recipe.photo,
-      creatorId: recipe.creatorId,
+      ...recipe,
+      categories: selectedCategory, // Ensure this is an array of category IDs
     };
-
+  
     try {
-      const { data, error } = await updateRecipe({ id: recipeId, updatedData });
-
-      if (data) {
+      const response = await updateRecipe({ id, updatedData });
+      if (response.error) {
+        setError("Error updating recipe: " + response.error.message);
+      } else {
         alert("Recipe updated successfully!");
-      }
-
-      if (error) {
-        setError("Error updating recipe");
       }
     } catch (err) {
       setError("Error updating recipe");
     }
   };
-
+  
+  
   if (isLoading) return <p>Loading...</p>;
-
   if (fetchError) return <p>{fetchError.message || "Error fetching recipe"}</p>;
-
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -145,10 +135,41 @@ export default function EditRecipeForm() {
           onChange={handleChange}
         />
       </div>
-
       <div>
         <label>Ingredients</label>
         {recipe.ingredients.map((ingredient, index) => (
+  <div key={index}>
+    <input
+      type="text"
+      name="name"
+      value={ingredient.name}
+      placeholder="Ingredient Name"
+      onChange={(e) => handleIngredientChange(index, e)}
+    />
+    <input
+      type="number"
+      name="quantity"
+      value={ingredient.quantity}
+      placeholder="Quantity"
+      onChange={(e) => handleIngredientChange(index, e)}
+    />
+    <input
+      type="text"
+      name="unitName"
+      value={ingredient.unitName}
+      placeholder="Unit Name"
+      onChange={(e) => handleIngredientChange(index, e)}
+    />
+    <button type="button" onClick={() => handleRemoveIngredient(index)}>
+      Remove Ingredient
+    </button>
+  </div>
+))}
+<button type="button" onClick={handleAddIngredient}>
+  Add Ingredient
+</button>
+
+        {/* {recipe.ingredients.map((ingredient, index) => (
           <div key={index}>
             <input
               type="text"
@@ -175,25 +196,42 @@ export default function EditRecipeForm() {
               Remove Ingredient
             </button>
           </div>
-        ))}
-        <button type="button" onClick={handleAddIngredient}>
+        ))} */}
+        {/* <button type="button" onClick={handleAddIngredient}>
           Add Ingredient
-        </button>
+        </button> */}
       </div>
-
       <div>
         <label>Instructions</label>
         <textarea
-          name="instructions"
-          value={recipe.instructions.join(", ")}
-          onChange={(e) =>
-            setRecipe({ ...recipe, instructions: e.target.value.split(", ") })
-          }
-        />
-      </div>
+  name="instructions"
+  value={recipe.instructions.join("\n")}
+  onChange={(e) =>
+    setRecipe({ ...recipe, instructions: e.target.value.split("\n") })
+  }
+/>
 
+      </div>
       <div>
-        <label>Categories (comma separated)</label>
+      <div className="dropdown">
+            <select
+              className="form-select"
+              id="category"
+              value={selectedCategory}
+              multiple
+              size="6"
+              aria-label="Multiple select example"
+              onChange={handleCategoryChange}
+            >
+              <option disabled>Categories</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        {/* <label>Categories (comma separated)</label>
         <input
           type="text"
           name="categories"
@@ -204,14 +242,12 @@ export default function EditRecipeForm() {
               .map((cat) => cat.trim());
             setRecipe({ ...recipe, categories });
           }}
-        />
+        /> */}
       </div>
-
       <button type="submit" disabled={isUpdating}>
         {isUpdating ? "Updating..." : "Update Recipe"}
       </button>
     </form>
-
     /* <div className="card-body">
               <form>
                 <label>
@@ -223,7 +259,6 @@ export default function EditRecipeForm() {
                     onChange={handleInputChange}
                   />
                 </label>
-
                 <div className="dropdown">
                   <select
                     className="form-select"
@@ -242,7 +277,6 @@ export default function EditRecipeForm() {
                     ))}
                   </select>
                 </div>
-
                 <label>
                   Description:
                   <textarea

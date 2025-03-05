@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function StarRating({ initialRating = 0, onRatingChange }) {
+export default function StarRating({ initialRating = 0, onRatingChange }) {
   const [rating, setRating] = useState(initialRating);
   const [hoveredRating, setHoveredRating] = useState(0);
 
@@ -47,5 +47,3 @@ function StarRating({ initialRating = 0, onRatingChange }) {
 
   return <div>{renderStars()}</div>;
 }
-
-export default StarRating;

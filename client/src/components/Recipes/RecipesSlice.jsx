@@ -97,7 +97,7 @@ const recipesApi = api.injectEndpoints({
           "Content-Type": "application/json",
           Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
         },
-        body: JSON.stringify({ updatedData }),
+        body: JSON.stringify( updatedData ),
 
         transformResponse: (response) => response.data,
         transformErrorResponse: (response) => response.data.error,
