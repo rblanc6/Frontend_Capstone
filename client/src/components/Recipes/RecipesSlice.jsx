@@ -92,7 +92,7 @@ const recipesApi = api.injectEndpoints({
     updateRecipe: builder.mutation({
       query: ({ id, updatedData }) => ({
         url: `/recipes/${id}`,
-        method: "PATCH",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,

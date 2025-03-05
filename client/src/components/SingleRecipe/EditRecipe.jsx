@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useGetRecipeQuery } from "./SingleRecipeSlice";
-import { useUpdateRecipeMutation, useGetCategoriesQuery } from "../Recipes/RecipesSlice";
+import {
+  useUpdateRecipeMutation,
+  useGetCategoriesQuery,
+} from "../Recipes/RecipesSlice";
+
 export default function EditRecipeForm() {
-    const { data: category, isSuccess: categorySuccess } =
+  const { data: category, isSuccess: categorySuccess } =
     useGetCategoriesQuery();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
@@ -13,19 +17,28 @@ export default function EditRecipeForm() {
     error: fetchError,
     isLoading,
   } = useGetRecipeQuery(id);
+
+  console.log("INGREDIENTS", currentRecipe?.ingredient);
+  console.log("CURRENT RECIPE", currentRecipe);
+
   useEffect(() => {
     if (categorySuccess) {
       setCategories(category);
     }
-  }, [categorySuccess]); // Fix dependency
-  
+
+  }, [category]);
+
+
   const handleCategoryChange = (e) => {
     const selectedOptions = Array.from(
       e.target.selectedOptions,
       (option) => option.value
     );
     setSelectedCategory(selectedOptions);
+
+    console.log(selectedOptions);
   };
+
   const [recipe, setRecipe] = useState({
     name: "",
     description: "",
@@ -36,18 +49,32 @@ export default function EditRecipeForm() {
     creatorId: "",
   });
   const [error, setError] = useState(null);
+
+
   console.log("Recipe ID from URL:", id); // Ensure this is not undefined
+
+
   // Use the updateRecipe mutation hook
   const [updateRecipe, { isLoading: isUpdating, error: updateError }] =
     useUpdateRecipeMutation();
   // When currentRecipe data is fetched, populate the form fields
   useEffect(() => {
     if (currentRecipe) {
-      setRecipe((prevRecipe) => ({
-        ...prevRecipe,
+
+      setRecipe({
+        name: currentRecipe.name,
+        description: currentRecipe.description,
+        ingredients: currentRecipe.ingredient.map((ingredient) => ({
+          name: ingredient.name,
+          quantity: ingredient.quantity,
+          unitName: ingredient.unit.name,
+        })),
+        instructions: currentRecipe?.instructions || [],
         categories: currentRecipe.categories || [],
-      }));
-      setSelectedCategory(currentRecipe.categories?.map(cat => cat.id) || []);
+        photo: currentRecipe.photo,
+        creatorId: currentRecipe.creatorId, // Ensure this comes from the backend or user context
+      });
+
     }
   }, [currentRecipe]);
   
@@ -88,15 +115,26 @@ export default function EditRecipeForm() {
     e.preventDefault();
   
     const updatedData = {
-      ...recipe,
-      categories: selectedCategory, // Ensure this is an array of category IDs
+
+      name: recipe.name,
+      description: recipe.description,
+      ingredients: recipe.ingredients,
+      instructions: recipe.instructions,
+      categories: selectedCategory,
+      photo: recipe.photo,
+      creatorId: recipe.creatorId,
+
     };
   
     try {
-      const response = await updateRecipe({ id, updatedData });
-      if (response.error) {
-        setError("Error updating recipe: " + response.error.message);
-      } else {
+
+      const { data, error } = await updateRecipe({
+        id: id,
+        updatedData: updatedData,
+      });
+
+      if (data) {
+
         alert("Recipe updated successfully!");
       }
     } catch (err) {
@@ -201,37 +239,62 @@ export default function EditRecipeForm() {
           Add Ingredient
         </button> */}
       </div>
-      <div>
+
+
+      {/* <div>
         <label>Instructions</label>
         <textarea
-  name="instructions"
-  value={recipe.instructions.join("\n")}
-  onChange={(e) =>
-    setRecipe({ ...recipe, instructions: e.target.value.split("\n") })
-  }
-/>
+          name="instructions"
+          value={recipe.instructions.join("\n")}
+          onChange={(e) =>
+            setRecipe({ ...recipe, instructions: e.target.value.split("\n") })
+          }
+        />
+      </div> */}
+
 
       </div>
       <div>
+
+        <label>Instructions</label>
+        <textarea
+    name="instructions"
+    value={recipe.instructions.map(instruction => instruction.instruction).join("\n")} // Ensure to join the 'step' property of each object
+    onChange={(e) => {
+      const instructionsArray = e.target.value
+        .split("\n")
+        .map((instruction) => ({ instruction: instruction.trim() })); // Convert back to objects with 'step' property
+      setRecipe({
+        ...recipe,
+        instructions: instructionsArray,
+      });
+    }}
+  />
+      </div>
+
+      {/* <div> */}
+
       <div className="dropdown">
-            <select
-              className="form-select"
-              id="category"
-              value={selectedCategory}
-              multiple
-              size="6"
-              aria-label="Multiple select example"
-              onChange={handleCategoryChange}
-            >
-              <option disabled>Categories</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        {/* <label>Categories (comma separated)</label>
+        <select
+          className="form-select"
+          id="category"
+          value={selectedCategory}
+          multiple
+          size="6"
+          aria-label="Multiple select example"
+          onChange={handleCategoryChange}
+        >
+          <option disabled>Categories</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* <label>Categories (comma separated)</label>
+
         <input
           type="text"
           name="categories"
@@ -243,7 +306,10 @@ export default function EditRecipeForm() {
             setRecipe({ ...recipe, categories });
           }}
         /> */}
-      </div>
+
+      {/* </div> */}
+
+
       <button type="submit" disabled={isUpdating}>
         {isUpdating ? "Updating..." : "Update Recipe"}
       </button>

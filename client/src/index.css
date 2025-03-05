@@ -105,7 +105,9 @@ button:focus-visible {
 }
 
 .container {
-  padding-top: 2em;
+  padding: 2em 0;
+  position: relative;
+  min-height: 100vh;
 }
 
 .home-container {
@@ -204,7 +206,6 @@ a.button-details-alt:hover {
 }
 
 .button-details-alt:hover,
-.button-details-alt:hover,
 .button-details-alt:focus {
   background-color: #245e94;
   border: 1px solid transparent;
@@ -255,6 +256,22 @@ ul.pagination {
   --bs-pagination-disabled-color: #245e94;
 }
 
-.navbar {
-  background-color: #292b35;
+.social-links {
+  color: #245e94;
+  display: inline-block;
+  text-align: center;
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out,
+    border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.social-links:hover,
+.social-links:focus  {
+  color: #de296c;
+}
+
+.footer {
+  position: relative;
+  bottom: 0;
+  width:100%;
+  border-top: solid 1px rgb(223, 223, 223)
 }
