@@ -12,7 +12,9 @@ import { ProtectedRoute } from "../components/ProtectedRoutes";
 import NavBar from "../components/Navigation";
 import NewRecipe from "../components/Account/NewRecipe";
 import Admin from "../components/Admin/Admin";
-import EditRecipeForm from "../components/SingleRecipe/EditRecipe";
+import Footer from "../components/Footer";
+import MyRecipes from "../components/Account/MyRecipes";
+
 
 function App() {
   const [token, setToken] = useState(null);
@@ -38,6 +40,9 @@ function App() {
         <Route path="/favorites" element={<ProtectedRoute />}>
           <Route path="/favorites" element={<Favorites />} />
         </Route>
+        <Route path="/my-recipes" element={<ProtectedRoute />}>
+          <Route path="/my-recipes" element={<MyRecipes />} />
+        </Route>
         <Route path="/share-recipe" element={<ProtectedRoute />}>
           <Route path="/share-recipe" element={<NewRecipe />} />
         </Route>
@@ -45,6 +50,7 @@ function App() {
           <Route path="/admin" element={<Admin />} />
         </Route>
       </Routes>
+      <Footer/>
     </>
   );
 }

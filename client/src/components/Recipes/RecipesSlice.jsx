@@ -92,12 +92,12 @@ const recipesApi = api.injectEndpoints({
     updateRecipe: builder.mutation({
       query: ({ id, updatedData }) => ({
         url: `/recipes/${id}`,
-        method: "PATCH",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
         },
-        body: JSON.stringify({ updatedData }),
+        body: JSON.stringify( updatedData ),
 
         transformResponse: (response) => response.data,
         transformErrorResponse: (response) => response.data.error,
