@@ -10,7 +10,7 @@ const userDetailsApi = api.injectEndpoints({
           "Content-Type": "application/json",
           Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
         },
-        transformResponse: (response) => response.data.users,
+        transformResponse: (response) => response.data,
         transformErrorResponse: (response) => response.data.error,
       }),
       providesTags: ["User"],

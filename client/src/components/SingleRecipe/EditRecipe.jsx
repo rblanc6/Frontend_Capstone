@@ -18,7 +18,7 @@ export default function EditRecipeForm() {
     error: fetchError,
     isLoading,
   } = useGetRecipeQuery(id);
-  console.log("INGREDIENTS NAME", currentRecipe?.ingredient.name);
+ 
   //   console.log("CURRENT RECIPE", currentRecipe);
 
   useEffect(() => {
@@ -51,16 +51,18 @@ export default function EditRecipeForm() {
   const [updateRecipe, { isLoading: isUpdating, error: updateError }] =
     useUpdateRecipeMutation();
 
+    console.log("INGREDIENTS NAME", currentRecipe?.ingredient.name);
+
   useEffect(() => {
     if (currentRecipe) {
       console.log("Current Recipe Ingredients: ", currentRecipe.ingredient);
       setRecipe({
         name: currentRecipe.name,
         description: currentRecipe.description,
-        ingredients: currentRecipe.ingredient.map((ingredient) => ({
-          name: ingredient.name,
-          quantity: ingredient.quantity,
-          unitName: ingredient.unit.name,
+        ingredients: currentRecipe.ingredient.map((ing) => ({
+          name: ing.ingredient.name,
+          quantity: ing.quantity,
+          unitName: ing.unit.name,
         })),
         instructions: currentRecipe?.instructions || [],
         categories: currentRecipe.categories || [],
