@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "./RegisterSlice";
+import { confirmLogin } from "../../app/confirmLoginSlice";
+import { useDispatch } from "react-redux";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -10,6 +12,7 @@ export default function Register() {
     password: "",
   });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [registerUser] = useRegisterMutation();
   const [error, setError] = useState(null);
   const change = (e) => {
@@ -25,6 +28,8 @@ export default function Register() {
     try {
       const response = await registerUser(form).unwrap();
       console.log(response);
+      dispatch(confirmLogin());
+      navigate("/account");
     } catch (error) {
       if (error.data && error.data.message === "Email already in use") {
         setError("This email is already in use. Please use a different one.");
@@ -33,7 +38,6 @@ export default function Register() {
         console.error(error.data);
       }
     }
-    navigate("/account");
   };
 
   return (

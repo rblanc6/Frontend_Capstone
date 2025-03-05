@@ -36,8 +36,7 @@ export default function SingleRecipe() {
   // const user = useSelector((state) => state.confirmLogin.user);
   // console.log("User in component:", user);
 
-  const { data: favoriteRecipes, isSuccess: isFavoriteRecipesFetched } =
-    useGetFavoriteRecipesQuery({ id });
+  const { data: favoriteRecipes, isSuccess: isFavoriteRecipesFetched } = useGetFavoriteRecipesQuery({ id });
 
   const [recipeArr, setRecipeArr] = useState([]);
   useEffect(() => {

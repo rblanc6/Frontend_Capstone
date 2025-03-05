@@ -18,14 +18,18 @@ export default function EditRecipeForm() {
     error: fetchError,
     isLoading,
   } = useGetRecipeQuery(id);
+
   console.log("INGREDIENTS NAME", currentRecipe?.ingredient.name);
   //   console.log("CURRENT RECIPE", currentRecipe);
+
 
   useEffect(() => {
     if (categorySuccess) {
       setCategories(category);
     }
+
   }, [category]);
+
 
   const handleCategoryChange = (e) => {
     const selectedOptions = Array.from(
@@ -33,7 +37,9 @@ export default function EditRecipeForm() {
       (option) => option.value
     );
     setSelectedCategory(selectedOptions);
+
     // console.log("SELECTED OPTIONS", selectedOptions);
+
   };
 
   const [recipe, setRecipe] = useState({
@@ -45,8 +51,8 @@ export default function EditRecipeForm() {
     photo: "",
     creatorId: "",
   });
-
   const [error, setError] = useState(null);
+
 
   const [updateRecipe, { isLoading: isUpdating, error: updateError }] =
     useUpdateRecipeMutation();
@@ -54,6 +60,7 @@ export default function EditRecipeForm() {
   useEffect(() => {
     if (currentRecipe) {
       console.log("Current Recipe Ingredients: ", currentRecipe.ingredient);
+
       setRecipe({
         name: currentRecipe.name,
         description: currentRecipe.description,
@@ -67,6 +74,7 @@ export default function EditRecipeForm() {
         photo: currentRecipe.photo,
         creatorId: currentRecipe.creatorId,
       });
+
       setSelectedCategory(currentRecipe.categories?.map((cat) => cat.id) || []);
     }
   }, [currentRecipe]);
@@ -81,6 +89,7 @@ export default function EditRecipeForm() {
   //     }
   //   }, [currentRecipe]);
 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRecipe((prevState) => ({
@@ -88,7 +97,6 @@ export default function EditRecipeForm() {
       [name]: value,
     }));
   };
-
   const handleIngredientChange = (index, e) => {
     const { name, value } = e.target;
     const newIngredients = [...recipe.ingredients];
@@ -98,7 +106,6 @@ export default function EditRecipeForm() {
       ingredients: newIngredients,
     }));
   };
-
   const handleAddIngredient = () => {
     setRecipe((prevState) => ({
       ...prevState,
@@ -108,7 +115,6 @@ export default function EditRecipeForm() {
       ],
     }));
   };
-
   const handleRemoveIngredient = (index) => {
     const newIngredients = [...recipe.ingredients];
     newIngredients.splice(index, 1);
@@ -117,11 +123,11 @@ export default function EditRecipeForm() {
       ingredients: newIngredients,
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const updatedData = {
+
       name: recipe.name,
       description: recipe.description,
       ingredients: recipe.ingredients,
@@ -129,30 +135,28 @@ export default function EditRecipeForm() {
       categories: selectedCategory,
       photo: recipe.photo,
       creatorId: recipe.creatorId,
-    };
 
+    };
+  
     try {
+
       const { data, error } = await updateRecipe({
         id: id,
         updatedData: updatedData,
       });
 
       if (data) {
-        alert("Recipe updated successfully!");
-      }
 
-      if (error) {
-        setError("Error updating recipe");
+        alert("Recipe updated successfully!");
       }
     } catch (err) {
       setError("Error updating recipe");
     }
   };
-
+  
+  
   if (isLoading) return <p>Loading...</p>;
-
   if (fetchError) return <p>{fetchError.message || "Error fetching recipe"}</p>;
-
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -181,10 +185,41 @@ export default function EditRecipeForm() {
           onChange={handleChange}
         />
       </div>
-
       <div>
         <label>Ingredients</label>
         {recipe.ingredients.map((ingredient, index) => (
+  <div key={index}>
+    <input
+      type="text"
+      name="name"
+      value={ingredient.name}
+      placeholder="Ingredient Name"
+      onChange={(e) => handleIngredientChange(index, e)}
+    />
+    <input
+      type="number"
+      name="quantity"
+      value={ingredient.quantity}
+      placeholder="Quantity"
+      onChange={(e) => handleIngredientChange(index, e)}
+    />
+    <input
+      type="text"
+      name="unitName"
+      value={ingredient.unitName}
+      placeholder="Unit Name"
+      onChange={(e) => handleIngredientChange(index, e)}
+    />
+    <button type="button" onClick={() => handleRemoveIngredient(index)}>
+      Remove Ingredient
+    </button>
+  </div>
+))}
+<button type="button" onClick={handleAddIngredient}>
+  Add Ingredient
+</button>
+
+        {/* {recipe.ingredients.map((ingredient, index) => (
           <div key={index}>
             <input
               type="text"
@@ -211,13 +246,15 @@ export default function EditRecipeForm() {
               Remove Ingredient
             </button>
           </div>
-        ))}
-        <button type="button" onClick={handleAddIngredient}>
+        ))} */}
+        {/* <button type="button" onClick={handleAddIngredient}>
           Add Ingredient
-        </button>
+        </button> */}
       </div>
 
+
       <div>
+
         <label>Instructions</label>
         <textarea
           name="instructions"
@@ -234,6 +271,7 @@ export default function EditRecipeForm() {
             });
           }}
         />
+
       </div>
 
       <div className="dropdown">
@@ -256,6 +294,7 @@ export default function EditRecipeForm() {
       </div>
 
       {/* <label>Categories (comma separated)</label>
+
         <input
           type="text"
           name="categories"
@@ -267,13 +306,14 @@ export default function EditRecipeForm() {
             setRecipe({ ...recipe, categories });
           }}
         /> */}
+
       {/* </div> */}
+
 
       <button type="submit" disabled={isUpdating}>
         {isUpdating ? "Updating..." : "Update Recipe"}
       </button>
     </form>
-
     /* <div className="card-body">
               <form>
                 <label>
@@ -285,7 +325,6 @@ export default function EditRecipeForm() {
                     onChange={handleInputChange}
                   />
                 </label>
-
                 <div className="dropdown">
                   <select
                     className="form-select"
@@ -304,7 +343,6 @@ export default function EditRecipeForm() {
                     ))}
                   </select>
                 </div>
-
                 <label>
                   Description:
                   <textarea
