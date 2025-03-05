@@ -1,5 +1,5 @@
 import { useEffect, useState, refetch } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useGetRecipeQuery,
   usePostReviewMutation,
@@ -30,13 +30,15 @@ export default function SingleRecipe() {
   const authUser = useSelector(getUser);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState();
+  const dispatch = useDispatch();
 
   // console.log("auth:", auth);
 
   // const user = useSelector((state) => state.confirmLogin.user);
   // console.log("User in component:", user);
 
-  const { data: favoriteRecipes, isSuccess: isFavoriteRecipesFetched } = useGetFavoriteRecipesQuery({ id });
+  const { data: favoriteRecipes, isSuccess: isFavoriteRecipesFetched } =
+    useGetFavoriteRecipesQuery({ id });
 
   const [recipeArr, setRecipeArr] = useState([]);
   useEffect(() => {
@@ -45,8 +47,6 @@ export default function SingleRecipe() {
     }
   }, [data, isSuccess]);
   console.log("Recipe array", recipeArr);
-
-  
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -57,6 +57,13 @@ export default function SingleRecipe() {
       name: data?.name,
     });
   };
+
+  useEffect(() => {
+    const storedUser = window.sessionStorage.getItem("user");
+    if (storedUser && !authUser) {
+      dispatch(confirmLogin(JSON.parse(storedUser)));
+    }
+  }, [authUser, dispatch]);
 
   const isCreator =
     authUser && recipeArr?.creatorId && recipeArr.creatorId === authUser.id;
@@ -214,12 +221,11 @@ export default function SingleRecipe() {
             )}
 
             <div className="card-body">
-              <EditRecipeForm id={id}/>  <button type="button" onClick={handleCancelClick}>
-                  Cancel
-                </button>
+              <EditRecipeForm id={id} />{" "}
+              <button type="button" onClick={handleCancelClick}>
+                Cancel
+              </button>
             </div>
-
-            
 
             {/* ADD INSTRUCTIONS AND INGREDIENTS TO FORM HERE */}
           </div>
@@ -265,9 +271,13 @@ export default function SingleRecipe() {
 
               {recipeArr?.categories?.map((cat) => {
                 return (
-                  <p key={cat.id} style={{marginRight: "6px"}} className="badge text-bg-secondary">
+                  <p
+                    key={cat.id}
+                    style={{ marginRight: "6px" }}
+                    className="badge text-bg-secondary"
+                  >
                     {cat.name}
-                  </p> 
+                  </p>
                 );
               })}
               <div className="star-rating">
