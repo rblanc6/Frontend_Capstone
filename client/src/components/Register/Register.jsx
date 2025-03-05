@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "./RegisterSlice";
-import { useDispatch } from "react-redux";
 import { confirmLogin } from "../../app/confirmLoginSlice";
+import { useDispatch } from "react-redux";
+
 
 export default function Register() {
   const [form, setForm] = useState({

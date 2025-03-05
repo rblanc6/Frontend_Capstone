@@ -19,11 +19,11 @@ const usersApi = api.injectEndpoints({
     }),
     
 
-    updateUser: builder.mutation({
-      query: ({ id, firstName, lastName, email }) => ({
-        url: `/auth/user/${id}`,
-        method: "PATCH",
-        body: JSON.stringify({ firstName, lastName, email }),
+    updateUserAdmin: builder.mutation({
+      query: ({ id, firstName, lastName, email, role }) => ({
+        url: `/admin/user/${id}`,
+        method: "PUT",
+        body: JSON.stringify({ firstName, lastName, email, role }),
         headers: {
           "Content-Type": "application/json",
           // Authorization: `Bearer ${window.localStorage.getItem("token")}`,
@@ -56,6 +56,6 @@ const usersApi = api.injectEndpoints({
 
 export const {
   useGetUsersQuery,
-  useUpdateUserMutation,
+  useUpdateUserAdminMutation,
   useDeleteUserMutation,
 } = usersApi;

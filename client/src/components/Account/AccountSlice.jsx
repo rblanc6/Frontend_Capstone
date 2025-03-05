@@ -15,7 +15,26 @@ const userDetailsApi = api.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
+
+    updateUser: builder.mutation({
+      query: ({ id, firstName, lastName, email, role }) => ({
+        url: `/auth/user/${id}`,
+        method: "PUT",
+        body: JSON.stringify({ firstName, lastName, email, role }),
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+        },
+        transformResponse: (response) => response.data.users,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
-export const { useGetUserQuery } = userDetailsApi;
+
+
+export const { useGetUserQuery, useUpdateUserMutation } = userDetailsApi;
