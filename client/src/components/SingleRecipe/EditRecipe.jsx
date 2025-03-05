@@ -11,6 +11,7 @@ export default function EditRecipeForm() {
     useGetCategoriesQuery();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
+
   const { id } = useParams();
   const {
     data: currentRecipe,
@@ -18,8 +19,9 @@ export default function EditRecipeForm() {
     isLoading,
   } = useGetRecipeQuery(id);
 
-  console.log("INGREDIENTS", currentRecipe?.ingredient);
-  console.log("CURRENT RECIPE", currentRecipe);
+  console.log("INGREDIENTS NAME", currentRecipe?.ingredient.name);
+  //   console.log("CURRENT RECIPE", currentRecipe);
+
 
   useEffect(() => {
     if (categorySuccess) {
@@ -36,7 +38,8 @@ export default function EditRecipeForm() {
     );
     setSelectedCategory(selectedOptions);
 
-    console.log(selectedOptions);
+    // console.log("SELECTED OPTIONS", selectedOptions);
+
   };
 
   const [recipe, setRecipe] = useState({
@@ -51,15 +54,12 @@ export default function EditRecipeForm() {
   const [error, setError] = useState(null);
 
 
-  console.log("Recipe ID from URL:", id); // Ensure this is not undefined
-
-
-  // Use the updateRecipe mutation hook
   const [updateRecipe, { isLoading: isUpdating, error: updateError }] =
     useUpdateRecipeMutation();
-  // When currentRecipe data is fetched, populate the form fields
+
   useEffect(() => {
     if (currentRecipe) {
+      console.log("Current Recipe Ingredients: ", currentRecipe.ingredient);
 
       setRecipe({
         name: currentRecipe.name,
@@ -72,12 +72,24 @@ export default function EditRecipeForm() {
         instructions: currentRecipe?.instructions || [],
         categories: currentRecipe.categories || [],
         photo: currentRecipe.photo,
-        creatorId: currentRecipe.creatorId, // Ensure this comes from the backend or user context
+        creatorId: currentRecipe.creatorId,
       });
 
+      setSelectedCategory(currentRecipe.categories?.map((cat) => cat.id) || []);
     }
   }, [currentRecipe]);
-  
+
+  //   useEffect(() => {
+  //     if (currentRecipe) {
+  //       setRecipe((prevRecipe) => ({
+  //         ...prevRecipe,
+  //         categories: currentRecipe.categories || [],
+  //       }));
+  //       setSelectedCategory(currentRecipe.categories?.map(cat => cat.id) || []);
+  //     }
+  //   }, [currentRecipe]);
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRecipe((prevState) => ({
@@ -241,38 +253,26 @@ export default function EditRecipeForm() {
       </div>
 
 
-      {/* <div>
-        <label>Instructions</label>
-        <textarea
-          name="instructions"
-          value={recipe.instructions.join("\n")}
-          onChange={(e) =>
-            setRecipe({ ...recipe, instructions: e.target.value.split("\n") })
-          }
-        />
-      </div> */}
-
-
-      </div>
       <div>
 
         <label>Instructions</label>
         <textarea
-    name="instructions"
-    value={recipe.instructions.map(instruction => instruction.instruction).join("\n")} // Ensure to join the 'step' property of each object
-    onChange={(e) => {
-      const instructionsArray = e.target.value
-        .split("\n")
-        .map((instruction) => ({ instruction: instruction.trim() })); // Convert back to objects with 'step' property
-      setRecipe({
-        ...recipe,
-        instructions: instructionsArray,
-      });
-    }}
-  />
-      </div>
+          name="instructions"
+          value={recipe.instructions
+            .map((instruction) => instruction.instruction)
+            .join("\n")}
+          onChange={(e) => {
+            const instructionsArray = e.target.value
+              .split("\n")
+              .map((instruction) => ({ instruction: instruction.trim() }));
+            setRecipe({
+              ...recipe,
+              instructions: instructionsArray,
+            });
+          }}
+        />
 
-      {/* <div> */}
+      </div>
 
       <div className="dropdown">
         <select
