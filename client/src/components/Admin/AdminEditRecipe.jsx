@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useGetRecipeQuery } from "./SingleRecipeSlice";
-import {
-  useUpdateRecipeMutation,
-  useGetCategoriesQuery,
-} from "../Recipes/RecipesSlice";
+import { useGetRecipeQuery } from "../SingleRecipe/SingleRecipeSlice";
+import { useGetCategoriesQuery } from "../Recipes/RecipesSlice";
+import { useUpdateRecipeAsAdminMutation } from "./AdminSlice";
 
-export default function EditRecipeForm({ onCancel, setIsEditing }) {
+export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
   const { data: category, isSuccess: categorySuccess } =
     useGetCategoriesQuery();
   const [categories, setCategories] = useState([]);
@@ -53,7 +51,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
   const [error, setError] = useState(null);
 
   const [updateRecipe, { isLoading: isUpdating, error: updateError }] =
-    useUpdateRecipeMutation();
+    useUpdateRecipeAsAdminMutation();
 
   const [removedIngredientIds, setRemovedIngredientIds] = useState([]);
   const [removedInstructionIds, setRemovedInstructionIds] = useState([]);
@@ -193,7 +191,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
     }
   };
 
-  const handleCancelClick = () => {
+  const handleAdminCancelClick = () => {
     setIsEditing(false);
   };
 
@@ -321,9 +319,8 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
             </button>
           </div>
           <div className="dropdown mt-3">
-            
-              <h4>Categories</h4>
-            
+            <h4>Categories</h4>
+
             {categories.map((category) => (
               <div className="form-check form-check-inline" key={category.id}>
                 <input
@@ -331,8 +328,8 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
                   type="checkbox"
                   id={`category-${category.id}`}
                   value={category.id}
-                  checked={selectedCategory.includes(category.id)} 
-                  onChange={handleCategoryChange} 
+                  checked={selectedCategory.includes(category.id)}
+                  onChange={handleCategoryChange}
                 />
                 <label
                   className="form-check-label"
@@ -371,7 +368,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
           <button
             type="button"
             className="button-details mt-4"
-            onClick={handleCancelClick}
+            onClick={handleAdminCancelClick}
           >
             Cancel
           </button>
