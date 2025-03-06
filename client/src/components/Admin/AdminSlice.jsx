@@ -17,7 +17,6 @@ const usersApi = api.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
-    
 
     updateUserAdmin: builder.mutation({
       query: ({ id, firstName, lastName, email, role }) => ({
@@ -51,6 +50,23 @@ const usersApi = api.injectEndpoints({
 
       invalidatesTags: ["User"],
     }),
+
+    updateRecipeAsAdmin: builder.mutation({
+      query: ({ id, updatedData }) => ({
+        url: `/admin/recipe/${id}`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(updatedData),
+
+        transformResponse: (response) => response.data,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+
+      invalidatesTags: ["Recipe"],
+    }),
   }),
 });
 
@@ -58,4 +74,5 @@ export const {
   useGetUsersQuery,
   useUpdateUserAdminMutation,
   useDeleteUserMutation,
+  useUpdateRecipeAsAdminMutation,
 } = usersApi;
