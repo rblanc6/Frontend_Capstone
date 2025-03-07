@@ -31,14 +31,25 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
 
   const handleCategoryChange = (e) => {
     const { value, checked } = e.target;
+    console.log(value);
+    console.log(checked);
+    const numValu = +value;
+    let temp = [...selectedCategory];
+    const found = temp.indexOf(numValu);
+    if (found !== -1) {
+      temp = [...temp.filter((element) => element !== numValu)];
+    } else {
+      temp.push(numValu);
+    }
+    setSelectedCategory(temp);
 
-    setSelectedCategory((prevSelected) => {
-      if (checked) {
-        return [...prevSelected, value];
-      } else {
-        return prevSelected.filter((categoryId) => categoryId !== value);
-      }
-    });
+    // setSelectedCategory((prevSelected) => {
+    //   if (checked) {
+    //     return [...prevSelected, value];
+    //   } else {
+    //     return prevSelected.filter((categoryId) => categoryId !== value);
+    //   }
+    // });
   };
 
   const [recipe, setRecipe] = useState({
@@ -165,6 +176,9 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
       (inst) => !inst.id || !removedInstructionIds.includes(inst.id)
     );
     const newIngredients = recipe.ingredients.filter((ing) => !ing.id);
+    const removedCategoryIds = currentRecipe.categories
+      .filter((cat) => !selectedCategory.includes(cat.id))
+      .map((cat) => cat.id);
 
     const updatedData = {
       name: recipe.name,
@@ -176,6 +190,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
       creatorId: recipe.creatorId,
       removedIngredientIds: Array.from(removedIngredientIds),
       removedInstructionIds: Array.from(removedInstructionIds),
+      removedCategoryIds: removedCategoryIds,
     };
 
     try {
@@ -321,9 +336,8 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
             </button>
           </div>
           <div className="dropdown mt-3">
-            
-              <h4>Categories</h4>
-            
+            <h4>Categories</h4>
+
             {categories.map((category) => (
               <div className="form-check form-check-inline" key={category.id}>
                 <input
@@ -331,8 +345,9 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
                   type="checkbox"
                   id={`category-${category.id}`}
                   value={category.id}
-                  checked={selectedCategory.includes(category.id)} 
-                  onChange={handleCategoryChange} 
+                  checked={selectedCategory.includes(category.id)}
+                  onChange={handleCategoryChange}
+                  name={category.name}
                 />
                 <label
                   className="form-check-label"

@@ -71,9 +71,10 @@ export default function NewRecipe() {
   };
 
   const handleAddInstruction = () => {
-    if (instruction.trim() !== "") {
+    if (instruction !== "") {
       setInstructions((prev) => [...prev, instruction]);
       setInstruction(""); // Clear the instruction input after adding
+      console.log(instruction)
     }
   };
 
@@ -138,18 +139,25 @@ export default function NewRecipe() {
             <label>Instructions</label>
             <input
               type="text"
-              id="instructions"
-              value={instructions}
-              onChange={(e) => setInstructions(e.target.value)}
-              placeholder="Instructions"
+              id="instruction"
+              value={instruction}
+              onChange={(e) => setInstruction(e.target.value)}
+              placeholder="Instruction"
             ></input>
           </div>
           <button type="button" onClick={handleAddInstruction}>
             Add Instruction
           </button>
           <div>
+        <ul>
+          {/* {instructions.map((inst, index) => (
+            <li key={index}>{inst}</li>
+          ))} */}
+        </ul>
+      </div>
+          <div>
             <h5>Instructions Preview:</h5>
-            <ul>
+             <ul>
               {Array.isArray(instructions) && instructions.length > 0 ? (
                 instructions.map((instruct, index) => (
                   <li key={index}>{instruct}</li>
