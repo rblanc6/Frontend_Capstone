@@ -106,8 +106,8 @@ button:focus-visible {
 
 .container {
   padding: 2em 0;
-  position: relative;
-  min-height: 100vh;
+  /* position: relative; */
+  /* min-height: 100vh; */
 }
 
 .home-container {
@@ -270,7 +270,7 @@ ul.pagination {
 }
 
 .footer {
-  position: relative;
+  /* position: relative; */
   bottom: 0;
   width:100%;
   border-top: solid 1px rgb(223, 223, 223)

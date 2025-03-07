@@ -2,7 +2,7 @@
 export default function Footer() {
   return (
     <footer
-      className="text-center text-white   footer"
+      className="text-center text-white footer"
     >
       <div className=" pt-4">
         <section className="mb-1">
