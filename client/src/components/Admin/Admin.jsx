@@ -2,6 +2,7 @@ import {
   useGetUsersQuery,
   useDeleteUserMutation,
   useUpdateUserAdminMutation,
+  // useViewUserDetailsMutation,
 } from "./AdminSlice";
 import { useEffect, useState } from "react";
 
@@ -9,6 +10,7 @@ export default function Admin() {
   const { data, isSuccess } = useGetUsersQuery();
   const [deleteUser] = useDeleteUserMutation();
   const [updateUser] = useUpdateUserAdminMutation();
+  // const [viewUserDetails] = useViewUserDetailsMutation();
   const [userArr, setUserArr] = useState();
   const [editUser, setEditUser] = useState(null);
   const [formData, setFormData] = useState({
@@ -171,7 +173,7 @@ export default function Admin() {
                                 <option value="ADMIN">Admin</option>
                               </select>
                             ) : (
-                              <span>{user.role}</span> 
+                              <span>{user.role}</span>
                             )}
                           </p>
 
@@ -191,6 +193,9 @@ export default function Admin() {
                             </button>
                             <button onClick={() => deleteUser({ id: user.id })}>
                               Delete
+                            </button>
+                            <button onClick={() => viewUserDetails()}>
+                              Content Overview
                             </button>
                           </div>
                         </div>

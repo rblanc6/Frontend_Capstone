@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useGetRecipeQuery } from "../SingleRecipe/SingleRecipeSlice";
-import { useGetCategoriesQuery } from "../Recipes/RecipesSlice";
+import {
+  useGetCategoriesQuery,
+  useGetIngredientUnitsQuery,
+} from "../Recipes/RecipesSlice";
 import { useUpdateRecipeAsAdminMutation } from "./AdminSlice";
 import ImageUpload from "../SingleRecipe/ImageUpload";
 
 export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
   const { data: category, isSuccess: categorySuccess } =
     useGetCategoriesQuery();
+  const { data: unit, isSuccess: unitsSuccess } = useGetIngredientUnitsQuery();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
+  const [units, setUnits] = useState([]);
 
   const { id } = useParams();
   const {
@@ -23,6 +28,12 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
       setCategories(category);
     }
   }, [category, categorySuccess]);
+
+  useEffect(() => {
+    if (unitsSuccess) {
+      setUnits(unit);
+    }
+  }, [unit]);
 
   useEffect(() => {
     console.log("Selected Categories on load:", selectedCategory);
@@ -184,8 +195,8 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
     };
 
     if (recipe.photo) {
-        updatedData.photo = recipe.photo;
-      }
+      updatedData.photo = recipe.photo;
+    }
 
     try {
       const { data } = await updateRecipe({
@@ -205,7 +216,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
   const handleImageUploadSuccess = (url) => {
     setRecipe((prevData) => ({
       ...prevData,
-      photo: url,  
+      photo: url,
     }));
   };
 
@@ -248,7 +259,6 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
               onChange={handleChange}
             />
           </div>
-          
           <div className="mt-3">
             <label>
               <h4>Ingredients</h4>
@@ -272,14 +282,19 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
                   placeholder="Quantity"
                   onChange={(e) => handleIngredientChange(index, e)}
                 />
-                <input
-                  type="text"
+                <select
                   name="unitName"
-                  className="form-control"
+                  className="form-select"
                   value={ingredient.unitName}
-                  placeholder="Unit Name"
                   onChange={(e) => handleIngredientChange(index, e)}
-                />
+                >
+                  <option value="">Select Unit</option>
+                  {units.map((unit) => (
+                    <option key={unit.id} value={unit.name}>
+                      {unit.name}
+                    </option>
+                  ))}
+                </select>
                 <button
                   className="btn btn-outline-secondary"
                   type="button"
@@ -331,22 +346,26 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
             <h4>Categories</h4>
             {categories.map((category) => (
               <ul
-              className="form-check form-check-inline category-list" key={category.id}>
-                <li><input
-                  className="form-check-input"
-                  type="checkbox"
-                  id={`category-${category.id}`}
-                  value={category.id}
-                  checked={selectedCategory.includes(category.id)}
-                  onChange={handleCategoryChange}
-                  name={category.name}
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor={`category-${category.id}`}
-                >
-                  {category.name}
-                </label></li>
+                className="form-check form-check-inline category-list"
+                key={category.id}
+              >
+                <li>
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id={`category-${category.id}`}
+                    value={category.id}
+                    checked={selectedCategory.includes(category.id)}
+                    onChange={handleCategoryChange}
+                    name={category.name}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor={`category-${category.id}`}
+                  >
+                    {category.name}
+                  </label>
+                </li>
               </ul>
             ))}
           </div>
