@@ -305,3 +305,28 @@ ul.category-list li {
   height: 10px;
 }
 
+.edit-review {
+  padding:15px
+}
+
+li.comment-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+}
+
+.comment-content {
+  display: flex;
+  width: 100%; 
+  justify-content: space-between; 
+}
+
+.comment-text {
+  flex-grow: 1; 
+}
+
+.comment-actions {
+  display: flex;
+  align-items: center; 
+  justify-content: flex-end;
+}
