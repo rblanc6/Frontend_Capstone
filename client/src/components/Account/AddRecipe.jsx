@@ -210,11 +210,12 @@ export default function AddRecipe() {
               <select
                 name="unit"
                 required
+                className="form-select"
                 value={ingredient.unit}
                 aria-label="Units"
                 onChange={(e) => handleIngredientChange(index, e)}
               >
-                <option value="">Units</option>
+                <option value="">Select Units</option>
                 {units.map((unit) => (
                   <option key={unit.id} value={unit.name}>
                     {unit.name}

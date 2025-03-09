@@ -69,11 +69,11 @@ export default function Favorites() {
                 </div>
                 <div className="col-md-8">
                   <div className="card-body">
-                    <h5 className="card-title">
+                    <h4 className="card-title">
                       <Link className={"link-style"} to={`/recipes/${fav.recipeId}`}>
                         {fav.recipe.name}
                       </Link>
-                    </h5>
+                    </h4>
                     <p className="card-text">{fav.recipe.description}</p>
                   </div>
                 </div>
