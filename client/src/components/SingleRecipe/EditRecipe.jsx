@@ -5,6 +5,7 @@ import {
   useUpdateRecipeMutation,
   useGetCategoriesQuery,
 } from "../Recipes/RecipesSlice";
+import ImageUpload from "./ImageUpload";
 
 export default function EditRecipeForm({ onCancel, setIsEditing }) {
   const { data: category, isSuccess: categorySuccess } =
@@ -33,23 +34,15 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
     const { value, checked } = e.target;
     console.log(value);
     console.log(checked);
-    const numValu = +value;
+    const numValue = +value;
     let temp = [...selectedCategory];
-    const found = temp.indexOf(numValu);
+    const found = temp.indexOf(numValue);
     if (found !== -1) {
-      temp = [...temp.filter((element) => element !== numValu)];
+      temp = [...temp.filter((element) => element !== numValue)];
     } else {
-      temp.push(numValu);
+      temp.push(numValue);
     }
     setSelectedCategory(temp);
-
-    // setSelectedCategory((prevSelected) => {
-    //   if (checked) {
-    //     return [...prevSelected, value];
-    //   } else {
-    //     return prevSelected.filter((categoryId) => categoryId !== value);
-    //   }
-    // });
   };
 
   const [recipe, setRecipe] = useState({
@@ -186,12 +179,15 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
       ingredients: newIngredients,
       instructions: updatedInstructions,
       categories: selectedCategory,
-      photo: recipe.photo,
       creatorId: recipe.creatorId,
       removedIngredientIds: Array.from(removedIngredientIds),
       removedInstructionIds: Array.from(removedInstructionIds),
       removedCategoryIds: removedCategoryIds,
     };
+
+    if (recipe.photo) {
+      updatedData.photo = recipe.photo;
+    }
 
     try {
       const { data } = await updateRecipe({
@@ -206,6 +202,13 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
     } catch (error) {
       setError(error.message || "Error updating recipe");
     }
+  };
+
+  const handleImageUploadSuccess = (url) => {
+    setRecipe((prevData) => ({
+      ...prevData,
+      photo: url, 
+    }));
   };
 
   const handleCancelClick = () => {
@@ -224,7 +227,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
           )}
           <div>
             <label>
-              <h4>Name</h4>
+              <h4>Recipe Name</h4>
             </label>
             <br />
             <input
@@ -249,27 +252,15 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
           </div>
           <div className="mt-3">
             <label>
-              <h4>Photo URL</h4>
-            </label>
-            <br />
-            <input
-              className="form-control"
-              type="text"
-              name="photo"
-              value={recipe.photo}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mt-3">
-            <label>
               <h4>Ingredients</h4>
             </label>
             <br />
             {recipe.ingredients.map((ingredient, index) => (
-              <div key={index}>
+              <div className="input-group mb-2" key={index}>
                 <input
                   type="text"
                   name="name"
+                  className="form-control"
                   value={ingredient.name}
                   placeholder="Ingredient Name"
                   onChange={(e) => handleIngredientChange(index, e)}
@@ -277,6 +268,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
                 <input
                   type="number"
                   name="quantity"
+                  className="form-control"
                   value={ingredient.quantity}
                   placeholder="Quantity"
                   onChange={(e) => handleIngredientChange(index, e)}
@@ -284,12 +276,13 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
                 <input
                   type="text"
                   name="unitName"
+                  className="form-control"
                   value={ingredient.unitName}
                   placeholder="Unit Name"
                   onChange={(e) => handleIngredientChange(index, e)}
                 />
                 <button
-                  className="btn btn-secondary btn-sm mt-1 mb-3"
+                  className="btn btn-outline-secondary"
                   type="button"
                   onClick={() => handleRemoveIngredient(index)}
                 >
@@ -298,7 +291,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
               </div>
             ))}
             <button
-              className="btn btn-secondary btn-sm mt-3"
+              className="btn btn-secondary btn-sm"
               type="button"
               onClick={handleAddIngredient}
             >
@@ -311,7 +304,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
             </label>
             <br />
             {recipe.instructions.map((instruction, index) => (
-              <div key={index}>
+              <div className="input-group mb-2" key={index}>
                 <textarea
                   name="instructions"
                   className="form-control"
@@ -319,7 +312,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
                   onChange={(e) => handleInstructionChange(index, e)}
                 />
                 <button
-                  className="btn btn-secondary btn-sm mt-1"
+                  className="btn btn-outline-secondary"
                   type="button"
                   onClick={() => handleRemoveInstruction(index)}
                 >
@@ -328,52 +321,46 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
               </div>
             ))}
             <button
-              className="btn btn-secondary btn-sm mt-3"
+              className="btn btn-secondary btn-sm"
               type="button"
               onClick={handleAddInstruction}
             >
               Add Instruction
             </button>
           </div>
-          <div className="dropdown mt-3">
+          <div className="mt-3">
             <h4>Categories</h4>
-
             {categories.map((category) => (
-              <div className="form-check form-check-inline" key={category.id}>
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id={`category-${category.id}`}
-                  value={category.id}
-                  checked={selectedCategory.includes(category.id)}
-                  onChange={handleCategoryChange}
-                  name={category.name}
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor={`category-${category.id}`}
-                >
-                  {category.name}
-                </label>
-                {/* <p>{selectedCategory.includes(category.id) ? 'checked' : 'unchecked'}</p> */}
-              </div>
+              <ul
+                className="form-check form-check-inline category-list"
+                key={category.id}
+              >
+                <li>
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id={`category-${category.id}`}
+                    value={category.id}
+                    checked={selectedCategory.includes(category.id)}
+                    onChange={handleCategoryChange}
+                    name={category.name}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor={`category-${category.id}`}
+                  >
+                    {category.name}
+                  </label>
+                </li>
+              </ul>
             ))}
-            {/* <select
-            className="form-select"
-            id="category"
-            value={selectedCategory}
-            multiple
-            size="6"
-            aria-label="Multiple select example"
-            onChange={handleCategoryChange}
-          >
-            <option disabled>Categories</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select> */}
+          </div>
+          <div className="mt-3">
+            <label>
+              <h4>Update Photo</h4>
+            </label>
+            <br />
+            <ImageUpload onUploadSuccess={handleImageUploadSuccess} />
           </div>
           <button
             type="submit"

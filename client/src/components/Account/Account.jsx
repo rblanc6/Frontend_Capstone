@@ -58,13 +58,13 @@ export default function Account() {
                     <div className="card-body">
                       <h5 className="card-title">{rec.name}</h5>
                       <p className="card-text">{rec.description}</p>
-                      <Link
+                      <p><Link
                         to={`/recipes/${rec.id}`}
                         className="button-details"
                         style={{ textDecoration: "none" }}
                       >
                         View Recipe
-                      </Link>
+                      </Link></p>
                     </div>
                   </div>
                 </div>
@@ -75,16 +75,6 @@ export default function Account() {
           </div>
         </div>
         <br />
-        <p>
-          <Link
-            to="/share-recipe"
-            className="button-details-alt"
-            style={{ textDecoration: "none" }}
-          >
-            Share a Recipe
-          </Link>
-          <br />
-        </p>
         <p>
           {Array.isArray(user?.recipes) && user.recipes?.length > 3 ? (
             <Link
@@ -98,6 +88,17 @@ export default function Account() {
             ""
           )}
         </p>
+        <p>
+          <Link
+            to="/share-recipe"
+            className="button-details-alt"
+            style={{ textDecoration: "none" }}
+          >
+            Share a Recipe
+          </Link>
+          <br />
+        </p>
+        
         <hr></hr>
         <h1 className="display-6">My Favorite Recipes</h1>
         <div>

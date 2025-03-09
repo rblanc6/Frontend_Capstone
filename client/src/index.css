@@ -15,12 +15,21 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #245e94;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #de296c;
 }
+
+.link-style {
+  color: #245e94
+}
+
+.link-style:hover {
+  color: #de296c
+}
+
 
 body {
   margin: 0;
@@ -47,7 +56,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #245e94;
 }
 button:focus,
 button:focus-visible {
@@ -60,7 +69,7 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: #245e94;
   }
   button {
     background-color: #f9f9f9;
@@ -106,8 +115,9 @@ button:focus-visible {
 
 .container {
   padding: 2em 0;
-  /* position: relative; */
-  /* min-height: 100vh; */
+  position: relative;
+  min-height: 70vh;
+  width: "100%";
 }
 
 .home-container {
@@ -265,13 +275,34 @@ ul.pagination {
 }
 
 .social-links:hover,
-.social-links:focus  {
+.social-links:focus {
   color: #de296c;
 }
 
 .footer {
-  /* position: relative; */
+  position: relative;
   bottom: 0;
-  width:100%;
-  border-top: solid 1px rgb(223, 223, 223)
+  width: 100%;
+  /* border-top: solid 1px rgb(223, 223, 223); */
 }
+
+ul.category-list {
+  margin: 0 0 0 20px;
+  padding: 0;
+  list-style: none;
+}
+
+ul.category-list li {
+  border: 1px transparent solid;
+  display: inline-block;
+  width: 12em;
+}
+
+.carousel .carousel-indicators button {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+

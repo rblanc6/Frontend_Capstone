@@ -78,7 +78,7 @@ export default function NavBar({ token }) {
                     <ul className="dropdown-menu">
                       <li>
                         <Link
-                          to="/share-recipe"
+                          to="/new-recipe"
                           className="dropdown-item"
                           href="#"
                         >

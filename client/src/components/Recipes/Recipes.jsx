@@ -14,9 +14,19 @@ export default function Recipes() {
 
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 12;
-  const endOffset = itemOffset + itemsPerPage;
-  const currentItems = recipeArr.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(recipeArr.length / itemsPerPage);
+
+  const applyFilter = (data, searchTerm) => {
+    return searchTerm
+      ? data.filter((recipe) =>
+          recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : data;
+  };
+
+  const getCurrentPageItems = (filteredRecipes) => {
+    const endOffset = itemOffset + itemsPerPage;
+    return filteredRecipes.slice(itemOffset, endOffset);
+  };
 
   const seeRecipeDetails = (id) => {
     navigate(`/recipes/${id}`);
@@ -32,23 +42,20 @@ export default function Recipes() {
     setRecipeFilter({
       recipeSearch: e.target.value,
     });
-    const temp = e.target.value.toLowerCase();
-    if (temp.length === 0) {
-      setRecipeArr(data);
-    } else {
-      const filteredRecipes = data.filter((element) => {
-        return element.name.toLowerCase().includes(temp);
-      });
-      setRecipeArr(filteredRecipes);
-    }
+    setItemOffset(0);
   };
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % recipeArr.length;
+    const newOffset = (event.selected * itemsPerPage) % filteredRecipes.length;
     setItemOffset(newOffset);
   };
 
+  const filteredRecipes = applyFilter(recipeArr, recipeFilter.recipeSearch);
+  const currentItems = getCurrentPageItems(filteredRecipes);
+  const pageCount = Math.ceil(filteredRecipes.length / itemsPerPage);
+
   console.log(currentItems);
+
   return (
     <>
       <div className="container">
@@ -104,9 +111,8 @@ export default function Recipes() {
                     <h5 className="card-title">{recipe.name}</h5>
                     <p className="card-text">{recipe.description}</p>
                   </div>
-                  <div className="card-body" >
+                  <div className="card-body">
                     <button
-                      // className="btn btn-outline-primary btn-sm "
                       className="button-details"
                       onClick={() => seeRecipeDetails(recipe.id)}
                       style={{

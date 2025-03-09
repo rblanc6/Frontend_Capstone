@@ -1,8 +1,8 @@
 import { useGetUserQuery } from "./AccountSlice";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useParams, Link,  } from "react-router-dom";
 import ReactPaginate from "react-paginate";
+
 
 export default function MyRecipes() {
   const { id } = useParams();
@@ -11,11 +11,12 @@ export default function MyRecipes() {
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(5);
 
+  
   useEffect(() => {
     if (isSuccess) {
       setUser(data);
     }
-  }, [data]);
+  }, [data, isSuccess]);
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
@@ -31,12 +32,18 @@ export default function MyRecipes() {
       <div className="container">
         <h2>My Recipes</h2>
 
+
+
+
+
+
+
         {myRecipes?.map((recipe) => {
           return (
             <div
               key={recipe.id}
               className="card mb-3"
-              style={{ maxWidth: "540px" }}
+              // style={{ maxWidth: "540px" }}
             >
               <div className="row g-0">
                 <div className="col-md-4">
@@ -65,11 +72,11 @@ export default function MyRecipes() {
                 </div>
                 <div className="col-md-8">
                   <div className="card-body">
-                    <h5 className="card-title">
-                      <Link to={`/recipes/${recipe.id}`}>
+                    <h4 className="card-title">
+                      <Link className={"link-style"} to={`/recipes/${recipe.id}`}>
                         {recipe.name}
                       </Link>
-                    </h5>
+                    </h4>
                     <p className="card-text">{recipe.description}</p>
                   </div>
                 </div>

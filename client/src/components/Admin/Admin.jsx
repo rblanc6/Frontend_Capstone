@@ -69,7 +69,7 @@ export default function Admin() {
   return (
     <div className="container">
       <h2>Admin Dashboard</h2>
-      <p style={{ wordWrap: "break-word" }}>Token: {token}</p>
+      {/* <p style={{ wordWrap: "break-word" }}>Token: {token}</p> */}
 
       <h3>User List:</h3>
 

@@ -1,28 +1,33 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetRecipeQuery } from "./SingleRecipeSlice";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   useAddFavoriteRecipeMutation,
   useDeleteFavoriteRecipeMutation,
   useGetFavoriteRecipesQuery,
+  useDeleteRecipeMutation,
 } from "../Recipes/RecipesSlice";
 import { getLogin, getUser, confirmLogin } from "../../app/confirmLoginSlice";
 import EditRecipeForm from "./EditRecipe";
 import AdminEditRecipeForm from "../Admin/AdminEditRecipe";
 import ReviewSection from "./Reviews";
+import { useDeleteRecipeAsAdminMutation } from "../Admin/AdminSlice";
 
 export default function SingleRecipe() {
   const { id } = useParams();
   const { data, isSuccess } = useGetRecipeQuery(id);
   const [favoriteRecipe] = useAddFavoriteRecipeMutation();
   const [deleteFavoriteRecipe] = useDeleteFavoriteRecipeMutation();
+  const [deleteRecipe] = useDeleteRecipeMutation(id);
+  const [deleteRecipeAsAdmin] = useDeleteRecipeAsAdminMutation(id);
   const [isFavorite, setIsFavorite] = useState(false);
   const auth = useSelector(getLogin);
   const authUser = useSelector(getUser);
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useDispatch();
   const role = window.sessionStorage.getItem("role");
+  const navigate = useNavigate();
 
   const { data: favoriteRecipes, isSuccess: isFavoriteRecipesFetched } =
     useGetFavoriteRecipesQuery({ id });
@@ -34,6 +39,28 @@ export default function SingleRecipe() {
     }
   }, [data, isSuccess]);
   console.log("Recipe array", recipeArr);
+
+  const handleDeleteClick = (id) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      deleteRecipe({ id });
+      alert("Recipe deleted.");
+      navigate("/");
+      console.log(`Deleting item with ID: ${id}`);
+    } else {
+      console.log("Deletion cancelled.");
+    }
+  };
+
+  const handleDeleteAdminClick = (id) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      deleteRecipeAsAdmin({ id });
+      alert("Recipe deleted.");
+      navigate("/");
+      console.log(`Deleting item with ID: ${id}`);
+    } else {
+      console.log("Deletion cancelled.");
+    }
+  };
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -174,39 +201,64 @@ export default function SingleRecipe() {
               )}
 
               <div className="card-body">
-                <h5 className="card-title">
-                  {recipeArr.name}{" "}
-                  {auth && (
-                    <button onClick={handleFavorite} className="btn">
-                      {" "}
-                      <span>
-                        {isFavorite ? (
+                <div className="d-flex mb-0">
+                  <div className="p-0">
+                    <figure>
+                      <blockquote className="blockquote">
+                        <h2>{recipeArr.name}</h2>
+                      </blockquote>
+                      <figcaption className="blockquote-footer">
+                        {recipeArr?.user?.firstName}{" "}
+                        {recipeArr?.user?.lastName[0]}
+                      </figcaption>
+                    </figure>
+                  </div>
+                  <div className="ms-auto p-0">
+                    <span className="h5">
+                      {auth && (
+                        <button onClick={handleFavorite} className="btn">
+                          {" "}
+                          <span>
+                            {isFavorite ? (
+                              <i
+                                className="bi bi-heart-fill"
+                                style={{ color: "red" }}
+                              ></i>
+                            ) : (
+                              <i className="bi bi-heart"></i>
+                            )}
+                          </span>
+                        </button>
+                      )}{" "}
+                      {isCreator && (
+                        <>
                           <i
-                            className="bi bi-heart-fill"
-                            style={{ color: "red" }}
+                            className="bi bi-pencil-square"
+                            onClick={handleEditClick}
                           ></i>
-                        ) : (
-                          <i className="bi bi-heart"></i>
-                        )}
-                      </span>
-                    </button>
-                  )}{" "}
-                  {isCreator && (
-                    <>
-                      <i className="bi bi-pencil" onClick={handleEditClick}></i>
-                      &nbsp;&nbsp;&nbsp;<i className="bi bi-trash"></i>
-                    </>
-                  )}
-                  {role === "ADMIN" && !isCreator && (
-                    <>
-                      <i
-                        className="bi bi-pencil-square"
-                        onClick={handleAdminEditClick}
-                      ></i>
-                      &nbsp;&nbsp;&nbsp;<i className="bi bi-trash"></i>
-                    </>
-                  )}
-                </h5>
+                          &nbsp;&nbsp;&nbsp;
+                          <i
+                            className="bi bi-trash"
+                            onClick={() => handleDeleteClick(recipeArr.id)}
+                          ></i>
+                        </>
+                      )}
+                      {role === "ADMIN" && !isCreator && (
+                        <>
+                          <i
+                            className="bi bi-pencil-square"
+                            onClick={handleAdminEditClick}
+                          ></i>
+                          &nbsp;&nbsp;&nbsp;
+                          <i
+                            className="bi bi-trash"
+                            onClick={() => handleDeleteAdminClick(recipeArr.id)}
+                          ></i>
+                        </>
+                      )}
+                    </span>
+                  </div>
+                </div>
 
                 {recipeArr?.categories?.map((cat) => {
                   return (

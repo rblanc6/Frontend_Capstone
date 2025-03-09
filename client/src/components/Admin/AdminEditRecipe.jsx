@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useGetRecipeQuery } from "../SingleRecipe/SingleRecipeSlice";
 import { useGetCategoriesQuery } from "../Recipes/RecipesSlice";
 import { useUpdateRecipeAsAdminMutation } from "./AdminSlice";
+import ImageUpload from "../SingleRecipe/ImageUpload";
 
 export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
   const { data: category, isSuccess: categorySuccess } =
@@ -29,14 +30,17 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
 
   const handleCategoryChange = (e) => {
     const { value, checked } = e.target;
-
-    setSelectedCategory((prevSelected) => {
-      if (checked) {
-        return [...prevSelected, value];
-      } else {
-        return prevSelected.filter((categoryId) => categoryId !== value);
-      }
-    });
+    console.log(value);
+    console.log(checked);
+    const numValue = +value;
+    let temp = [...selectedCategory];
+    const found = temp.indexOf(numValue);
+    if (found !== -1) {
+      temp = [...temp.filter((element) => element !== numValue)];
+    } else {
+      temp.push(numValue);
+    }
+    setSelectedCategory(temp);
   };
 
   const [recipe, setRecipe] = useState({
@@ -163,6 +167,9 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
       (inst) => !inst.id || !removedInstructionIds.includes(inst.id)
     );
     const newIngredients = recipe.ingredients.filter((ing) => !ing.id);
+    const removedCategoryIds = currentRecipe.categories
+      .filter((cat) => !selectedCategory.includes(cat.id))
+      .map((cat) => cat.id);
 
     const updatedData = {
       name: recipe.name,
@@ -170,11 +177,15 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
       ingredients: newIngredients,
       instructions: updatedInstructions,
       categories: selectedCategory,
-      photo: recipe.photo,
       creatorId: recipe.creatorId,
       removedIngredientIds: Array.from(removedIngredientIds),
       removedInstructionIds: Array.from(removedInstructionIds),
+      removedCategoryIds: removedCategoryIds,
     };
+
+    if (recipe.photo) {
+        updatedData.photo = recipe.photo;
+      }
 
     try {
       const { data } = await updateRecipe({
@@ -189,6 +200,13 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
     } catch (error) {
       setError(error.message || "Error updating recipe");
     }
+  };
+
+  const handleImageUploadSuccess = (url) => {
+    setRecipe((prevData) => ({
+      ...prevData,
+      photo: url,  
+    }));
   };
 
   const handleAdminCancelClick = () => {
@@ -207,7 +225,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
           )}
           <div>
             <label>
-              <h4>Name</h4>
+              <h4>Recipe Name</h4>
             </label>
             <br />
             <input
@@ -230,29 +248,18 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
               onChange={handleChange}
             />
           </div>
-          <div className="mt-3">
-            <label>
-              <h4>Photo URL</h4>
-            </label>
-            <br />
-            <input
-              className="form-control"
-              type="text"
-              name="photo"
-              value={recipe.photo}
-              onChange={handleChange}
-            />
-          </div>
+          
           <div className="mt-3">
             <label>
               <h4>Ingredients</h4>
             </label>
             <br />
             {recipe.ingredients.map((ingredient, index) => (
-              <div key={index}>
+              <div className="input-group mb-2" key={index}>
                 <input
                   type="text"
                   name="name"
+                  className="form-control"
                   value={ingredient.name}
                   placeholder="Ingredient Name"
                   onChange={(e) => handleIngredientChange(index, e)}
@@ -260,6 +267,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
                 <input
                   type="number"
                   name="quantity"
+                  className="form-control"
                   value={ingredient.quantity}
                   placeholder="Quantity"
                   onChange={(e) => handleIngredientChange(index, e)}
@@ -267,12 +275,13 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
                 <input
                   type="text"
                   name="unitName"
+                  className="form-control"
                   value={ingredient.unitName}
                   placeholder="Unit Name"
                   onChange={(e) => handleIngredientChange(index, e)}
                 />
                 <button
-                  className="btn btn-secondary btn-sm mt-1 mb-3"
+                  className="btn btn-outline-secondary"
                   type="button"
                   onClick={() => handleRemoveIngredient(index)}
                 >
@@ -281,7 +290,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
               </div>
             ))}
             <button
-              className="btn btn-secondary btn-sm mt-3"
+              className="btn btn-secondary btn-sm"
               type="button"
               onClick={handleAddIngredient}
             >
@@ -294,7 +303,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
             </label>
             <br />
             {recipe.instructions.map((instruction, index) => (
-              <div key={index}>
+              <div className="input-group mb-2" key={index}>
                 <textarea
                   name="instructions"
                   className="form-control"
@@ -302,7 +311,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
                   onChange={(e) => handleInstructionChange(index, e)}
                 />
                 <button
-                  className="btn btn-secondary btn-sm mt-1"
+                  className="btn btn-outline-secondary"
                   type="button"
                   onClick={() => handleRemoveInstruction(index)}
                 >
@@ -311,7 +320,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
               </div>
             ))}
             <button
-              className="btn btn-secondary btn-sm mt-3"
+              className="btn btn-secondary btn-sm "
               type="button"
               onClick={handleAddInstruction}
             >
@@ -320,42 +329,33 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
           </div>
           <div className="dropdown mt-3">
             <h4>Categories</h4>
-
             {categories.map((category) => (
-              <div className="form-check form-check-inline" key={category.id}>
-                <input
+              <ul
+              className="form-check form-check-inline category-list" key={category.id}>
+                <li><input
                   className="form-check-input"
                   type="checkbox"
                   id={`category-${category.id}`}
                   value={category.id}
                   checked={selectedCategory.includes(category.id)}
                   onChange={handleCategoryChange}
+                  name={category.name}
                 />
                 <label
                   className="form-check-label"
                   htmlFor={`category-${category.id}`}
                 >
                   {category.name}
-                </label>
-                {/* <p>{selectedCategory.includes(category.id) ? 'checked' : 'unchecked'}</p> */}
-              </div>
+                </label></li>
+              </ul>
             ))}
-            {/* <select
-            className="form-select"
-            id="category"
-            value={selectedCategory}
-            multiple
-            size="6"
-            aria-label="Multiple select example"
-            onChange={handleCategoryChange}
-          >
-            <option disabled>Categories</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select> */}
+          </div>
+          <div className="mt-3">
+            <label>
+              <h4>Update Photo</h4>
+            </label>
+            <br />
+            <ImageUpload onUploadSuccess={handleImageUploadSuccess} />
           </div>
           <button
             type="submit"
