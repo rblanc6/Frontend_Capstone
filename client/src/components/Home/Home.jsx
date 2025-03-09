@@ -33,9 +33,42 @@ export default function Home() {
   useEffect(() => {
     if (isSuccess && data?.length > 0) {
       setFeaturedRecipes(getRandomRecipes(data, 3));
-      setCarouselRecipes(getRandomRecipes(data, 10));
+      setCarouselRecipes(getRandomRecipes(data, 7));
     }
   }, [data, isSuccess]);
+
+  console.log(featuredRecipes);
+
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return totalRating / reviews.length;
+  };
+
+  const renderStarAverage = (rating) => {
+    const totalStars = 5;
+    let stars = [];
+
+    for (let i = 0; i < totalStars; i++) {
+      if (i < rating) {
+        stars.push(
+          <span key={i} className="star-rating">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="star-rating-empty">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      }
+    }
+
+    return stars;
+  };
+
+  console.log("REVIEW", data?.recipe);
 
   return (
     <>
@@ -65,8 +98,8 @@ export default function Home() {
       <div className="container">
         <div className="home-container">
           <div>
-          <h3 className="mt-4">Trending Now</h3>
-            <Carousel >
+            <h3 className="mt-4">Trending Now</h3>
+            <Carousel>
               {carouselRecipes.map((recipe) => (
                 <Carousel.Item
                   key={recipe.id}
@@ -79,6 +112,7 @@ export default function Home() {
                       width: "100%",
                       height: "300px",
                       objectFit: "cover",
+                      borderRadius: "15px",
                     }}
                     src={
                       recipe.photo ||
@@ -90,10 +124,10 @@ export default function Home() {
                     <p>
                       <button
                         onClick={() => seeRecipeDetails(recipe.id)}
-                        className="btn btn-link text-white"
-                        style={{ background: "rgba(0, 0, 0, 0.4)" }}
+                        className="btn text-white pb-0 pt-2"
+                        style={{ background: "#245e94" }}
                       >
-                        <h2>{recipe.name}</h2>
+                        <h4>{recipe.name}</h4>
                       </button>
                     </p>
                   </Carousel.Caption>
@@ -106,7 +140,18 @@ export default function Home() {
             {error && "Error loading recipes."}
           </p>
           <div>
-            <p className="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur commodo dignissim lorem non consequat. Duis pharetra euismod dignissim.</p><p>Donec libero libero, sagittis non arcu et, aliquam sagittis ligula. Vivamus ornare augue id magna luctus, nec aliquet erat laoreet. Aliquam erat volutpat. Praesent vitae turpis nec dui ultricies rhoncus nec sit amet leo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+            <p className="lead">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+              commodo dignissim lorem non consequat. Duis pharetra euismod
+              dignissim.
+            </p>
+            <p>
+              Donec libero libero, sagittis non arcu et, aliquam sagittis
+              ligula. Vivamus ornare augue id magna luctus, nec aliquet erat
+              laoreet. Aliquam erat volutpat. Praesent vitae turpis nec dui
+              ultricies rhoncus nec sit amet leo. Vestibulum ante ipsum primis
+              in faucibus orci luctus et ultrices posuere cubilia curae.
+            </p>
           </div>
 
           <h3 className="mt-4">Featured Recipes</h3>
@@ -144,13 +189,33 @@ export default function Home() {
                     />
                   )}
                   <div className="card-body">
-                    <h5 className="card-title">{recipe.name}</h5>
-                    <button
-                      onClick={() => seeRecipeDetails(recipe.id)}
-                      className="button-details"
-                    >
-                      View Recipe Details
-                    </button>
+                    <h5 className="card-title mb-0">{recipe.name}</h5>
+                    <p className="small mb-0 pb-0">
+                      <i>by {recipe.user.firstName} {recipe.user.lastName[0]}</i>
+                    </p>
+                    <p className="mb-0 pb-0">
+                      {recipe.review &&
+                        recipe.review.length > 0 &&
+                        renderStarAverage(
+                          Math.round(calculateAverageRating(recipe.review))
+                        )}
+                    </p>
+                    <div className="card-body">
+                      <p>
+                        <button
+                          onClick={() => seeRecipeDetails(recipe.id)}
+                          className="button-details"
+                          style={{
+                            position: "absolute",
+                            bottom: "0",
+                            left: "15px",
+                            margin: "10px 0",
+                          }}
+                        >
+                          View Recipe Details
+                        </button>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -163,7 +228,7 @@ export default function Home() {
           <button onClick={seeAllRecipes} className="button-details-alt mt-2">
             <strong>Show All Recipes</strong>
           </button>
-          
+
           <h5 className="mt-5">Join our newsletter:</h5>
           <form>
             <input

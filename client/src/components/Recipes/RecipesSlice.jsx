@@ -59,14 +59,14 @@ const recipesApi = api.injectEndpoints({
     }),
 
     postRecipe: builder.mutation({
-      query: (formData) => ({
+      query: (body) => ({
         url: "/recipes/recipe",
         mode: "cors",
         method: "POST",
         headers: {
           Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
         },
-        body: formData,
+        body
       }),
       invalidatesTags: ["Recipe"],
     }),

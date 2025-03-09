@@ -39,7 +39,6 @@ export default function Favorites() {
             <div
               key={fav.id}
               className="card mb-3"
-              style={{ maxWidth: "540px" }}
             >
               <div className="row g-0">
                 <div className="col-md-4">
@@ -71,7 +70,7 @@ export default function Favorites() {
                 <div className="col-md-8">
                   <div className="card-body">
                     <h5 className="card-title">
-                      <Link to={`/recipes/${fav.recipeId}`}>
+                      <Link className={"link-style"} to={`/recipes/${fav.recipeId}`}>
                         {fav.recipe.name}
                       </Link>
                     </h5>

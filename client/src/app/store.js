@@ -4,6 +4,7 @@ import registerSlice from "../components/Register/RegisterSlice";
 import loginSlice from "../components/Login/LoginSlice";
 import confirmLoginReducer from "./confirmLoginSlice";
 
+
 export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,

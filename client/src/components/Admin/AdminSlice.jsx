@@ -65,6 +65,22 @@ const usersApi = api.injectEndpoints({
         transformErrorResponse: (response) => response.data.error,
       }),
 
+      
+
+      invalidatesTags: ["Recipe"],
+    }),
+
+    deleteRecipeAsAdmin: builder.mutation({
+      query: ({ id }) => ({
+        url: `/admin/recipe/${id}`,
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+        },
+        transformResponse: (response) => response.data.recipes,
+        transformErrorResponse: (response) => response.data.error,
+      }),
       invalidatesTags: ["Recipe"],
     }),
   }),
@@ -75,4 +91,5 @@ export const {
   useUpdateUserAdminMutation,
   useDeleteUserMutation,
   useUpdateRecipeAsAdminMutation,
+  useDeleteRecipeAsAdminMutation
 } = usersApi;
