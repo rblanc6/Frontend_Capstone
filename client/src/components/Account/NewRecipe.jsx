@@ -1,5 +1,3 @@
-// OLD FORM
-
 import { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
@@ -56,7 +54,7 @@ export default function NewRecipe() {
   };
 
   const handleAddIngredient = () => {
-    const unitName = unit.find((u) => u.id === parseInt(selectedUnit))?.name;
+    const unitName = units.find((u) => u.id === parseInt(selectedUnit))?.name;
     if (!unitName) {
       console.error("Unit not selected or invalid.");
       return;
@@ -66,7 +64,6 @@ export default function NewRecipe() {
       quantity: ingredientQuantity,
       unitName,
     };
-    console.log("Adding new ingredient:", newIngredient);
     setIngredients((prev) => [...prev, newIngredient]);
     setIngredientName("");
     setIngredientQuantity("");
@@ -74,38 +71,27 @@ export default function NewRecipe() {
   };
 
   const handleAddInstruction = () => {
-    if (instruction !== "") {
-      setInstructions((prev) => [...prev, instruction]);
+    const newInstruction = { instruction: instruction };
+    
+      setInstructions((prev) => [...prev, newInstruction, { instruction: "" }]);
       setInstruction(""); // Clear the instruction input after adding
-      console.log(instruction);
-    }
+    
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Ingredients before submit", ingredients);
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
-    instructions.forEach((instruction) => {
-      formData.append("instructions[]", instruction);
-    });
-    ingredients.forEach((ingredient, index) => {
-      formData.append(`ingredients[${index}].name`, ingredient.name);
-      formData.append(`ingredients[${index}].quantity`, ingredient.quantity);
-      formData.append(`ingredients[${index}].unitName`, ingredient.unitName);
-    });
-
-    // formData.append("instructions", JSON.stringify(instructions));
-    // formData.append("ingredient", JSON.stringify(ingredients));
+    formData.append("instructions", JSON.stringify(instructions));
+    formData.append("ingredient", JSON.stringify(ingredients));
     formData.append("category", JSON.stringify([selectedCategory]));
     if (photo) {
       formData.append("photo", photo);
     }
-
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0], pair[1]);
+    // }
     try {
       await addRecipe(formData);
       if (formData) {
@@ -151,25 +137,22 @@ export default function NewRecipe() {
           {/* Add Instructions */}
           <div className="instructions">
             <label>Instructions</label>
-            <input
-              type="text"
-              id="instruction"
-              value={instruction}
-              onChange={(e) => setInstruction(e.target.value)}
-              placeholder="Instruction"
-            ></input>
+            {NewRecipe.instructions.map((instruction, index) => (
+              <div key={index}>
+                <input
+                  type="text"
+                  id="instructions"
+                  value={instruction}
+                  onChange={(e) => setInstructions(e.target.value)}
+                  placeholder="Instructions"
+                ></input>
+              </div>
+            ))}
           </div>
           <button type="button" onClick={handleAddInstruction}>
             Add Instruction
           </button>
-          <div>
-            <ul>
-              {/* {instructions.map((inst, index) => (
-            <li key={index}>{inst}</li>
-          ))} */}
-            </ul>
-          </div>
-          <div>
+          {/* <div>
             <h5>Instructions Preview:</h5>
             <ul>
               {Array.isArray(instructions) && instructions.length > 0 ? (
@@ -180,7 +163,7 @@ export default function NewRecipe() {
                 <li>No instructions added yet.</li>
               )}
             </ul>
-          </div>
+          </div> */}
           <div className="ingredient">
             <label>Ingredients</label>
             {/* Ingredient Name */}

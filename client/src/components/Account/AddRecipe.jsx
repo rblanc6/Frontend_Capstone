@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import {
   usePostRecipeMutation,
   useGetCategoriesQuery,
+  useGetIngredientUnitsQuery,
 } from "../Recipes/RecipesSlice";
 import ImageUpload from "../SingleRecipe/ImageUpload";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +13,12 @@ export default function AddRecipe() {
     useGetCategoriesQuery();
   const [postRecipe, { isLoading, error }] = usePostRecipeMutation();
   const [categories, setCategories] = useState([]);
+  const { data: unit, isSuccess: unitsSuccess } = useGetIngredientUnitsQuery();
+  const [units, setUnits] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState("");
+  // const [ingredients, setIngredients] = useState([]);
+  // const [ingredientName, setIngredientName] = useState("");
+  // const [ingredientQuantity, setIngredientQuantity] = useState("");
 
   useEffect(() => {
     if (categorySuccess) {
@@ -56,10 +63,21 @@ export default function AddRecipe() {
     }));
   };
 
+  useEffect(() => {
+    if (unitsSuccess) {
+      setUnits(unit);
+    }
+  }, [unit]);
+
+  const handleUnitChange = (e) => {
+    setSelectedUnit(e.target.value);
+  };
+
   const handleIngredientChange = (index, e) => {
     const { name, value } = e.target;
     const updatedIngredients = [...recipeData.ingredients];
     updatedIngredients[index][name] = value;
+
     setRecipeData((prevData) => ({
       ...prevData,
       ingredients: updatedIngredients,
@@ -140,7 +158,8 @@ export default function AddRecipe() {
 
   return (
     <div className="container">
-      <h2>Share A Recipe</h2><hr/>
+      <h2>Share A Recipe</h2>
+      <hr />
       <form onSubmit={handleSubmit}>
         <div>
           <label>
@@ -172,10 +191,10 @@ export default function AddRecipe() {
         </div>
 
         <div className="mt-3">
-            <label>
-              <h4>Ingredients</h4>
-            </label>
-            <br />
+          <label>
+            <h4>Ingredients</h4>
+          </label>
+          <br />
 
           {recipeData.ingredients.map((ingredient, index) => (
             <div className="input-group mb-2" key={index}>
@@ -197,44 +216,76 @@ export default function AddRecipe() {
                 value={ingredient.quantity}
                 onChange={(e) => handleIngredientChange(index, e)}
               />
-              <input
-                type="text"
+              {/* <input
+                // type="text"
                 name="unit"
                 required
                 className="form-control"
                 placeholder="Unit (e.g., tsp, cup, etc.)"
+                value={selectedUnit}
+                onChange={(e) => handleUnitChange(index, e)}
+              /> */}
+              <select
+                name="unit"
+                required
                 value={ingredient.unit}
+                aria-label="Units"
                 onChange={(e) => handleIngredientChange(index, e)}
-              />
-              <button type="button" className="btn btn-outline-secondary" onClick={() => removeIngredient(index)}>
+              >
+                <option value="">Units</option>
+                {units.map((unit) => (
+                  <option key={unit.id} value={unit.name}>
+                    {unit.name}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => removeIngredient(index)}
+              >
                 Remove
               </button>
             </div>
           ))}
-          <button className="btn btn-secondary btn-sm mt-2" type="button" onClick={addIngredient}>
+
+          <button
+            className="btn btn-secondary btn-sm mt-2"
+            type="button"
+            onClick={addIngredient}
+          >
             Add Ingredient
           </button>
         </div>
 
         <div className="mt-3">
-            <label>
-              <h4>Instructions</h4>
-            </label>
-            <br />
+          <label>
+            <h4>Instructions</h4>
+          </label>
+          <br />
           {recipeData.instructions.map((instruction, index) => (
             <div className="input-group mb-2" key={index}>
               <textarea
-              className="form-control"
+                className="form-control"
                 required
                 value={instruction}
                 onChange={(e) => handleInstructionChange(index, e)}
               />
-              <button className="btn btn-outline-secondary" type="button" onClick={() => removeInstruction(index)}>
+              <button
+                className="btn btn-outline-secondary"
+                type="button"
+                onClick={() => removeInstruction(index)}
+              >
                 Remove
               </button>
             </div>
           ))}
-          <button className="btn btn-secondary btn-sm mt-2" type="button" onClick={addInstruction}>
+          <button
+            className="btn btn-secondary btn-sm mt-2"
+            type="button"
+            onClick={addInstruction}
+          >
             Add Instruction
           </button>
         </div>
@@ -243,31 +294,34 @@ export default function AddRecipe() {
           <h4>Categories</h4>
 
           {categories.map((category) => (
-            <ul className="form-check form-check-inline category-list" key={category.id}>
-              <li><input
-                className="form-check-input"
-                type="checkbox"
-                id="category"
-                value={category.id}
-                onChange={handleCategoryChange}
-                name={category.name}
-              />
-              <label
-                className="form-check-label"
-                htmlFor={`category-${category.id}`}
-              >
-                {category.name}
-              </label></li>
+            <ul
+              className="form-check form-check-inline category-list"
+              key={category.id}
+            >
+              <li>
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="category"
+                  value={category.id}
+                  onChange={handleCategoryChange}
+                  name={category.name}
+                />
+                <label
+                  className="form-check-label"
+                  htmlFor={`category-${category.id}`}
+                >
+                  {category.name}
+                </label>
+              </li>
             </ul>
           ))}
         </div>
 
-        
-
         <div className="mt-3">
-            <label>
-              <h4>Add Photo</h4>
-            </label>
+          <label>
+            <h4>Add Photo</h4>
+          </label>
           <ImageUpload onUploadSuccess={handleImageUploadSuccess} />
         </div>
 
