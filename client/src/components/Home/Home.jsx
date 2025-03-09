@@ -191,7 +191,9 @@ export default function Home() {
                   <div className="card-body">
                     <h5 className="card-title mb-0">{recipe.name}</h5>
                     <p className="small mb-0 pb-0">
-                      <i>by {recipe.user.firstName} {recipe.user.lastName[0]}</i>
+                      <i>
+                        by {recipe.user.firstName} {recipe.user.lastName[0]}
+                      </i>
                     </p>
                     <p className="mb-0 pb-0">
                       {recipe.review &&
