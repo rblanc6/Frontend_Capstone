@@ -5,11 +5,13 @@ import {
   usePostReviewMutation,
   usePostCommentMutation,
   useDeleteReviewMutation,
+  useDeleteCommentMutation,
 } from "./SingleRecipeSlice";
 import { useParams } from "react-router-dom";
 import { getLogin, getUser, confirmLogin } from "../../app/confirmLoginSlice";
 import StarRating from "./StarRating";
 import EditReviewForm from "./EditReview";
+import EditCommentForm from "./EditComment";
 
 export default function ReviewSection() {
   const { id } = useParams();
@@ -23,8 +25,11 @@ export default function ReviewSection() {
   const authUser = useSelector(getUser);
   const dispatch = useDispatch();
   const [deleteReview] = useDeleteReviewMutation(id);
+  const [deleteComment] = useDeleteCommentMutation(id);
   const [isEditingReview, setIsEditingReview] = useState(false);
-
+  const [isEditingComment, setIsEditingComment] = useState(false);
+  const [currentCommentId, setCurrentCommentId] = useState(null);
+  const role = window.sessionStorage.getItem("role");
 
   const [recipeArr, setRecipeArr] = useState([]);
   useEffect(() => {
@@ -92,6 +97,7 @@ export default function ReviewSection() {
         firstName: user.firstName,
         lastName: user.lastName,
       }).unwrap();
+  
       setRecipeArr((prevRecipeArr) => ({
         ...prevRecipeArr,
         review: prevRecipeArr.review.map((rev) =>
@@ -106,12 +112,10 @@ export default function ReviewSection() {
         [reviewId]: "Thanks for your comment!",
       }));
     } catch (error) {
-      if (error?.data?.message) {
-        console.error(error.data.message);
-      }
+      console.error("Error posting comment:", error);
+      setErrorMessage("There was an issue posting your comment. Please try again.");
     }
     setActiveReviewId(null);
-
   }
 
   const handleDeleteReview = (id) => {
@@ -133,6 +137,25 @@ export default function ReviewSection() {
     setIsEditingReview(false);
   };
 
+  const handleDeleteComment = (id) => {
+    if (window.confirm("Are you sure you want to delete this comment?")) {
+      deleteComment({ id });
+      alert("Comment deleted.");
+      console.log(`Deleting item with ID: ${id}`);
+    } else {
+      console.log("Deletion cancelled.");
+    }
+  };
+
+  const handleEditComment = (commentId) => {
+    setIsEditingComment(true);
+    setCurrentCommentId(commentId);
+  };
+
+  const handleEditCancelComment = () => {
+    setIsEditingComment(false);
+    setCurrentCommentId(null);
+  };
 
   return (
     <>
@@ -187,7 +210,8 @@ export default function ReviewSection() {
 
         {recipeArr?.review?.map((rev) => {
           const isCreator =
-            authUser && rev.userId && rev.userId === authUser.id;
+            authUser && rev?.userId && rev.userId === authUser.id;
+
           const renderStars = (rating) => {
             const totalStars = 5;
             let stars = [];
@@ -215,37 +239,57 @@ export default function ReviewSection() {
             <>
               <div>
                 <div className="card" key={rev.id}>
-                  {isEditingReview ? (<EditReviewForm
-                  reviewId={rev.id}
-                  onCancel={handleEditCancelReview}
-                  setIsEditingReview={setIsEditingReview}
-                />
-              ): (<div className="card-body">
+                  {activeReviewId === rev.id && isEditingReview ? (
+                    <EditReviewForm
+                      reviewId={rev.id}
+                      onCancel={handleEditCancelReview}
+                      setIsEditingReview={setIsEditingReview}
+                    />
+                  ) : (
+                    <div className="card-body">
+                      <div className="d-flex mb-0">
+                        <div className="p-0">
+                          <h6 className="card-title">{rev.review}</h6>{" "}
+                          <p className="star-rating">
+                            {renderStars(rev.rating)}{" "}
+                          </p>
+                        </div>
+                        <div className="ms-auto p-0">
+                          {isCreator && (
+                            <span>
+                              <i
+                                className="bi bi-pencil-square"
+                                onClick={() => handleEditReview(rev.id)}
+                              ></i>
+                              <br />
+                              <i
+                                className="bi bi-trash"
+                                onClick={() => handleDeleteReview(rev.id)}
+                              ></i>
+                            </span>
+                          )}
+                          {role === "ADMIN" && !isCreator && (
+                            <span>
+                              <i
+                                className="bi bi-pencil-square"
+                                onClick={() => handleEditReview(rev.id)}
+                              ></i>
+                              <br />
+                              <i
+                                className="bi bi-trash"
+                                onClick={() => handleDeleteReview(rev.id)}
+                              ></i>
+                            </span>
+                          )}
+                        </div>
+                      </div>
 
-                    <div className="d-flex mb-0">
-                      <div className="p-0">
-                        <h6 className="card-title">{rev.review}</h6>
-                      </div>
-                      <div className="ms-auto p-0">
-                        {isCreator && (
-                          <>
-                            <i className="bi bi-pencil-square" onClick={() => handleEditReview(rev.id)}></i>
-                            <br />
-                            <i className="bi bi-trash" onClick={() => handleDeleteReview(rev.id)}></i>
-                          </>
-                        )}
-                      </div>
+                      <p className="card-text">
+                        - {rev.user ? rev.user.firstName : ""}{" "}
+                        {rev.user ? rev.user.lastName[0] : ""}
+                      </p>
                     </div>
-
-                    <h6 className="card-subtitle mb-2 text-body-secondary">
-                      {" "}
-                      <p className="star-rating">{renderStars(rev.rating)} </p>
-                    </h6>
-                    <p className="card-text">
-                      - {rev.user ? rev.user.firstName : ""}{" "}
-                      {rev.user ? rev.user.lastName[0] : ""}
-                    </p>
-                  </div>)}
+                  )}
 
                   {auth && (
                     <div className="card-footer">
@@ -292,19 +336,75 @@ export default function ReviewSection() {
                     <div className="card-footer">
                       <h6>Comments:</h6>
                       <ul className="list-group list-group-flush">
-                        {rev.comments?.map((comment) => (
-                          <li
-                            key={comment.id}
-                            className="list-group-item"
-                            style={{ backgroundColor: "transparent" }}
-                          >
-                            {comment.comment}
-                            <br />- {comment.user
-                              ? comment.user.firstName
-                              : ""}{" "}
-                            {comment.user ? comment.user.lastName[0] : ""}
-                          </li>
-                        ))}
+                        {rev.comments?.map((comment) => {
+                          const isCommentCreator =
+                            authUser &&
+                            comment.user?.id &&
+                            comment.user.id === authUser.id;
+                          return (
+                            <li
+                              key={comment.id}
+                              className="list-group-item comment-section"
+                              style={{ backgroundColor: "transparent" }}
+                            >
+                              {isEditingComment &&
+                              currentCommentId === comment.id ? (
+                                <EditCommentForm
+                                  commentId={currentCommentId}
+                                  onCancel={handleEditCancelComment}
+                                  setIsEditingComment={setIsEditingComment}
+                                />
+                              ) : (
+                                <div className="comment-content">
+                                  <span className="comment-text">
+                                    {comment.comment}
+                                    <br />-{" "}
+                                    {comment.user
+                                      ? comment.user.firstName
+                                      : ""}{" "}
+                                    {comment.user
+                                      ? comment.user.lastName[0]
+                                      : ""}
+                                  </span>
+                                  {isCommentCreator && (
+                                    <span className="comment-actions">
+                                      <i
+                                        className="bi bi-pencil-square"
+                                        onClick={() =>
+                                          handleEditComment(comment.id)
+                                        }
+                                      ></i>
+                                      &nbsp;
+                                      <i
+                                        className="bi bi-trash"
+                                        onClick={() =>
+                                          handleDeleteComment(comment.id)
+                                        }
+                                      ></i>
+                                    </span>
+                                  )}
+                                  {role === "ADMIN" && !isCommentCreator && (
+                                    <span className="comment-actions">
+                                      <i
+                                        className="bi bi-pencil-square"
+                                        onClick={() =>
+                                          handleEditComment(comment.id)
+                                        }
+                                      ></i>
+                                      &nbsp;
+                                      <i
+                                        className="bi bi-trash"
+                                        onClick={() =>
+                                          handleDeleteComment(comment.id)
+                                        }
+                                      ></i>
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   ) : (

@@ -40,10 +40,59 @@ const recipeDetailsApi = api.injectEndpoints({
       invalidatesTags: ["Comment"],
     }),
 
+    getComment: builder.query({
+      query: (id) => ({
+        url: `/comments/${id}`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+        },
+        transformResponse: (response) => response.data,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+      providesTags: ["Comment"],
+    }),
+
+    editComment: builder.mutation({
+      query: ({ id, body }) => ({
+        url: `/comments/${id}`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+        },
+        body,
+
+        transformResponse: (response) => response.data,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+
+      invalidatesTags: ["Comment"],
+    }),
+
+    deleteComment: builder.mutation({
+      query: ({ id }) => ({
+        url: `/comments/${id}`,
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+        },
+        transformResponse: (response) => response.data.recipes,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+      invalidatesTags: ["Comment"],
+    }),
+
     getReview: builder.query({
       query: (id) => ({
         url: `/reviews/${id}`,
         method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+        },
         transformResponse: (response) => response.data,
         transformErrorResponse: (response) => response.data.error,
       }),
@@ -92,5 +141,8 @@ export const {
   usePostCommentMutation,
   useEditReviewMutation,
   useDeleteReviewMutation,
-  useGetReviewQuery
+  useGetReviewQuery,
+  useEditCommentMutation,
+  useDeleteCommentMutation,
+  useGetCommentQuery
 } = recipeDetailsApi;

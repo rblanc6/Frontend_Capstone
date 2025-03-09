@@ -49,10 +49,12 @@ export default function EditReviewForm({ reviewId, onCancel, setIsEditingReview 
       rating: rev.rating,
     };
 
+     console.log(updatedData);
+
     try {
       const { data } = await editReview({
         id: reviewId,
-        updatedData: updatedData,
+        body: updatedData,
       });
 
       if (data) {
@@ -71,12 +73,12 @@ export default function EditReviewForm({ reviewId, onCancel, setIsEditingReview 
   if (isLoading) return <p>Loading...</p>;
   if (fetchError) return <p>{fetchError.message || "Error fetching review"}</p>;
   return (
-    <>
+    <><div className="edit-review">
       <div>
         <form onSubmit={handleSubmit}>
           <div>
             <label>
-              <h4>Review</h4>
+              <h5>Edit Review</h5>
             </label>
             <br />
             <input
@@ -89,7 +91,7 @@ export default function EditReviewForm({ reviewId, onCancel, setIsEditingReview 
           </div>
           <div className="mt-3">
             <label>
-              <h4>Rating</h4>
+              <h5>Edit Rating</h5>
             </label>
             <br />
             <StarRating
@@ -113,6 +115,7 @@ export default function EditReviewForm({ reviewId, onCancel, setIsEditingReview 
             Cancel
           </button>
         </form>
+      </div>
       </div>
     </>
   );
