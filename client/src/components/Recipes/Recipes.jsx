@@ -126,7 +126,7 @@ export default function Recipes() {
         <form>
           <label>
             <p>
-              Search by Name, Ingredient, or Category:{" "}
+              Search by Name or Ingredient:{" "}
               <input
                 className="form-control"
                 name="recipeSearch"
@@ -137,13 +137,13 @@ export default function Recipes() {
           </label>&nbsp;&nbsp;&nbsp;
           <label>
             <p>
-              Select Category:{" "}
+              Filter by Category:{" "}
               <select
                 className="form-select"
                 value={recipeFilter.category}
                 onChange={updateCategory}
               >
-                <option value="">All Categories</option>
+                <option value="">Select Category</option>
                 {categoryList?.map((category) => (
                   <option key={category.id} value={category.name}>
                     {category.name}

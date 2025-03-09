@@ -15,10 +15,6 @@ export default function AddRecipe() {
   const [categories, setCategories] = useState([]);
   const { data: unit, isSuccess: unitsSuccess } = useGetIngredientUnitsQuery();
   const [units, setUnits] = useState([]);
-  const [selectedUnit, setSelectedUnit] = useState("");
-  // const [ingredients, setIngredients] = useState([]);
-  // const [ingredientName, setIngredientName] = useState("");
-  // const [ingredientQuantity, setIngredientQuantity] = useState("");
 
   useEffect(() => {
     if (categorySuccess) {
@@ -36,7 +32,6 @@ export default function AddRecipe() {
         : prevData.categories.filter(
             (category) => category !== updatedCategory
           );
-
       return {
         ...prevData,
         categories: updatedCategories,
@@ -68,10 +63,6 @@ export default function AddRecipe() {
       setUnits(unit);
     }
   }, [unit]);
-
-  const handleUnitChange = (e) => {
-    setSelectedUnit(e.target.value);
-  };
 
   const handleIngredientChange = (index, e) => {
     const { name, value } = e.target;
@@ -216,15 +207,6 @@ export default function AddRecipe() {
                 value={ingredient.quantity}
                 onChange={(e) => handleIngredientChange(index, e)}
               />
-              {/* <input
-                // type="text"
-                name="unit"
-                required
-                className="form-control"
-                placeholder="Unit (e.g., tsp, cup, etc.)"
-                value={selectedUnit}
-                onChange={(e) => handleUnitChange(index, e)}
-              /> */}
               <select
                 name="unit"
                 required
