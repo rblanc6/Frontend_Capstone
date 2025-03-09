@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
-import { useGetRecipesQuery } from "./RecipesSlice";
+import { useGetRecipesQuery, useGetCategoriesQuery } from "./RecipesSlice";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 export default function Recipes() {
   const { data, isSuccess, isLoading, error } = useGetRecipesQuery();
+  const { data: categoryList } = useGetCategoriesQuery();
   console.log(data);
   const [recipeFilter, setRecipeFilter] = useState({
     recipeSearch: "",
+    category: "",
   });
   const navigate = useNavigate();
   const [recipeArr, setRecipeArr] = useState([]);
@@ -15,26 +17,31 @@ export default function Recipes() {
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 12;
 
-  const applyFilter = (data, searchTerm) => {
-    return searchTerm
-      ? data.filter((recipe) => {
-          const nameMatch = recipe.name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
 
-          // Extract ingredient names from nested structure
-          const ingredientMatch = recipe.ingredient.some((item) =>
-            item.ingredient.name
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase())
-          );
-          const categoryMatch = recipe.categories.some((category) =>
-            category.name.toLowerCase().includes(searchTerm.toLowerCase())
-          );
 
-          return nameMatch || ingredientMatch || categoryMatch;
-        })
-      : data;
+  const applyFilter = (data, searchTerm, categories) => {
+   
+
+    return data
+      .filter((recipe) => {
+        const nameMatch = recipe.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const ingredientMatch = recipe.ingredient.some((item) =>
+          item.ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        return nameMatch || ingredientMatch;
+      })
+      .filter((recipe) => {
+        if (categories) {
+          return recipe.categories?.some(
+            (category) =>
+              category.name.toLowerCase() === categories.toLowerCase()
+          );
+        }
+        return true;
+      });
+
   };
 
   const getCurrentPageItems = (filteredRecipes) => {
@@ -52,9 +59,18 @@ export default function Recipes() {
     }
   }, [data, isSuccess]);
 
-  const update = (e) => {
+  const updateSearch = (e) => {
     setRecipeFilter({
+      ...recipeFilter,
       recipeSearch: e.target.value,
+    });
+    setItemOffset(0);
+  };
+
+  const updateCategory = (e) => {
+    setRecipeFilter({
+      ...recipeFilter,
+      category: e.target.value,
     });
     setItemOffset(0);
   };
@@ -64,7 +80,11 @@ export default function Recipes() {
     setItemOffset(newOffset);
   };
 
-  const filteredRecipes = applyFilter(recipeArr, recipeFilter.recipeSearch);
+  const filteredRecipes = applyFilter(
+    recipeArr,
+    recipeFilter.recipeSearch,
+    recipeFilter.category
+  );
   const currentItems = getCurrentPageItems(filteredRecipes);
   const pageCount = Math.ceil(filteredRecipes.length / itemsPerPage);
 
@@ -111,8 +131,25 @@ export default function Recipes() {
                 className="form-control"
                 name="recipeSearch"
                 value={recipeFilter.recipeSearch}
-                onChange={update}
+                onChange={updateSearch}
               />
+            </p>
+          </label>&nbsp;&nbsp;&nbsp;
+          <label>
+            <p>
+              Select Category:{" "}
+              <select
+                className="form-select"
+                value={recipeFilter.category}
+                onChange={updateCategory}
+              >
+                <option value="">All Categories</option>
+                {categoryList?.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
             </p>
           </label>
         </form>
