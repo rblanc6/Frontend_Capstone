@@ -31,7 +31,6 @@ const usersApi = api.injectEndpoints({
         transformResponse: (response) => response.data.users,
         transformErrorResponse: (response) => response.data.error,
       }),
-
       invalidatesTags: ["User"],
     }),
 
@@ -47,7 +46,6 @@ const usersApi = api.injectEndpoints({
         transformResponse: (response) => response.data.users,
         transformErrorResponse: (response) => response.data.error,
       }),
-
       invalidatesTags: ["User"],
     }),
 
@@ -64,9 +62,6 @@ const usersApi = api.injectEndpoints({
         transformResponse: (response) => response.data,
         transformErrorResponse: (response) => response.data.error,
       }),
-
-      
-
       invalidatesTags: ["Recipe"],
     }),
 

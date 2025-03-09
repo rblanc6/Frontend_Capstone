@@ -210,6 +210,7 @@ export default function AddRecipe() {
               <select
                 name="unit"
                 required
+                className="form-select"
                 value={ingredient.unit}
                 aria-label="Units"
                 onChange={(e) => handleIngredientChange(index, e)}
