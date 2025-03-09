@@ -5,6 +5,8 @@ import logo from "../logos/logo.jpg";
 import { useDispatch } from "react-redux";
 import { confirmLogout } from "../app/confirmLoginSlice";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
 
 export default function NavBar({ token }) {
   const navigate = useNavigate();
@@ -12,12 +14,34 @@ export default function NavBar({ token }) {
   const dispatch = useDispatch();
   const role = window.sessionStorage.getItem("role");
 
+  const checkTokenExpiration = (token) => {
+    try {
+      const decodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000; 
+      return decodedToken.exp < currentTime; 
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return true; 
+    }
+  };
+
   const logout = () => {
     window.sessionStorage.removeItem("token");
     window.sessionStorage.removeItem("role");
     dispatch(confirmLogout());
     navigate("/");
   };
+ 
+  useEffect(() => {
+    const token = window.sessionStorage.getItem("token");
+    if (token && checkTokenExpiration(token)) {
+      dispatch(confirmLogout());
+      window.sessionStorage.removeItem("token");
+      window.sessionStorage.removeItem("role");
+      console.log("Token expired, user logged out.");
+    }
+  }, [dispatch]);
+
   return (
     <>
       <nav className="navbar fixed-top navbar-expand-md bg-body-tertiary">

@@ -114,10 +114,9 @@ button:focus-visible {
 }
 
 .container {
-  padding: 2em 0;
+  padding: 2em;
   position: relative;
   min-height: 70vh;
-  width: "100%";
 }
 
 .home-container {
