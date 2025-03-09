@@ -10,7 +10,6 @@ import SingleRecipe from "../components/SingleRecipe/SingleRecipe";
 import Favorites from "../components/Account/Favorites";
 import { ProtectedRoute } from "../components/ProtectedRoutes";
 import NavBar from "../components/Navigation";
-import NewRecipe from "../components/Account/NewRecipe";
 import Admin from "../components/Admin/Admin";
 import Footer from "../components/Footer";
 import MyRecipes from "../components/Account/MyRecipes";
@@ -45,9 +44,6 @@ function App() {
         <Route path="/my-recipes" element={<ProtectedRoute />}>
           <Route path="/my-recipes" element={<MyRecipes />} />
         </Route>
-        {/* <Route path="/share-recipe" element={<ProtectedRoute />}>
-          <Route path="/share-recipe" element={<NewRecipe />} />
-        </Route> */}
         <Route path="/admin" element={<ProtectedRoute requiredRole="ADMIN" />}>
           <Route path="/admin" element={<Admin />} />
         </Route>
