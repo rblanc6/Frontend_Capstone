@@ -18,6 +18,7 @@ export default function Recipes() {
   const itemsPerPage = 12;
 
 
+
   const applyFilter = (data, searchTerm, categories) => {
    
 
@@ -40,6 +41,7 @@ export default function Recipes() {
         }
         return true;
       });
+
   };
 
   const getCurrentPageItems = (filteredRecipes) => {
@@ -88,6 +90,35 @@ export default function Recipes() {
 
   console.log(currentItems);
 
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return totalRating / reviews.length;
+  };
+
+  const renderStarAverage = (rating) => {
+    const totalStars = 5;
+    let stars = [];
+
+    for (let i = 0; i < totalStars; i++) {
+      if (i < rating) {
+        stars.push(
+          <span key={i} className="star-rating">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="star-rating-empty">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      }
+    }
+
+    return stars;
+  };
+
   return (
     <>
       <div className="container">
@@ -95,7 +126,7 @@ export default function Recipes() {
         <form>
           <label>
             <p>
-              Search by Name or Ingredient:{" "}
+              Search by Name, Ingredient, or Category:{" "}
               <input
                 className="form-control"
                 name="recipeSearch"
@@ -159,7 +190,15 @@ export default function Recipes() {
                   <div className="card-body" style={{ marginBottom: "20px" }}>
                     <h5 className="card-title">{recipe.name}</h5>
                     <p className="card-text">{recipe.description}</p>
+                    <p className="mb-0 pb-0">
+                      {recipe.review &&
+                        recipe.review.length > 0 &&
+                        renderStarAverage(
+                          Math.round(calculateAverageRating(recipe.review))
+                        )}
+                    </p>
                   </div>
+
                   <div className="card-body">
                     <button
                       className="button-details"
