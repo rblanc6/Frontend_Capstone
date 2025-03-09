@@ -19,12 +19,7 @@ export default function Recipes() {
 
 
   const applyFilter = (data, searchTerm, categories) => {
-    console.log(
-      "Applying filter with searchTerm:",
-      searchTerm,
-      "category:",
-      categories
-    ); //
+   
 
     return data
       .filter((recipe) => {
