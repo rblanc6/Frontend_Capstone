@@ -1,14 +1,21 @@
-import { useGetUserQuery } from "./AccountSlice";
+import {
+  useGetUserQuery,
+  // useGetReviewsQuery,
+  // useGetCommentsQuery,
+} from "./AccountSlice";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 export default function Account() {
   const { id } = useParams();
   const { data, isSuccess } = useGetUserQuery(id);
-
   const [user, setUser] = useState("");
+  // const {data: review, isSuccess: reviewSuccess } = useGetReviewsQuery()
+  // const [reviews, setReviews] = useState("");
+  // const {data: comment, isSuccess: commentSuccess } = useGetCommentsQuery()
+  // const [comments, setComments] = useState("");
 
   useEffect(() => {
     if (isSuccess) {
@@ -16,7 +23,22 @@ export default function Account() {
     }
   }, [data]);
 
+  // useEffect(() => {
+  //   if (reviewSuccess) {
+  //     setReviews(data);
+  //   }
+  // }, [review]);
+  // console.log("REVIEWS", reviews)
+
+  // useEffect(() => {
+  //   if (commentSuccess) {
+  //     setComments(data);
+  //   }
+  // }, [comment]);
+  // console.log("COMMENTS", comments)
+
   console.log(data);
+  console.log(data?.reviews);
 
   return (
     <>
@@ -58,13 +80,15 @@ export default function Account() {
                     <div className="card-body">
                       <h5 className="card-title">{rec.name}</h5>
                       <p className="card-text">{rec.description}</p>
-                      <p><Link
-                        to={`/recipes/${rec.id}`}
-                        className="button-details"
-                        style={{ textDecoration: "none" }}
-                      >
-                        View Recipe
-                      </Link></p>
+                      <p>
+                        <Link
+                          to={`/recipes/${rec.id}`}
+                          className="button-details"
+                          style={{ textDecoration: "none" }}
+                        >
+                          View Recipe
+                        </Link>
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -98,7 +122,7 @@ export default function Account() {
           </Link>
           <br />
         </p>
-        
+
         <hr></hr>
         <h1 className="display-6">My Favorite Recipes</h1>
         <div>
@@ -173,6 +197,40 @@ export default function Account() {
             ""
           )}
         </p>
+        <hr />
+        <h1 className="display-6">My Reviews</h1>
+        <table className="table">
+          <tbody>
+            {Array.isArray(user?.reviews) &&
+              user.reviews.length > 0 &&
+              user?.reviews?.map((rev) => (
+                <tr className="col-4" key={rev.id}>
+                  <td>
+                    <h4 className="mb-0">{rev.recipe.name} </h4>
+                    <p>
+                      <small>
+                        by{" "}
+                        <i>
+                          {rev.recipe.user.firstName}{" "}
+                          {rev.recipe.user.lastName[0]}
+                        </i>
+                      </small>
+                    </p>
+                    {rev.review}
+                  </td>
+                  <td>
+                    <Link
+                      to={`/recipes/${rev.recipe.id}`}
+                      className="button-details"
+                      style={{ textDecoration: "none" }}
+                    >
+                      View Recipe
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       </div>
     </>
   );
