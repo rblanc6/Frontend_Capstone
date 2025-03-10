@@ -16,6 +16,34 @@ const userDetailsApi = api.injectEndpoints({
       providesTags: ["User"],
     }),
 
+    getReviews: builder.query({
+      query: ({id}) => ({
+        url: `/reviews/user/${id}`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+        },
+        transformResponse: (response) => response.data,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+      providesTags: ["Review"],
+    }),
+
+    getComments: builder.query({
+      query: ({id}) => ({
+        url: `/comments/user/${id}`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+        },
+        transformResponse: (response) => response.data,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+      providesTags: ["Comment"],
+    }),
+
     updateUser: builder.mutation({
       query: ({ id, firstName, lastName, email, role }) => ({
         url: `/auth/user/${id}`,
@@ -37,4 +65,4 @@ const userDetailsApi = api.injectEndpoints({
 
 
 
-export const { useGetUserQuery, useUpdateUserMutation } = userDetailsApi;
+export const { useGetUserQuery, useUpdateUserMutation, useGetReviewsQuery, useGetCommentsQuery } = userDetailsApi;
