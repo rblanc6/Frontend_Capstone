@@ -1,9 +1,10 @@
 ### RACipe Hub
-A central space for all things food, offering the essence of a community-driven recipe platform.
 
-<div>
-  <img src="../client/src/logos/logo.jpg"/>
+<div align= "center">
+  <img src="https://res.cloudinary.com/dyrhxocab/image/upload/v1741730364/logo_tuefhq.jpg"/>
 </div>
+
+A central space for all things food, offering the essence of a community-driven recipe platform.
 
 ### Developed By:
 * Rebecca Blanchard
