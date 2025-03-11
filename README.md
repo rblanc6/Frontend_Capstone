@@ -1,7 +1,8 @@
 ### RACipe Hub
+A central space for all things food, offering the essence of a community-driven recipe platform.
 
 <div>
-  <img src="https://files.slack.com/files-tmb/T05LYDFST6K-F08EML0BQB0-b7ea1341a1/image_480.png"/>
+  <img src="../client/src/logos/logo.jpg"/>
 </div>
 
 ### Developed By:
