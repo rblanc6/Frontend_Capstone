@@ -30,12 +30,7 @@ export default function MyRecipes() {
   return (
     <>
       <div className="container">
-        <h2>My Recipes</h2>
-
-
-
-
-
+        <h2 className="mb-4">My Recipes</h2>
 
 
         {myRecipes?.map((recipe) => {

@@ -12,6 +12,7 @@ import { getLogin, getUser, confirmLogin } from "../../app/confirmLoginSlice";
 import StarRating from "./StarRating";
 import EditReviewForm from "./EditReview";
 import EditCommentForm from "./EditComment";
+import { format } from "date-fns";
 
 export default function ReviewSection() {
   const { id } = useParams();
@@ -50,6 +51,16 @@ export default function ReviewSection() {
     setRating(value);
   };
 
+  function formatDate(dateString) {
+    try {
+      const date = new Date(dateString);
+      return format(date, "MMM dd, yyyy hh:mm a");
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return "Invalid Date";
+    }
+  }
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState(false);
   async function postReview(event) {
@@ -83,7 +94,9 @@ export default function ReviewSection() {
 
   const [activeReviewId, setActiveReviewId] = useState(null);
   const handleButtonClick = (reviewId) => {
-    setActiveReviewId((prevId) => (prevId === reviewId ? null : reviewId));
+    if (!isEditingReview) {
+      setActiveReviewId((prevId) => (prevId === reviewId ? null : reviewId));
+    }
   };
 
   async function postComment(event, reviewId) {
@@ -97,7 +110,7 @@ export default function ReviewSection() {
         firstName: user.firstName,
         lastName: user.lastName,
       }).unwrap();
-  
+
       setRecipeArr((prevRecipeArr) => ({
         ...prevRecipeArr,
         review: prevRecipeArr.review.map((rev) =>
@@ -113,14 +126,24 @@ export default function ReviewSection() {
       }));
     } catch (error) {
       console.error("Error posting comment:", error);
-      setErrorMessage("There was an issue posting your comment. Please try again.");
+      setErrorMessage(
+        "There was an issue posting your comment. Please try again."
+      );
     }
     setActiveReviewId(null);
   }
 
+  const cancelComment = () => {
+    setActiveReviewId(null);
+  };
+
   const handleDeleteReview = (id) => {
     if (window.confirm("Are you sure you want to delete this review?")) {
       deleteReview({ id });
+      setRecipeArr((prevRecipeArr) => ({
+        ...prevRecipeArr,
+        review: prevRecipeArr.review.filter((rev) => rev.id !== id),
+      }));
       alert("Review deleted.");
       console.log(`Deleting item with ID: ${id}`);
     } else {
@@ -135,11 +158,19 @@ export default function ReviewSection() {
 
   const handleEditCancelReview = () => {
     setIsEditingReview(false);
+    setActiveReviewId(null);
   };
 
   const handleDeleteComment = (id) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
       deleteComment({ id });
+      setRecipeArr((prevRecipeArr) => ({
+        ...prevRecipeArr,
+        review: prevRecipeArr.review.map((rev) => ({
+          ...rev,
+          comments: rev.comments.filter((comment) => comment.id !== id),
+        })),
+      }));
       alert("Comment deleted.");
       console.log(`Deleting item with ID: ${id}`);
     } else {
@@ -192,7 +223,7 @@ export default function ReviewSection() {
                 />
               </div>
 
-              <button className="btn btn-primary">Submit</button>
+              <button className="button-details">Submit</button>
             </form>
             <br />
             {successMessage && (
@@ -244,6 +275,8 @@ export default function ReviewSection() {
                       reviewId={rev.id}
                       onCancel={handleEditCancelReview}
                       setIsEditingReview={setIsEditingReview}
+                      setRecipeArr={setRecipeArr}
+                      setActiveReviewId={setActiveReviewId}
                     />
                   ) : (
                     <div className="card-body">
@@ -285,17 +318,20 @@ export default function ReviewSection() {
                       </div>
 
                       <p className="card-text">
-                        - {rev.user ? rev.user.firstName : ""}{" "}
+                        &mdash; {rev.user ? rev.user.firstName : ""}{" "}
                         {rev.user ? rev.user.lastName[0] : ""}
+                      </p>
+                      <p className="date-stamp">
+                        Posted on {formatDate(rev.createdAt)}
                       </p>
                     </div>
                   )}
 
-                  {auth && (
+                  {auth && !isEditingReview && (
                     <div className="card-footer">
                       <button
                         onClick={() => handleButtonClick(rev.id)}
-                        className="btn btn-outline-secondary"
+                        className="button-details-alt"
                       >
                         Leave a Comment
                       </button>
@@ -316,8 +352,13 @@ export default function ReviewSection() {
                               onChange={(e) => setComment(e.target.value)}
                             ></textarea>
                           </div>
-
-                          <button className="btn btn-primary">Submit</button>
+                          <button className="button-details">Submit</button>{" "}
+                          <button
+                            className="button-details"
+                            onClick={cancelComment}
+                          >
+                            Cancel
+                          </button>
                         </form>
                       )}
                       {commentSuccessMessage[rev.id] && (
@@ -353,19 +394,26 @@ export default function ReviewSection() {
                                   commentId={currentCommentId}
                                   onCancel={handleEditCancelComment}
                                   setIsEditingComment={setIsEditingComment}
+                                  setRecipeArr={setRecipeArr}
                                 />
                               ) : (
                                 <div className="comment-content">
                                   <span className="comment-text">
                                     {comment.comment}
-                                    <br />-{" "}
+                                    <br />
+                                    &mdash;{" "}
                                     {comment.user
                                       ? comment.user.firstName
                                       : ""}{" "}
                                     {comment.user
                                       ? comment.user.lastName[0]
                                       : ""}
+                                    <p className="date-stamp mt-2">
+                                      {formatDate(comment.createdAt)}
+                                    </p>
                                   </span>
+                                  {console.log(comment)}
+
                                   {isCommentCreator && (
                                     <span className="comment-actions">
                                       <i

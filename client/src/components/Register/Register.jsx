@@ -46,7 +46,7 @@ export default function Register() {
       <h2>Register</h2>
 
       <form onSubmit={submit}>
-        <table className="formtable">
+        <table>
           <tbody>
             <tr>
               <td width="150px">
@@ -54,7 +54,7 @@ export default function Register() {
               </td>
               <td>
                 <input
-                  className="inputfield"
+                  className="form-control"
                   type="text"
                   name="firstName"
                   onChange={change}
@@ -67,7 +67,7 @@ export default function Register() {
               </td>
               <td>
                 <input
-                  className="inputfield"
+                  className="form-control"
                   type="text"
                   name="lastName"
                   onChange={change}
@@ -80,7 +80,7 @@ export default function Register() {
               </td>
               <td>
                 <input
-                  className="inputfield"
+                  className="form-control"
                   type="email"
                   name="email"
                   onChange={change}
@@ -93,7 +93,7 @@ export default function Register() {
               </td>
               <td>
                 <input
-                  className="inputfield"
+                  className="form-control"
                   type="password"
                   name="password"
                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
@@ -108,7 +108,7 @@ export default function Register() {
                 <p></p>
               </td>
               <td>
-                <p className="passwordinfo">
+                <p className="small">
                   Password must be 8 or more characters in length and contain at
                   least one number, one uppercase letter, one lowercase letter.
                 </p>
@@ -116,7 +116,7 @@ export default function Register() {
             </tr>
             <tr>
               <td colSpan={2}>
-                <button type="submit" className="submitbutton">
+                <button type="submit" className="button-details">
                   Submit
                 </button>
                 {error && <p className="error">{error}</p>}
