@@ -7,6 +7,7 @@ import {
   useDeleteFavoriteRecipeMutation,
   useGetFavoriteRecipesQuery,
   useDeleteRecipeMutation,
+  useGetRecipesQuery,
 } from "../Recipes/RecipesSlice";
 import { getLogin, getUser, confirmLogin } from "../../app/confirmLoginSlice";
 import EditRecipeForm from "./EditRecipe";
@@ -16,7 +17,12 @@ import { useDeleteRecipeAsAdminMutation } from "../Admin/AdminSlice";
 
 export default function SingleRecipe() {
   const { id } = useParams();
-  const { data, isSuccess } = useGetRecipeQuery(id);
+  const { data, isSuccess, refetch } = useGetRecipeQuery(id);
+  const {
+    data: allRecipes,
+    isSuccess: recipesSuccess,
+    refetch: allRecipesRefetch,
+  } = useGetRecipesQuery();
   const [favoriteRecipe] = useAddFavoriteRecipeMutation();
   const [deleteFavoriteRecipe] = useDeleteFavoriteRecipeMutation();
   const [deleteRecipe] = useDeleteRecipeMutation(id);
@@ -40,23 +46,47 @@ export default function SingleRecipe() {
   }, [data, isSuccess]);
   console.log("Recipe array", recipeArr);
 
-  const handleDeleteClick = (id) => {
+  const [allRecipesArr, setAllRecipesArr] = useState([]);
+  useEffect(() => {
+    if (recipesSuccess && allRecipes) {
+      setAllRecipesArr(allRecipes);
+    }
+  }, [allRecipes, recipesSuccess]);
+  console.log("All Recipes array", allRecipesArr);
+
+  const handleDeleteClick = async (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
-      deleteRecipe({ id });
-      alert("Recipe deleted.");
-      navigate("/");
-      console.log(`Deleting item with ID: ${id}`);
+      try {
+        await deleteRecipe({ id });
+        const updatedRecipes = allRecipesArr.filter((item) => item.id !== id);
+        setAllRecipesArr(updatedRecipes);
+        allRecipesRefetch();
+        alert("Recipe deleted.");
+        navigate("/");
+        console.log(`Deleting item with ID: ${id}`);
+      } catch (error) {
+        console.error("Error deleting recipe:", error);
+        alert("Failed to delete recipe.");
+      }
     } else {
       console.log("Deletion cancelled.");
     }
   };
 
-  const handleDeleteAdminClick = (id) => {
+  const handleDeleteAdminClick = async (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
-      deleteRecipeAsAdmin({ id });
-      alert("Recipe deleted.");
-      navigate("/");
-      console.log(`Deleting item with ID: ${id}`);
+      try {
+        await deleteRecipeAsAdmin({ id });
+        const updatedRecipes = allRecipesArr.filter((item) => item.id !== id);
+        setAllRecipesArr(updatedRecipes);
+        allRecipesRefetch();
+        alert("Recipe deleted.");
+        navigate("/");
+        console.log(`Deleting item with ID: ${id}`);
+      } catch (error) {
+        console.error("Error deleting recipe:", error);
+        alert("Failed to delete recipe.");
+      }
     } else {
       console.log("Deletion cancelled.");
     }
@@ -68,6 +98,7 @@ export default function SingleRecipe() {
 
   const handleEditCancel = () => {
     setIsEditing(false);
+    refetch();
   };
 
   const handleAdminEditClick = () => {

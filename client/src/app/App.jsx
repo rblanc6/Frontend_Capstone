@@ -15,6 +15,8 @@ import Footer from "../components/Footer";
 import MyRecipes from "../components/Account/MyRecipes";
 import ImageUpload from "../components/SingleRecipe/ImageUpload";
 import AddRecipe from "../components/Account/AddRecipe";
+import MyReviews from "../components/Account/MyReviews";
+import MyComments from "../components/Account/MyComments";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -49,6 +51,12 @@ function App() {
         </Route>
         <Route path="/new-recipe" element={<ProtectedRoute />}>
           <Route path="/new-recipe" element={<AddRecipe />}></Route>
+        </Route>
+        <Route path="/my-reviews" element={<ProtectedRoute />}>
+          <Route path="/my-reviews" element={<MyReviews />}></Route>
+        </Route>
+        <Route path="/my-comments" element={<ProtectedRoute />}>
+          <Route path="/my-comments" element={<MyComments />}></Route>
         </Route>
       </Routes>
       <Footer />
