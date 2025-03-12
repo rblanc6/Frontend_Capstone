@@ -5,6 +5,8 @@ import {
   // useViewUserDetailsMutation,
 } from "./AdminSlice";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export default function Admin() {
   const { data, isSuccess } = useGetUsersQuery();
@@ -194,9 +196,16 @@ export default function Admin() {
                             <button onClick={() => deleteUser({ id: user.id })}>
                               Delete
                             </button>
-                            <button onClick={() => viewUserDetails()}>
+                            <Link
+                              to={`/admin-user-details/${user.id}`}
+                              className="button-details-alt"
+                              style={{ textDecoration: "none" }}
+                            >
                               Content Overview
-                            </button>
+                            </Link>
+                            {/* <button onClick={() => viewUserDetails()}>
+                              Content Overview
+                            </button> */}
                           </div>
                         </div>
                       )}

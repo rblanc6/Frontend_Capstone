@@ -18,6 +18,22 @@ const usersApi = api.injectEndpoints({
       providesTags: ["User"],
     }),
 
+    getUserDetails: builder.query({
+      query: (id) => ({
+        url: `/admin/user/${id}`,
+        mode: "cors",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+        },
+        transformResponse: (response) => response.data,
+        transformErrorResponse: (response) => response.data.error,
+      }),
+      providesTags: ["User"],
+    }),
+
     updateUserAdmin: builder.mutation({
       query: ({ id, firstName, lastName, email, role }) => ({
         url: `/admin/user/${id}`,
@@ -83,8 +99,9 @@ const usersApi = api.injectEndpoints({
 
 export const {
   useGetUsersQuery,
+  useGetUserDetailsQuery,
   useUpdateUserAdminMutation,
   useDeleteUserMutation,
   useUpdateRecipeAsAdminMutation,
-  useDeleteRecipeAsAdminMutation
+  useDeleteRecipeAsAdminMutation,
 } = usersApi;
