@@ -221,7 +221,7 @@ export default function Account() {
         </p>
         <hr className="mb-5" />
         <h1 className="display-6" id="reviews">My Reviews</h1>
-        <table className="table">
+        <table className="table user-table">
           <tbody>
             {Array.isArray(user?.reviews) &&
               user.reviews.length > 0 &&
@@ -271,7 +271,7 @@ export default function Account() {
         </p>
         <hr className="mb-5" />
         <h1 className="display-6" id="comments">My Comments</h1>
-        <table className="table">
+        <table className="table user-table">
           <tbody>
             {Array.isArray(user?.comments) &&
               user.comments.length > 0 &&
