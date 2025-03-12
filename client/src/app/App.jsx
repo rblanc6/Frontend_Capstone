@@ -15,6 +15,7 @@ import Footer from "../components/Footer";
 import MyRecipes from "../components/Account/MyRecipes";
 import ImageUpload from "../components/SingleRecipe/ImageUpload";
 import AddRecipe from "../components/Account/AddRecipe";
+import AdminUserDetails from "../components/Admin/AdminUserDetails";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -46,6 +47,15 @@ function App() {
         </Route>
         <Route path="/admin" element={<ProtectedRoute requiredRole="ADMIN" />}>
           <Route path="/admin" element={<Admin />} />
+        </Route>
+        <Route
+          path="/admin-user-details/:id"
+          element={<ProtectedRoute requiredRole="ADMIN" />}
+        >
+          <Route
+            path="/admin-user-details/:id"
+            element={<AdminUserDetails />}
+          />
         </Route>
         <Route path="/new-recipe" element={<ProtectedRoute />}>
           <Route path="/new-recipe" element={<AddRecipe />}></Route>
