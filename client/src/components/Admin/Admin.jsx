@@ -2,19 +2,17 @@ import {
   useGetUsersQuery,
   useDeleteUserMutation,
   useUpdateUserAdminMutation,
-  // useViewUserDetailsMutation,
 } from "./AdminSlice";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
 
 export default function Admin() {
   const { data, isSuccess } = useGetUsersQuery();
   const [deleteUser] = useDeleteUserMutation();
   const [updateUser] = useUpdateUserAdminMutation();
-  // const [viewUserDetails] = useViewUserDetailsMutation();
-  const [userArr, setUserArr] = useState();
+  const [userArr, setUserArr] = useState([]);
   const [editUser, setEditUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -27,6 +25,15 @@ export default function Admin() {
       setUserArr(data);
     }
   }, [data, isSuccess]);
+
+  
+    const filterUsers = userArr.filter(
+      (user) =>
+        user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+   
 
   const token = window.sessionStorage.getItem("token");
   console.log("Here is my token", token);
@@ -75,11 +82,18 @@ export default function Admin() {
       <h2>Admin Dashboard</h2>
       {/* <p style={{ wordWrap: "break-word" }}>Token: {token}</p> */}
 
+      <input
+        type="text"
+        placeholder="Search Users..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
       <h3>User List:</h3>
 
       <table className="table">
         <tbody>
-          {userArr?.map((user) => (
+          {filterUsers?.map((user) => (
             <>
               <tr key={user.id}>
                 <th
@@ -203,9 +217,6 @@ export default function Admin() {
                             >
                               Content Overview
                             </Link>
-                            {/* <button onClick={() => viewUserDetails()}>
-                              Content Overview
-                            </button> */}
                           </div>
                         </div>
                       )}
