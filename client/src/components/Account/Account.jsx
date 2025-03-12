@@ -1,21 +1,13 @@
-import {
-  useGetUserQuery,
-  // useGetReviewsQuery,
-  // useGetCommentsQuery,
-} from "./AccountSlice";
+import { useGetUserQuery } from "./AccountSlice";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
 
 export default function Account() {
   const { id } = useParams();
   const { data, isSuccess } = useGetUserQuery(id);
   const [user, setUser] = useState("");
-  // const {data: review, isSuccess: reviewSuccess } = useGetReviewsQuery()
-  // const [reviews, setReviews] = useState("");
-  // const {data: comment, isSuccess: commentSuccess } = useGetCommentsQuery()
-  // const [comments, setComments] = useState("");
 
   useEffect(() => {
     if (isSuccess) {
@@ -23,22 +15,18 @@ export default function Account() {
     }
   }, [data]);
 
-  // useEffect(() => {
-  //   if (reviewSuccess) {
-  //     setReviews(data);
-  //   }
-  // }, [review]);
-  // console.log("REVIEWS", reviews)
-
-  // useEffect(() => {
-  //   if (commentSuccess) {
-  //     setComments(data);
-  //   }
-  // }, [comment]);
-  // console.log("COMMENTS", comments)
-
   console.log(data);
   console.log(data?.reviews);
+
+  function formatDate(dateString) {
+    try {
+      const date = new Date(dateString);
+      return format(date, "MMM dd, yyyy hh:mm a");
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return "Invalid Date";
+    }
+  }
 
   return (
     <>
@@ -48,7 +36,23 @@ export default function Account() {
         </h3>
         <h6>{user.email}</h6>
         <hr></hr>
-        <h1 className="display-6">My Recipes</h1>
+        <ul className="nav nav-fill">
+  <li className="nav-item">
+    <a className="nav-link active link-style" aria-current="page" href="#recipes">My Recipes</a>
+  </li>
+  <li className="nav-item">
+    <a className="nav-link link-style" href="#favorites">My Favorites</a>
+  </li>
+  <li className="nav-item">
+    <a className="nav-link link-style" href="#reviews">My Reviews</a>
+  </li>
+  <li className="nav-item">
+    <a className="nav-link link-style" href="#comments">My Comments</a>
+  </li>
+</ul>
+        <hr className="mb-4" />
+        
+        <h1 className="display-6" id="recipes">My Recipes</h1>
         <div>
           <div className="row g-2">
             {Array.isArray(user?.recipes) && user.recipes.length > 0 ? (
@@ -77,10 +81,18 @@ export default function Account() {
                       />
                     )}
 
-                    <div className="card-body">
+                    <div className="card-body mb-4">
                       <h5 className="card-title">{rec.name}</h5>
                       <p className="card-text">{rec.description}</p>
-                      <p>
+                    </div>
+                    <div className="card-body">
+                      <p
+                        style={{
+                          position: "absolute",
+                          bottom: "0",
+                          margin: "20px 0",
+                        }}
+                      >
                         <Link
                           to={`/recipes/${rec.id}`}
                           className="button-details"
@@ -123,8 +135,8 @@ export default function Account() {
           <br />
         </p>
 
-        <hr></hr>
-        <h1 className="display-6">My Favorite Recipes</h1>
+        <hr className="mb-5" />
+        <h1 className="display-6" id="favorites">My Favorite Recipes</h1>
         <div>
           <div className="row g-2">
             {Array.isArray(user?.favorites) && user.favorites.length > 0 ? (
@@ -153,16 +165,26 @@ export default function Account() {
                       />
                     )}
 
-                    <div className="card-body">
+                    <div className="card-body mb-4">
                       <h5 className="card-title">{fav.recipe.name}</h5>
                       <p className="card-text">{fav.recipe.description}</p>
-                      <Link
-                        to={`/recipes/${fav.recipeId}`}
-                        className="button-details"
-                        style={{ textDecoration: "none" }}
+                    </div>
+                    <div className="card-body">
+                      <p
+                        style={{
+                          position: "absolute",
+                          bottom: "0",
+                          margin: "20px 0",
+                        }}
                       >
-                        View Recipe
-                      </Link>
+                        <Link
+                          to={`/recipes/${fav.recipeId}`}
+                          className="button-details"
+                          style={{ textDecoration: "none" }}
+                        >
+                          View Recipe
+                        </Link>
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -197,16 +219,16 @@ export default function Account() {
             ""
           )}
         </p>
-        <hr />
-        <h1 className="display-6">My Reviews</h1>
+        <hr className="mb-5" />
+        <h1 className="display-6" id="reviews">My Reviews</h1>
         <table className="table">
           <tbody>
             {Array.isArray(user?.reviews) &&
               user.reviews.length > 0 &&
-              user?.reviews?.map((rev) => (
-                <tr className="col-4" key={rev.id}>
+              user?.reviews?.slice(0, 3).map((rev) => (
+                <tr key={rev.id}>
                   <td>
-                    <h4 className="mb-0">{rev.recipe.name} </h4>
+                    <h5 className="mb-0">{rev.recipe.name} </h5>
                     <p>
                       <small>
                         by{" "}
@@ -216,9 +238,12 @@ export default function Account() {
                         </i>
                       </small>
                     </p>
-                    {rev.review}
+                    <p>{rev.review}</p>
+                    <p className="date-stamp">
+                      Posted on {formatDate(rev.createdAt)}
+                    </p>
                   </td>
-                  <td>
+                  <td style={{ minWidth: "150px", textAlign: "right" }}>
                     <Link
                       to={`/recipes/${rev.recipe.id}`}
                       className="button-details"
@@ -231,6 +256,78 @@ export default function Account() {
               ))}
           </tbody>
         </table>
+        <p>
+          {Array.isArray(user?.reviews) && user?.reviews.length > 3 ? (
+            <Link
+              to="/my-reviews"
+              className="button-details-alt"
+              style={{ textDecoration: "none" }}
+            >
+              View all Reviews
+            </Link>
+          ) : (
+            ""
+          )}
+        </p>
+        <hr className="mb-5" />
+        <h1 className="display-6" id="comments">My Comments</h1>
+        <table className="table">
+          <tbody>
+            {Array.isArray(user?.comments) &&
+              user.comments.length > 0 &&
+              user?.comments?.slice(0, 3).map((com) => (
+                <tr key={com.id}>
+                  <td>
+                    <h4 className="mb-0">{com.name} </h4>
+
+                    <p>{com.comment}</p>
+                    <p className="date-stamp">
+                      Posted on {formatDate(com.createdAt)}
+                    </p>
+                    <p>in response to review:</p>
+                    <figure
+                      style={{
+                        marginLeft: "10px",
+                        paddingLeft: "10px",
+                        borderLeft: "solid 1px #ccc",
+                      }}
+                    >
+                      <p>{com.review.review}</p>
+
+                      <figcaption className="blockquote-footer">
+                        {com.review.user.firstName}{" "}
+                        {com.review.user.lastName[0]} on{" "}
+                        {formatDate(com.review.createdAt)}
+                      </figcaption>
+                    </figure>
+                    <p>on recipe: {com.review.recipe.name}</p>
+                  </td>
+                  <td style={{ minWidth: "150px", textAlign: "right" }}>
+                    <Link
+                      to={`/recipes/${com.review.recipe.id}`}
+                      className="button-details"
+                      style={{ textDecoration: "none" }}
+                    >
+                      View Recipe
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        <p>
+          {Array.isArray(user?.comments) && user?.comments.length > 3 ? (
+            <Link
+              to="/my-comments"
+              className="button-details-alt"
+              style={{ textDecoration: "none" }}
+            >
+              View all Comments
+            </Link>
+          ) : (
+            ""
+          )}
+        </p>
       </div>
     </>
   );

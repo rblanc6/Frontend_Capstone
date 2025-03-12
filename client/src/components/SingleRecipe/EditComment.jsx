@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useEditCommentMutation, useGetCommentQuery } from "./SingleRecipeSlice";
-import StarRating from "./StarRating";
 
-export default function EditCommentForm({ commentId, onCancel, setIsEditingComment }) {
+export default function EditCommentForm({ commentId, onCancel, setIsEditingComment, setRecipeArr }) {
   const [editComment, { isLoading }] = useEditCommentMutation();
 
   const { data: currentComment, error: fetchError } = useGetCommentQuery(commentId);
@@ -50,6 +49,21 @@ export default function EditCommentForm({ commentId, onCancel, setIsEditingComme
 
       if (data) {
         alert("Comment updated successfully!");
+        setRecipeArr((prevRecipeArr) => ({
+          ...prevRecipeArr,
+          review: prevRecipeArr.review.map((rev) =>
+            rev.comments
+              ? {
+                  ...rev,
+                  comments: rev.comments.map((comment) =>
+                    comment.id === commentId
+                      ? { ...comment, comment: com.comment }
+                      : comment
+                  ),
+                }
+              : rev
+          ),
+        }));
         onCancel();
       }
     } catch (error) {

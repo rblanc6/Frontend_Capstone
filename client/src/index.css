@@ -13,6 +13,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  scroll-padding-top: 115px;
+}
+
 a {
   font-weight: 500;
   color: #245e94;
@@ -23,13 +27,12 @@ a:hover {
 }
 
 .link-style {
-  color: #245e94
+  color: #245e94 !important;
 }
 
 .link-style:hover {
-  color: #de296c
+  color: #de296c !important;
 }
-
 
 body {
   margin: 0;
@@ -306,27 +309,65 @@ ul.category-list li {
 }
 
 .edit-review {
-  padding:15px
+  padding: 15px;
 }
 
 li.comment-section {
   display: flex;
   justify-content: space-between;
-  align-items: center; 
+  align-items: center;
 }
 
 .comment-content {
   display: flex;
-  width: 100%; 
-  justify-content: space-between; 
+  width: 100%;
+  justify-content: space-between;
 }
 
 .comment-text {
-  flex-grow: 1; 
+  flex-grow: 1;
 }
 
 .comment-actions {
   display: flex;
-  align-items: center; 
+  align-items: top;
   justify-content: flex-end;
+  margin-top: 5px;
+}
+
+.table {
+  border: 1px solid black;
+  td {
+    padding: 15px !important;
+  }
+}
+
+.date-stamp {
+  font-size: 0.875em;
+  color: gray;
+}
+
+.user-remarks {
+  font-size: 1.5em;
+  margin: 0.25em 0;
+  padding: 0 0 0.35em 30px;
+  line-height: 1.45;
+  position: relative;
+}
+
+.user-remarks:before {
+  display: block;
+  padding-left: 10px;
+  content: "\201C";
+  font-size: 3em;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  position: absolute;
+  left: -15px;
+  top: -20px;
+  color: #aeaeae;
+}
+
+.review-title {
+  padding: 10px;
+  border-radius: 10px;
 }

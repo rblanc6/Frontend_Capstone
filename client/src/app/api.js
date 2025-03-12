@@ -6,6 +6,6 @@ export const api = createApi({
     baseUrl: "http://localhost:3000/api",
     // baseUrl: "https://backend-capstone-z53c.onrender.com/api",
   }),
-  tagTypes: ["User"],
+  tagTypes: ["User, Recipe, FavoriteRecipes, Review, Comment"],
   endpoints: () => ({}),
 });

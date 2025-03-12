@@ -44,11 +44,10 @@ export default function Login({ setToken }) {
     }
   }
   return (
-    <>
       <div className="container">
         <h2>Log In</h2>
         <form onSubmit={handleSubmit}>
-          <table className="formtable">
+          <table>
             <tbody>
               <tr>
                 <td width="150px">
@@ -56,7 +55,8 @@ export default function Login({ setToken }) {
                 </td>
                 <td>
                   <input
-                    className="inputfield"
+                  
+                    className="form-control"
                     value={email}
                     type="email"
                     onChange={(e) => setEmail(e.target.value)}
@@ -70,7 +70,7 @@ export default function Login({ setToken }) {
                 </td>
                 <td>
                   <input
-                    className="inputfield"
+                    className="form-control"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -80,7 +80,7 @@ export default function Login({ setToken }) {
               </tr>
               <tr>
                 <td colSpan={2}>
-                  <button className="submitbutton">Submit</button>
+                  <button className="button-details">Submit</button>
                   {error && <p className="error">{error.data}</p>}
                 </td>
               </tr>
@@ -88,6 +88,6 @@ export default function Login({ setToken }) {
           </table>
         </form>
       </div>
-    </>
+    
   );
 }

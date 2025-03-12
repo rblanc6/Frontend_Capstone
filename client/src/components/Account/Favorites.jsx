@@ -32,7 +32,7 @@ export default function Favorites() {
   return (
     <>
       <div className="container">
-        <h2>Favorites</h2>
+        <h2 className="mb-4">My Favorites</h2>
 
         {currentFavorites?.map((fav) => {
           return (
