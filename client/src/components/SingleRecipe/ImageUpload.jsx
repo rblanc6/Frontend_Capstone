@@ -46,7 +46,7 @@ function ImageUpload({ onUploadSuccess }) {
          />
         {!uploadSuccess && file && (
         <>
-          <button onClick={handleUpload} className="btn btn-secondary">
+          <button onClick={handleUpload} className="button-details-alt">
             {loading ? "uploading..." : "Upload"}
           </button>
         </>

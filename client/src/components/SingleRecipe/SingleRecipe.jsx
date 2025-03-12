@@ -47,15 +47,12 @@ export default function SingleRecipe() {
   console.log("Recipe array", recipeArr);
   // console.log("favorites", recipeArr?.favoritedBy.length)
 
-  
-
   const [allRecipesArr, setAllRecipesArr] = useState([]);
   useEffect(() => {
     if (recipesSuccess && allRecipes) {
       setAllRecipesArr(allRecipes);
     }
   }, [allRecipes, recipesSuccess]);
-  // console.log("All Recipes array", allRecipesArr);
 
   const handleDeleteClick = async (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
@@ -178,6 +175,10 @@ export default function SingleRecipe() {
 
   const averageRating = calculateAverageRating(recipeArr?.review);
 
+  const favoriteCount = Array.isArray(recipeArr?.favoritedBy)
+    ? recipeArr.favoritedBy.length
+    : 0;
+
   // const favoriteCount = recipeArr?.favoritedBy.length;
 
   return (
@@ -251,49 +252,48 @@ export default function SingleRecipe() {
                   </div>
                   <div className="ms-auto p-0">
                     <span className="h5">
+                      {isCreator && (
+                        <>
+                          <i
+                            className="bi bi-pencil-square btn btn-outline-dark controls"
+                            onClick={handleEditClick}
+                          ></i>
+                          &nbsp;&nbsp;
+                          <i
+                            className="bi bi-trash btn btn-outline-dark controls"
+                            onClick={() => handleDeleteClick(recipeArr.id)}
+                          ></i>&nbsp;&nbsp;
+                        </>
+                      )}
+                      
+                      {role === "ADMIN" && !isCreator && (
+                        <>
+                          <i
+                            className="bi bi-pencil-square btn btn-outline-dark controls"
+                            onClick={handleAdminEditClick}
+                          ></i>
+                          &nbsp;&nbsp;
+                          <i
+                            className="bi bi-trash btn btn-outline-dark controls"
+                            onClick={() => handleDeleteAdminClick(recipeArr.id)}
+                          ></i>&nbsp;&nbsp;
+                        </>
+                      )}
                       {auth && (
-                        <button onClick={handleFavorite} className="btn"
+                        <button
+                          onClick={handleFavorite}
+                          className="btn btn-outline-danger favorite"
                         >
                           {" "}
                           <span>
                             {isFavorite ? (
-                              <i
-                                className="bi bi-heart-fill favorite"
-                                style={{ color: "red" }}
-                              ></i>
+                              <i className="bi bi-heart-fill favorite"></i>
                             ) : (
                               <i className="bi bi-heart"></i>
-                            )} 
-                            {/* {favoriteCount} */}
+                            )}{" "}
+                            {favoriteCount}
                           </span>
-                          
                         </button>
-                      )}{" "}
-                      {isCreator && (
-                        <>
-                          <i
-                            className="bi bi-pencil-square"
-                            onClick={handleEditClick}
-                          ></i>
-                          &nbsp;&nbsp;&nbsp;
-                          <i
-                            className="bi bi-trash"
-                            onClick={() => handleDeleteClick(recipeArr.id)}
-                          ></i>
-                        </>
-                      )}
-                      {role === "ADMIN" && !isCreator && (
-                        <>
-                          <i
-                            className="bi bi-pencil-square"
-                            onClick={handleAdminEditClick}
-                          ></i>
-                          &nbsp;&nbsp;&nbsp;
-                          <i
-                            className="bi bi-trash"
-                            onClick={() => handleDeleteAdminClick(recipeArr.id)}
-                          ></i>
-                        </>
                       )}
                     </span>
                   </div>

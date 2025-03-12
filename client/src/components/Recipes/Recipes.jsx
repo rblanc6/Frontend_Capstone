@@ -158,12 +158,12 @@ export default function Recipes() {
           {error && "Error loading recipes..."}
         </p>
         <div>
-          <div className="row g-3">
+          <div className="row g-2">
             {currentItems?.map((recipe) => (
-              <div className="col" key={recipe.id}>
+              <div className="col-md-4" key={recipe.id}>
                 <div
                   className="card h-100"
-                  style={{ padding: "0", width: "18rem", margin: "auto" }}
+                  style={{ padding: "0",margin: "auto" }}
                 >
                   {recipe?.photo ? (
                     <img
@@ -171,7 +171,7 @@ export default function Recipes() {
                       className="card-img-top"
                       style={{
                         width: "100%",
-                        height: "250px",
+                        height: "20vw",
                         objectFit: "cover",
                       }}
                     />
@@ -181,7 +181,7 @@ export default function Recipes() {
                       className="card-img-top"
                       style={{
                         width: "100%",
-                        height: "250px",
+                        height: "20vw",
                         objectFit: "cover",
                       }}
                     />
@@ -217,7 +217,7 @@ export default function Recipes() {
             ))}
           </div>
           <br />
-          <nav aria-label="Page navigation example">
+          <nav aria-label="Page navigation">
             <ul className="pagination justify-content-center">
               <li className="page-item">
                 <ReactPaginate
