@@ -45,6 +45,9 @@ export default function SingleRecipe() {
     }
   }, [data, isSuccess]);
   console.log("Recipe array", recipeArr);
+  // console.log("favorites", recipeArr?.favoritedBy.length)
+
+  
 
   const [allRecipesArr, setAllRecipesArr] = useState([]);
   useEffect(() => {
@@ -52,7 +55,7 @@ export default function SingleRecipe() {
       setAllRecipesArr(allRecipes);
     }
   }, [allRecipes, recipesSuccess]);
-  console.log("All Recipes array", allRecipesArr);
+  // console.log("All Recipes array", allRecipesArr);
 
   const handleDeleteClick = async (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
@@ -175,6 +178,8 @@ export default function SingleRecipe() {
 
   const averageRating = calculateAverageRating(recipeArr?.review);
 
+  // const favoriteCount = recipeArr?.favoritedBy.length;
+
   return (
     <>
       <div className="container">
@@ -247,18 +252,21 @@ export default function SingleRecipe() {
                   <div className="ms-auto p-0">
                     <span className="h5">
                       {auth && (
-                        <button onClick={handleFavorite} className="btn">
+                        <button onClick={handleFavorite} className="btn"
+                        >
                           {" "}
                           <span>
                             {isFavorite ? (
                               <i
-                                className="bi bi-heart-fill"
+                                className="bi bi-heart-fill favorite"
                                 style={{ color: "red" }}
                               ></i>
                             ) : (
                               <i className="bi bi-heart"></i>
-                            )}
+                            )} 
+                            {/* {favoriteCount} */}
                           </span>
+                          
                         </button>
                       )}{" "}
                       {isCreator && (

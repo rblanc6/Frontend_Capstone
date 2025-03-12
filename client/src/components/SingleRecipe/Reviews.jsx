@@ -38,7 +38,7 @@ export default function ReviewSection() {
       setRecipeArr(data);
     }
   }, [data, isSuccess]);
-  console.log("Recipe array", recipeArr);
+  // console.log("Recipe array", recipeArr);
 
   useEffect(() => {
     const storedUser = window.sessionStorage.getItem("user");
@@ -318,8 +318,8 @@ export default function ReviewSection() {
                       </div>
 
                       <p className="card-text">
-                        &mdash; {rev.user ? rev.user.firstName : ""}{" "}
-                        {rev.user ? rev.user.lastName[0] : ""}
+                        &mdash; <i>{rev.user ? rev.user.firstName : ""}{" "}
+                        {rev.user ? rev.user.lastName[0] : ""}</i>
                       </p>
                       <p className="date-stamp">
                         Posted on {formatDate(rev.createdAt)}
@@ -402,17 +402,17 @@ export default function ReviewSection() {
                                     {comment.comment}
                                     <br />
                                     &mdash;{" "}
-                                    {comment.user
+                                    <i>{comment.user
                                       ? comment.user.firstName
                                       : ""}{" "}
                                     {comment.user
                                       ? comment.user.lastName[0]
-                                      : ""}
+                                      : ""}</i>
                                     <p className="date-stamp mt-2">
                                       {formatDate(comment.createdAt)}
                                     </p>
                                   </span>
-                                  {console.log(comment)}
+                                  {/* {console.log(comment)} */}
 
                                   {isCommentCreator && (
                                     <span className="comment-actions">

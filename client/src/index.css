@@ -335,7 +335,7 @@ li.comment-section {
   margin-top: 5px;
 }
 
-.table {
+.user-table {
   border: 1px solid black;
   td {
     padding: 15px !important;
@@ -370,4 +370,10 @@ li.comment-section {
 .review-title {
   padding: 10px;
   border-radius: 10px;
+}
+
+.favorite {
+  --bs-btn-padding-x: 0.3rem !important;
+  --bs-btn-padding-y: 0.3rem !important;
+  line-height: 0 !important;
 }
