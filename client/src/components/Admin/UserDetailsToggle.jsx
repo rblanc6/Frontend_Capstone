@@ -20,7 +20,7 @@ export default function ToggleDetails({ setListView, setGridView }) {
 
 
   return (
-    <div className="toggle-group">
+    <div className="toggle-group" >
       <ToggleButtonGroup value={view} exclusive onChange={handleChange}>
         <ToggleButton value="module" aria-label="module" onClick={setGridView}>
           <ViewModuleIcon />

@@ -373,7 +373,20 @@ li.comment-section {
 }
 
 .favorite {
-  --bs-btn-padding-x: 0.3rem !important;
-  --bs-btn-padding-y: 0.3rem !important;
+  --bs-btn-padding-x: 0.4rem !important;
+  --bs-btn-padding-y: 0.4rem !important;
   line-height: 0 !important;
 }
+
+.controls {
+  --bs-btn-padding-x: 0.4rem !important;
+  --bs-btn-padding-y: 0.4rem !important;
+  line-height: 0 !important;
+}
+
+.toggle-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+

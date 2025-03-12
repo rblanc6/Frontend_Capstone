@@ -21,7 +21,7 @@ export default function AdminUserDetails() {
 
   return (
     <div className="container">
-      <ToggleDetails
+      <ToggleDetails 
         setGridView={setGridView}
         setListView={setListView}
       ></ToggleDetails>

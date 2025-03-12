@@ -35,24 +35,38 @@ export default function Account() {
           Welcome {user.firstName} {user.lastName}
         </h3>
         <h6>{user.email}</h6>
-        <hr></hr>
+        <hr />
         <ul className="nav nav-fill">
-  <li className="nav-item">
-    <a className="nav-link active link-style" aria-current="page" href="#recipes">My Recipes</a>
-  </li>
-  <li className="nav-item">
-    <a className="nav-link link-style" href="#favorites">My Favorites</a>
-  </li>
-  <li className="nav-item">
-    <a className="nav-link link-style" href="#reviews">My Reviews</a>
-  </li>
-  <li className="nav-item">
-    <a className="nav-link link-style" href="#comments">My Comments</a>
-  </li>
-</ul>
+          <li className="nav-item">
+            <a
+              className="nav-link active link-style"
+              aria-current="page"
+              href="#recipes"
+            >
+              My Recipes
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link link-style" href="#favorites">
+              My Favorites
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link link-style" href="#reviews">
+              My Reviews
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link link-style" href="#comments">
+              My Comments
+            </a>
+          </li>
+        </ul>
         <hr className="mb-4" />
-        
-        <h1 className="display-6" id="recipes">My Recipes</h1>
+
+        <h1 className="display-6" id="recipes">
+          My Recipes
+        </h1>
         <div>
           <div className="row g-2">
             {Array.isArray(user?.recipes) && user.recipes.length > 0 ? (
@@ -65,7 +79,7 @@ export default function Account() {
                         className="card-img-top"
                         style={{
                           width: "100%",
-                          height: "250px",
+                          height: "20vw",
                           objectFit: "cover",
                         }}
                       />
@@ -75,7 +89,7 @@ export default function Account() {
                         className="card-img-top"
                         style={{
                           width: "100%",
-                          height: "250px",
+                          height: "20vw",
                           objectFit: "cover",
                         }}
                       />
@@ -136,7 +150,9 @@ export default function Account() {
         </p>
 
         <hr className="mb-5" />
-        <h1 className="display-6" id="favorites">My Favorite Recipes</h1>
+        <h1 className="display-6" id="favorites">
+          My Favorite Recipes
+        </h1>
         <div>
           <div className="row g-2">
             {Array.isArray(user?.favorites) && user.favorites.length > 0 ? (
@@ -149,7 +165,7 @@ export default function Account() {
                         className="card-img-top"
                         style={{
                           width: "100%",
-                          height: "250px",
+                          height: "20vw",
                           objectFit: "cover",
                         }}
                       />
@@ -159,7 +175,7 @@ export default function Account() {
                         className="card-img-top"
                         style={{
                           width: "100%",
-                          height: "250px",
+                          height: "20vw",
                           objectFit: "cover",
                         }}
                       />
@@ -220,7 +236,9 @@ export default function Account() {
           )}
         </p>
         <hr className="mb-5" />
-        <h1 className="display-6" id="reviews">My Reviews</h1>
+        <h1 className="display-6" id="reviews">
+          My Reviews
+        </h1>
         <table className="table user-table">
           <tbody>
             {Array.isArray(user?.reviews) &&
@@ -270,7 +288,9 @@ export default function Account() {
           )}
         </p>
         <hr className="mb-5" />
-        <h1 className="display-6" id="comments">My Comments</h1>
+        <h1 className="display-6" id="comments">
+          My Comments
+        </h1>
         <table className="table user-table">
           <tbody>
             {Array.isArray(user?.comments) &&
