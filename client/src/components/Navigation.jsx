@@ -18,6 +18,8 @@ export default function NavBar({ token }) {
     try {
       const decodedToken = jwtDecode(token);
       const currentTime = Date.now() / 1000; 
+      console.log("Current Time:", currentTime);
+    console.log("Token Expiration Time:", decodedToken.exp);
       return decodedToken.exp < currentTime; 
     } catch (error) {
       console.error("Error decoding token:", error);

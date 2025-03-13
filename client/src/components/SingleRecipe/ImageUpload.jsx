@@ -37,20 +37,30 @@ function ImageUpload({ onUploadSuccess }) {
         select file
       </label>
       <div className="input-group mb-3">
-        <input 
-        id="file"
-        type="file"
-        onChange={handleSelectFile}
-        multiple={false}
-        className="form-control" 
-         />
+        <input
+          id="file"
+          type="file"
+          onChange={handleSelectFile}
+          multiple={false}
+          className="form-control"
+        />
         {!uploadSuccess && file && (
-        <>
-          <button onClick={handleUpload} className="button-details-alt">
-            {loading ? "uploading..." : "Upload"}
-          </button>
-        </>
-      )}
+          <>
+            <button onClick={handleUpload} className="button-details-alt">
+              {loading ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm text-light"
+                    aria-hidden="true"
+                  ></span>{" "}
+                  <span role="status">Uploading...</span>
+                </>
+              ) : (
+                "Upload"
+              )}
+            </button>
+          </>
+        )}
       </div>
       {uploadSuccess && (
         <div className="alert alert-success" role="alert">

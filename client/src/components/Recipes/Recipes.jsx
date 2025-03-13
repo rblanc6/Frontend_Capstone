@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 export default function Recipes() {
-  const { data, isSuccess, isLoading, error, } = useGetRecipesQuery();
+  const { data, isSuccess, isLoading, error } = useGetRecipesQuery();
   const { data: categoryList } = useGetCategoriesQuery();
   console.log(data);
   const [recipeFilter, setRecipeFilter] = useState({
@@ -17,11 +17,7 @@ export default function Recipes() {
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 12;
 
-
-
   const applyFilter = (data, searchTerm, categories) => {
-   
-
     return data
       .filter((recipe) => {
         const nameMatch = recipe.name
@@ -41,7 +37,6 @@ export default function Recipes() {
         }
         return true;
       });
-
   };
 
   const getCurrentPageItems = (filteredRecipes) => {
@@ -121,128 +116,135 @@ export default function Recipes() {
 
   return (
     <>
-      <div className="container">
-        <h2>Recipes</h2>
-        <form>
-          <label>
-            <p>
-              Search by Name or Ingredient:{" "}
-              <input
-                className="form-control"
-                name="recipeSearch"
-                value={recipeFilter.recipeSearch}
-                onChange={updateSearch}
-              />
-            </p>
-          </label>&nbsp;&nbsp;&nbsp;
-          <label>
-            <p>
-              Filter by Category:{" "}
-              <select
-                className="form-select"
-                value={recipeFilter.category}
-                onChange={updateCategory}
-              >
-                <option value="">Select Category</option>
-                {categoryList?.map((category) => (
-                  <option key={category.id} value={category.name}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-            </p>
-          </label>
-        </form>
-        <p>
-          {isLoading && "Loading recipes..."}
-          {error && "Error loading recipes..."}
-        </p>
-        <div>
-          <div className="row g-2">
-            {currentItems?.map((recipe) => (
-              <div className="col-md-4" key={recipe.id}>
-                <div
-                  className="card h-100"
-                  style={{ padding: "0",margin: "auto" }}
+      {isLoading ? (
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : (
+        <div className="container">
+          <h2>Recipes</h2>
+          {error && <p>Error loading recipes...</p>}
+          <form>
+            <label>
+              <p>
+                Search by Name or Ingredient:{" "}
+                <input
+                  className="form-control"
+                  name="recipeSearch"
+                  value={recipeFilter.recipeSearch}
+                  onChange={updateSearch}
+                />
+              </p>
+            </label>
+            &nbsp;&nbsp;&nbsp;
+            <label>
+              <p>
+                Filter by Category:{" "}
+                <select
+                  className="form-select"
+                  value={recipeFilter.category}
+                  onChange={updateCategory}
                 >
-                  {recipe?.photo ? (
-                    <img
-                      src={recipe.photo}
-                      className="card-img-top"
-                      style={{
-                        width: "100%",
-                        height: "20vw",
-                        objectFit: "cover",
-                      }}
-                    />
-                  ) : (
-                    <img
-                      src="https://placehold.co/600x600?text=No+Photo+Available"
-                      className="card-img-top"
-                      style={{
-                        width: "100%",
-                        height: "20vw",
-                        objectFit: "cover",
-                      }}
-                    />
-                  )}
+                  <option value="">Select Category</option>
+                  {categoryList?.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </p>
+            </label>
+          </form>
 
-                  <div className="card-body" style={{ marginBottom: "20px" }}>
-                    <h5 className="card-title">{recipe.name}</h5>
-                    <p className="card-text">{recipe.description}</p>
-                    <p className="mb-0 pb-0">
-                      {recipe.review &&
-                        recipe.review.length > 0 &&
-                        renderStarAverage(
-                          Math.round(calculateAverageRating(recipe.review))
-                        )}
-                    </p>
-                  </div>
+          <div>
+            <div className="row g-2">
+              {currentItems?.map((recipe) => (
+                <div className="col-md-4" key={recipe.id}>
+                  <div
+                    className="card h-100"
+                    style={{ padding: "0", margin: "auto" }}
+                  >
+                    {recipe?.photo ? (
+                      <img
+                        src={recipe.photo}
+                        className="card-img-top"
+                        style={{
+                          width: "100%",
+                          height: "20vw",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src="https://placehold.co/600x600?text=No+Photo+Available"
+                        className="card-img-top"
+                        style={{
+                          width: "100%",
+                          height: "20vw",
+                          objectFit: "cover",
+                        }}
+                      />
+                    )}
 
-                  <div className="card-body">
-                    <button
-                      className="button-details"
-                      onClick={() => seeRecipeDetails(recipe.id)}
-                      style={{
-                        position: "absolute",
-                        bottom: "0",
-                        margin: "20px 0",
-                      }}
-                    >
-                      Click for Recipe
-                    </button>
+                    <div className="card-body" style={{ marginBottom: "20px" }}>
+                      <h5 className="card-title">{recipe.name}</h5>
+                      <p className="card-text">{recipe.description}</p>
+                      <p className="mb-0 pb-0">
+                        {recipe.review &&
+                          recipe.review.length > 0 &&
+                          renderStarAverage(
+                            Math.round(calculateAverageRating(recipe.review))
+                          )}
+                      </p>
+                    </div>
+
+                    <div className="card-body">
+                      <button
+                        className="button-details"
+                        onClick={() => seeRecipeDetails(recipe.id)}
+                        style={{
+                          position: "absolute",
+                          bottom: "0",
+                          margin: "20px 0",
+                        }}
+                      >
+                        Click for Recipe
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <br />
+            <nav aria-label="Page navigation">
+              <ul className="pagination justify-content-center">
+                <li className="page-item">
+                  <ReactPaginate
+                    breakLabel="..."
+                    nextLabel="next >"
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={5}
+                    pageCount={pageCount}
+                    previousLabel="< previous"
+                    containerClassName="pagination"
+                    activeClassName="active"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                  />
+                </li>
+              </ul>
+            </nav>
           </div>
-          <br />
-          <nav aria-label="Page navigation">
-            <ul className="pagination justify-content-center">
-              <li className="page-item">
-                <ReactPaginate
-                  breakLabel="..."
-                  nextLabel="next >"
-                  onPageChange={handlePageClick}
-                  pageRangeDisplayed={5}
-                  pageCount={pageCount}
-                  previousLabel="< previous"
-                  containerClassName="pagination"
-                  activeClassName="active"
-                  pageClassName="page-item"
-                  pageLinkClassName="page-link"
-                  nextClassName="page-item"
-                  nextLinkClassName="page-link"
-                  previousClassName="page-item"
-                  previousLinkClassName="page-link"
-                  breakClassName="page-item"
-                  breakLinkClassName="page-link"
-                />
-              </li>
-            </ul>
-          </nav>
         </div>
-      </div>
+      )}
     </>
   );
 }

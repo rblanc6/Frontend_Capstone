@@ -17,7 +17,7 @@ import { useDeleteRecipeAsAdminMutation } from "../Admin/AdminSlice";
 
 export default function SingleRecipe() {
   const { id } = useParams();
-  const { data, isSuccess, refetch } = useGetRecipeQuery(id);
+  const { data, isSuccess, isLoading, error, refetch } = useGetRecipeQuery(id);
   const {
     data: allRecipes,
     isSuccess: recipesSuccess,
@@ -45,7 +45,6 @@ export default function SingleRecipe() {
     }
   }, [data, isSuccess]);
   console.log("Recipe array", recipeArr);
-  // console.log("favorites", recipeArr?.favoritedBy.length)
 
   const [allRecipesArr, setAllRecipesArr] = useState([]);
   useEffect(() => {
@@ -182,8 +181,19 @@ export default function SingleRecipe() {
   // const favoriteCount = recipeArr?.favoritedBy.length;
 
   return (
-    <>
+    <>{isLoading ? (
+            <div className="d-flex justify-content-center">
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : (
       <div className="container">
+        <p>
+          {error && "Error loading recipe..."}
+        </p>
+        
+
         {isEditing ? (
           <div className="card" style={{ minWidth: "42rem", margin: "auto" }}>
             {recipeArr?.photo ? (
@@ -262,10 +272,11 @@ export default function SingleRecipe() {
                           <i
                             className="bi bi-trash btn btn-outline-dark controls"
                             onClick={() => handleDeleteClick(recipeArr.id)}
-                          ></i>&nbsp;&nbsp;
+                          ></i>
+                          &nbsp;&nbsp;
                         </>
                       )}
-                      
+
                       {role === "ADMIN" && !isCreator && (
                         <>
                           <i
@@ -276,7 +287,8 @@ export default function SingleRecipe() {
                           <i
                             className="bi bi-trash btn btn-outline-dark controls"
                             onClick={() => handleDeleteAdminClick(recipeArr.id)}
-                          ></i>&nbsp;&nbsp;
+                          ></i>
+                          &nbsp;&nbsp;
                         </>
                       )}
                       {auth && (
@@ -352,6 +364,7 @@ export default function SingleRecipe() {
           </>
         )}
       </div>
+          )}
     </>
   );
 }
