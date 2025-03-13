@@ -309,7 +309,7 @@ export default function AddRecipe() {
         </div>
 
         <button className="button-details" type="submit" disabled={isLoading}>
-          {isLoading ? "Loading..." : "Submit Recipe"}
+          {isLoading ? <><span className="spinner-border spinner-border-sm text-light" aria-hidden="true"></span> <span role="status">Loading...</span></> : "Submit Recipe"}
         </button>
       </form>
 

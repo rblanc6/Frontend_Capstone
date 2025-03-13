@@ -381,7 +381,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
             disabled={isUpdating}
             className="button-details mt-4"
           >
-            {isUpdating ? "Updating..." : "Update Recipe"}
+            {isUpdating ? <><span className="spinner-border spinner-border-sm text-light" aria-hidden="true"></span> <span role="status">Updating...</span></> : "Update Recipe"}
           </button>
           &nbsp;
           <button

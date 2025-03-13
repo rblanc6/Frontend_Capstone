@@ -96,9 +96,16 @@ export default function Home() {
         </section>
       </div>
       <div className="container">
-        <div className="home-container">
+        <div className="home-container"><h3 className="mt-4">Trending Now</h3>
+        {isLoading ? (
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : (
           <div>
-            <h3 className="mt-4">Trending Now</h3>
+            
             <Carousel>
               {carouselRecipes.map((recipe) => (
                 <Carousel.Item
@@ -134,11 +141,7 @@ export default function Home() {
                 </Carousel.Item>
               ))}
             </Carousel>
-          </div>
-          <p className="text-center">
-            {isLoading && "Loading recipes..."}
-            {error && "Error loading recipes."}
-          </p>
+          </div>)}
           <div>
             <p className="lead">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
@@ -155,6 +158,13 @@ export default function Home() {
           </div>
 
           <h3 className="mt-4">Featured Recipes</h3>
+          {isLoading ? (
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : (
           <div className="row">
             {featuredRecipes.map((recipe) => (
               <div
@@ -222,11 +232,9 @@ export default function Home() {
                 </div>
               </div>
             ))}
-          </div>
+          </div>)}
 
-          {/* <button onClick={seeAllRecipes} className="btn btn-secondary mt-4">
-            Show All Recipes
-          </button> */}
+      
           <button onClick={seeAllRecipes} className="button-details-alt mt-2">
             <strong>Show All Recipes</strong>
           </button>

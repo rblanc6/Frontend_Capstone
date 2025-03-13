@@ -44,7 +44,7 @@ const usersApi = api.injectEndpoints({
           // Authorization: `Bearer ${window.localStorage.getItem("token")}`,
           Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
         },
-        transformResponse: (response) => response.data.users,
+        transformResponse: (response) => response.data,
         transformErrorResponse: (response) => response.data.error,
       }),
       invalidatesTags: ["User"],

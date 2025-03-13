@@ -390,3 +390,6 @@ li.comment-section {
   justify-content: flex-end;
 }
 
+.spinner-border {
+  color: #de296c !important;
+}
