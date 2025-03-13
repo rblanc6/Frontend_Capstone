@@ -90,7 +90,9 @@ export default function EditReviewForm({
     setActiveReviewId(null);
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <><div className="spinner-border spinner-border-sm m-3" role="status">
+  <span className="visually-hidden">Loading...</span>
+</div></>;
   if (fetchError) return <p>{fetchError.message || "Error fetching review"}</p>;
   return (
     <>

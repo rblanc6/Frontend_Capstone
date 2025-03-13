@@ -42,8 +42,17 @@ export default function ReviewSection() {
 
   useEffect(() => {
     const storedUser = window.sessionStorage.getItem("user");
-    if (storedUser && !authUser) {
-      dispatch(confirmLogin(JSON.parse(storedUser)));
+  
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser && !authUser) {
+          dispatch(confirmLogin(parsedUser));  
+        }
+      } catch (e) {
+        console.error("Error parsing user data from sessionStorage:", e);
+        
+      }
     }
   }, [authUser, dispatch]);
 
@@ -307,7 +316,7 @@ export default function ReviewSection() {
                                 className="bi bi-pencil-square"
                                 onClick={() => handleEditReview(rev.id)}
                               ></i>
-                              <br />
+                              &nbsp;
                               <i
                                 className="bi bi-trash"
                                 onClick={() => handleDeleteReview(rev.id)}
@@ -412,10 +421,9 @@ export default function ReviewSection() {
                                       {formatDate(comment.createdAt)}
                                     </p>
                                   </span>
-                                  {/* {console.log(comment)} */}
 
                                   {isCommentCreator && (
-                                    <span className="comment-actions">
+                                    <span className="comment-actions m-1">
                                       <i
                                         className="bi bi-pencil-square"
                                         onClick={() =>
@@ -432,7 +440,7 @@ export default function ReviewSection() {
                                     </span>
                                   )}
                                   {role === "ADMIN" && !isCommentCreator && (
-                                    <span className="comment-actions">
+                                    <span className="comment-actions m-1">
                                       <i
                                         className="bi bi-pencil-square"
                                         onClick={() =>

@@ -38,7 +38,11 @@ export default function Account() {
         </div>
       ) : (
         <div className="container">
-         {error && <div className="alert alert-danger" role="alert">Error loading user...</div>}
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              Error loading user...
+            </div>
+          )}
           <h3>
             Welcome {user.firstName} {user.lastName}
           </h3>
@@ -148,7 +152,7 @@ export default function Account() {
           </p>
           <p>
             <Link
-              to="/share-recipe"
+              to="/new-recipe"
               className="button-details-alt"
               style={{ textDecoration: "none" }}
             >
