@@ -1,11 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// const initialState = {
+//   value: window.sessionStorage.getItem("token") ? true : false,
+//   user: window.sessionStorage.getItem("user") 
+//     ? JSON.parse(window.sessionStorage.getItem("user")) 
+//     : null,
+// };
+
 const initialState = {
   value: window.sessionStorage.getItem("token") ? true : false,
-  user: window.sessionStorage.getItem("user") 
-    ? JSON.parse(window.sessionStorage.getItem("user")) 
-    : null,
+  user: (() => {
+    const user = window.sessionStorage.getItem("user");
+    try {
+      return user ? JSON.parse(user) : null;
+    } catch (e) {
+      console.error("Error parsing user data:", e);
+      return null;
+    }
+  })(),
 };
+
 
 export const confirmLoginSlice = createSlice({
   name: "confirmLogin",

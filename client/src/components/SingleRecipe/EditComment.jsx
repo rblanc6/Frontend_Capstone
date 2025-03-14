@@ -75,7 +75,9 @@ export default function EditCommentForm({ commentId, onCancel, setIsEditingComme
     setIsEditingComment(false);
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <><div className="spinner-border spinner-border-sm m-3" role="status">
+  <span className="visually-hidden">Loading...</span>
+</div></>;
   if (fetchError) return <p>{fetchError.message || "Error fetching comment"}</p>;
   return (
     <><div className="edit-comment">

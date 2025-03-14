@@ -110,8 +110,17 @@ export default function SingleRecipe() {
 
   useEffect(() => {
     const storedUser = window.sessionStorage.getItem("user");
-    if (storedUser && !authUser) {
-      dispatch(confirmLogin(JSON.parse(storedUser)));
+  
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser && !authUser) {
+          dispatch(confirmLogin(parsedUser));  
+        }
+      } catch (e) {
+        console.error("Error parsing user data from sessionStorage:", e);
+        
+      }
     }
   }, [authUser, dispatch]);
 
