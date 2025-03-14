@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 export default function Recipes() {
-  const { data, isSuccess, isLoading, error } = useGetRecipesQuery();
+  const { data, isSuccess, isLoading, error, refetch } = useGetRecipesQuery();
   const { data: categoryList } = useGetCategoriesQuery();
   console.log(data);
   const [recipeFilter, setRecipeFilter] = useState({
@@ -62,6 +62,7 @@ export default function Recipes() {
   useEffect(() => {
     if (isSuccess) {
       setRecipeArr(data);
+      refetch();
     }
   }, [data, isSuccess]);
 
