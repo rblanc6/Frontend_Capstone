@@ -10,6 +10,7 @@ export default function Recipes() {
   const [recipeFilter, setRecipeFilter] = useState({
     recipeSearch: "",
     category: "",
+    minRating: 0,
   });
   const navigate = useNavigate();
   const [recipeArr, setRecipeArr] = useState([]);
@@ -17,7 +18,13 @@ export default function Recipes() {
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 12;
 
-  const applyFilter = (data, searchTerm, categories) => {
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return totalRating / reviews.length;
+  };
+
+  const applyFilter = (data, searchTerm, categories, minRating) => {
     return data
       .filter((recipe) => {
         const nameMatch = recipe.name
@@ -36,6 +43,10 @@ export default function Recipes() {
           );
         }
         return true;
+      })
+      .filter((recipe) => {
+        const avgRating = calculateAverageRating(recipe.review);
+        return avgRating >= minRating;
       });
   };
 
@@ -70,6 +81,14 @@ export default function Recipes() {
     setItemOffset(0);
   };
 
+  const updateRating = (e) => {
+    setRecipeFilter({
+      ...recipeFilter,
+      minRating: parseFloat(e.target.value),
+    });
+    setItemOffset(0);
+  };
+
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % filteredRecipes.length;
     setItemOffset(newOffset);
@@ -78,18 +97,13 @@ export default function Recipes() {
   const filteredRecipes = applyFilter(
     recipeArr,
     recipeFilter.recipeSearch,
-    recipeFilter.category
+    recipeFilter.category,
+    recipeFilter.minRating
   );
   const currentItems = getCurrentPageItems(filteredRecipes);
   const pageCount = Math.ceil(filteredRecipes.length / itemsPerPage);
 
   console.log(currentItems);
-
-  const calculateAverageRating = (reviews) => {
-    if (!reviews || reviews.length === 0) return 0;
-    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
-    return totalRating / reviews.length;
-  };
 
   const renderStarAverage = (rating) => {
     const totalStars = 5;
@@ -153,6 +167,24 @@ export default function Recipes() {
                       {category.name}
                     </option>
                   ))}
+                </select>
+              </p>
+            </label>
+            &nbsp;&nbsp;&nbsp;
+            <label>
+              <p>
+                Filter by Minimum Rating:{" "}
+                <select
+                  className="form-select"
+                  value={recipeFilter.minRating}
+                  onChange={updateRating}
+                >
+                  <option value={0}>All Ratings</option>
+                  <option value={1}>1 Star</option>
+                  <option value={2}>2 Stars</option>
+                  <option value={3}>3 Stars</option>
+                  <option value={4}>4 Stars</option>
+                  <option value={5}>5 Stars</option>
                 </select>
               </p>
             </label>
