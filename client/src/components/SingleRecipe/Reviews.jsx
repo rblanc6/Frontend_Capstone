@@ -16,7 +16,7 @@ import { format } from "date-fns";
 
 export default function ReviewSection() {
   const { id } = useParams();
-  const { data, isSuccess } = useGetRecipeQuery(id);
+  const { data, isSuccess, refetch } = useGetRecipeQuery(id);
   const [addReview] = usePostReviewMutation();
   const [addComment] = usePostCommentMutation();
   const [review, setReview] = useState("");
@@ -42,16 +42,15 @@ export default function ReviewSection() {
 
   useEffect(() => {
     const storedUser = window.sessionStorage.getItem("user");
-  
+
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         if (parsedUser && !authUser) {
-          dispatch(confirmLogin(parsedUser));  
+          dispatch(confirmLogin(parsedUser));
         }
       } catch (e) {
         console.error("Error parsing user data from sessionStorage:", e);
-        
       }
     }
   }, [authUser, dispatch]);
@@ -89,6 +88,7 @@ export default function ReviewSection() {
         ...prevRecipeArr,
         review: [newReview, ...prevRecipeArr.review],
       }));
+      refetch();
       setReview("");
       setRating(0);
       setSuccessMessage(true);
@@ -128,6 +128,7 @@ export default function ReviewSection() {
             : rev
         ),
       }));
+      refetch();
       setComment("");
       setCommentSuccessMessage((prevState) => ({
         ...prevState,
@@ -327,8 +328,11 @@ export default function ReviewSection() {
                       </div>
 
                       <p className="card-text">
-                        &mdash; <i>{rev.user ? rev.user.firstName : ""}{" "}
-                        {rev.user ? rev.user.lastName[0] : ""}</i>
+                        &mdash;{" "}
+                        <i>
+                          {rev.user ? rev.user.firstName : ""}{" "}
+                          {rev.user ? rev.user.lastName[0] : ""}
+                        </i>
                       </p>
                       <p className="date-stamp">
                         Posted on {formatDate(rev.createdAt)}
@@ -411,12 +415,14 @@ export default function ReviewSection() {
                                     {comment.comment}
                                     <br />
                                     &mdash;{" "}
-                                    <i>{comment.user
-                                      ? comment.user.firstName
-                                      : ""}{" "}
-                                    {comment.user
-                                      ? comment.user.lastName[0]
-                                      : ""}</i>
+                                    <i>
+                                      {comment.user
+                                        ? comment.user.firstName
+                                        : ""}{" "}
+                                      {comment.user
+                                        ? comment.user.lastName[0]
+                                        : ""}
+                                    </i>
                                     <p className="date-stamp mt-2">
                                       {formatDate(comment.createdAt)}
                                     </p>

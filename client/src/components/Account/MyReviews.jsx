@@ -7,7 +7,7 @@ import { format } from "date-fns";
 
 export default function MyReviews() {
   const { id } = useParams();
-  const { data, isSuccess } = useGetUserQuery(id);
+  const { data, isSuccess, refetch } = useGetUserQuery(id);
   const [user, setUser] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(5);
@@ -17,6 +17,12 @@ export default function MyReviews() {
       setUser(data);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (user) {
+      refetch();
+    }
+  }, [user, refetch]);
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);

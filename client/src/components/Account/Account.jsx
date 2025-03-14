@@ -1,4 +1,4 @@
-import { useGetUserQuery } from "./AccountSlice";
+import { useGetUserQuery, useUpdateUserMutation } from "./AccountSlice";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -6,8 +6,53 @@ import { format } from "date-fns";
 
 export default function Account() {
   const { id } = useParams();
-  const { data, isSuccess, isLoading, error } = useGetUserQuery(id);
+  const { data, isSuccess, isLoading, error, refetch } = useGetUserQuery(id);
   const [user, setUser] = useState("");
+  const [updateUser] = useUpdateUserMutation();
+  const [editUser, setEditUser] = useState(null);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return totalRating / reviews.length;
+  };
+
+  const renderStarAverage = (rating) => {
+    const totalStars = 5;
+    let stars = [];
+
+    for (let i = 0; i < totalStars; i++) {
+      if (i < rating) {
+        stars.push(
+          <span key={i} className="star-rating">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="star-rating-empty">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      }
+    }
+
+    return stars;
+  };
+  
+  const handleClickEdit = (user) => {
+    setEditUser(user.id);
+    setFormData({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    });
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -15,8 +60,11 @@ export default function Account() {
     }
   }, [data]);
 
-  console.log(data);
-  console.log(data?.reviews);
+  useEffect(() => {
+    if (user) {
+      refetch();
+    }
+  }, [user, refetch]);
 
   function formatDate(dateString) {
     try {
@@ -27,6 +75,20 @@ export default function Account() {
       return "Invalid Date";
     }
   }
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = async () => {
+    try {
+      await updateUser({ id: editUser, ...formData }).unwrap();
+
+      setEditUser(null);
+    } catch (error) {
+      console.error("Update failed:", error);
+    }
+  };
 
   return (
     <>
@@ -43,10 +105,75 @@ export default function Account() {
               Error loading user...
             </div>
           )}
-          <h3>
-            Welcome {user.firstName} {user.lastName}
-          </h3>
-          <h6>{user.email}</h6>
+          <>
+            {editUser === user.id ? (
+              <div>
+                <p>
+                  <label>First Name:</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                  />
+                </p>
+                <p>
+                  <label>Last Name:</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                  />
+                </p>
+                <p>
+                  <label>Email:</label>
+                  <input
+                    className="form-control"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
+                </p>{" "}
+                <button onClick={handleSave} className="button-details">
+                  Save
+                </button>
+                &nbsp;&nbsp;
+                <button
+                  onClick={() => setEditUser(null)}
+                  className="button-details"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  gap: "15px",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>
+                  <h3>
+                    Welcome {user.firstName} {user.lastName}
+                  </h3>
+                  <h6>{user.email}</h6>
+                </span>
+                <span>
+                  <button
+                    onClick={() => handleClickEdit(user)}
+                    className="button-details"
+                  >
+                    Edit User Details
+                  </button>
+                </span>
+              </div>
+            )}
+          </>
           <hr />
           <ul className="nav nav-fill">
             <li className="nav-item">
@@ -108,7 +235,14 @@ export default function Account() {
                       )}
 
                       <div className="card-body mb-4">
-                        <h5 className="card-title">{rec.name}</h5>
+                        <h5 className="card-title mb-0">{rec.name}</h5>
+                        <p className="mb-0 pb-0">
+                          {rec.review &&
+                            rec.review.length > 0 &&
+                            renderStarAverage(
+                              Math.round(calculateAverageRating(rec.review))
+                            )}
+                        </p>
                         <p className="card-text">{rec.description}</p>
                       </div>
                       <div className="card-body">
@@ -194,7 +328,14 @@ export default function Account() {
                       )}
 
                       <div className="card-body mb-4">
-                        <h5 className="card-title">{fav.recipe.name}</h5>
+                        <h5 className="card-title mb-0">{fav.recipe.name}</h5>
+                        <p className="mb-0 pb-0">
+                          {fav.recipe.review &&
+                            fav.recipe.review.length > 0 &&
+                            renderStarAverage(
+                              Math.round(calculateAverageRating(fav.recipe.review))
+                            )}
+                        </p>
                         <p className="card-text">{fav.recipe.description}</p>
                       </div>
                       <div className="card-body">

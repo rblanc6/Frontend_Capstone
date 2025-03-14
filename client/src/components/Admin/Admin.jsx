@@ -302,15 +302,15 @@ export default function Admin() {
                                 <span style={{ textAlign: "right" }}>
                                   <p>
                                     <strong>Recipes:</strong>{" "}
-                                    {user.recipes.length}
+                                    {user.recipes.length || 0}
                                   </p>
                                   <p>
                                     <strong>Reviews:</strong>{" "}
-                                    {user.reviews.length}
+                                    {user.reviews.length || 0}
                                   </p>
                                   <p>
                                     <strong>Comments:</strong>{" "}
-                                    {user.comments.length}
+                                    {user.comments.length || 0}
                                   </p>
                                 </span>
                               </div>
