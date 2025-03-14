@@ -4,7 +4,6 @@ import { useRegisterMutation } from "./RegisterSlice";
 import { confirmLogin } from "../../app/confirmLoginSlice";
 import { useDispatch } from "react-redux";
 
-
 export default function Register() {
   const [form, setForm] = useState({
     firstName: "",
@@ -30,14 +29,11 @@ export default function Register() {
       const response = await registerUser(form).unwrap();
       console.log(response);
       dispatch(confirmLogin());
-      navigate("/account");
+        navigate("/account");
     } catch (error) {
-      if (error.data && error.data.message === "Email already in use") {
-        setError("This email is already in use. Please use a different one.");
-      } else {
-        setError(error.data);
-        console.error(error.data);
-      }
+        console.error("error response", error);
+        setError(error.data.message)
+      // }
     }
   };
 
@@ -57,6 +53,7 @@ export default function Register() {
                   className="form-control"
                   type="text"
                   name="firstName"
+                  required
                   onChange={change}
                 />
               </td>
@@ -70,6 +67,7 @@ export default function Register() {
                   className="form-control"
                   type="text"
                   name="lastName"
+                  required
                   onChange={change}
                 />
               </td>
@@ -83,6 +81,7 @@ export default function Register() {
                   className="form-control"
                   type="email"
                   name="email"
+                  required
                   onChange={change}
                 />
               </td>
@@ -119,7 +118,11 @@ export default function Register() {
                 <button type="submit" className="button-details">
                   Submit
                 </button>
-                {error && <p className="error">{error}</p>}
+                {error && (
+                  <div className="alert alert-danger mt-3" role="alert">
+                    {error}
+                  </div>
+                )}
               </td>
             </tr>
           </tbody>

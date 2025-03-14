@@ -201,11 +201,19 @@ export default function ReviewSection() {
     setCurrentCommentId(null);
   };
 
+  console.log("are there reviews", recipeArr?.review);
+
   return (
     <>
       <div className="container">
         <br />
-        <h1 className="display-6">Reviews</h1>
+
+        {recipeArr?.review?.length === 0 ? (
+          <h1 className="display-6">No reviews yet</h1>
+        ) : (
+          <h1 className="display-6">Reviews</h1>
+        )}
+
         <br />
 
         {auth && (

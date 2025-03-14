@@ -144,12 +144,13 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
   const handleInstructionChange = (index, e) => {
     const { value } = e.target;
     const newInstructions = [...recipe.instructions];
-    newInstructions[index] = { instruction: value };
+    newInstructions[index] = { ...newInstructions[index], instruction: value };
     setRecipe((prevState) => ({
       ...prevState,
       instructions: newInstructions,
     }));
   };
+
   const handleAddInstruction = () => {
     setRecipe((prevState) => ({
       ...prevState,
