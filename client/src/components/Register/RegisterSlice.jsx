@@ -14,14 +14,17 @@ const registerApi = api.injectEndpoints({
           email,
           password,
         },
+        transformResponse: (response) => response.data,
+        transformErrorResponse: (response) => response.data.error,
       }),
+
       invalidatesTags: ["User"],
     }),
   }),
 });
 
 const storeToken = (state, { payload }) => {
-    window.sessionStorage.setItem("token", payload.token);
+  window.sessionStorage.setItem("token", payload.token);
   // window.localStorage.setItem("token", payload.token);
 };
 

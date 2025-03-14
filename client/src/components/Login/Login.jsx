@@ -21,7 +21,7 @@ export default function Login({ setToken }) {
       console.log(result.role);
       if (result.error) {
         console.error(error);
-        setError(error);
+        setError(error.data.message);
       } else {
         sessionStorage.setItem("token", result.token);
         sessionStorage.setItem("role", result.role);
@@ -39,7 +39,7 @@ export default function Login({ setToken }) {
       }
       // setSuccessMessage(result.message);
     } catch (error) {
-      setError(error);
+      setError(error.data.message);
       console.error(error);
     }
   }
@@ -81,7 +81,11 @@ export default function Login({ setToken }) {
               <tr>
                 <td colSpan={2}>
                   <button className="button-details">Submit</button>
-                  {error && <p className="error">{error.data}</p>}
+                  {error && (
+                  <div className="alert alert-danger mt-3" role="alert">
+                    {error}
+                  </div>
+                )}
                 </td>
               </tr>
             </tbody>
