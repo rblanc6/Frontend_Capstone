@@ -88,6 +88,58 @@ export default function UserDetailsGrid({ isGridView }) {
       )
     : [];
 
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return totalRating / reviews.length;
+  };
+
+  const renderStarAverage = (rating) => {
+    const totalStars = 5;
+    let stars = [];
+
+    for (let i = 0; i < totalStars; i++) {
+      if (i < rating) {
+        stars.push(
+          <span key={i} className="star-rating">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="star-rating-empty">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      }
+    }
+
+    return stars;
+  };
+
+  const renderStars = (rating) => {
+    const totalStars = 5;
+    let stars = [];
+
+    for (let i = 0; i < totalStars; i++) {
+      if (i < rating) {
+        stars.push(
+          <span key={i} className="star-rating">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        ); // Filled star
+      } else {
+        stars.push(
+          <span key={i} className="star-rating-empty">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        ); // Empty star
+      }
+    }
+
+    return stars;
+  };
+
   return (
     <>
       {isLoading ? (
@@ -177,7 +229,14 @@ export default function UserDetailsGrid({ isGridView }) {
                         className="card-body"
                         style={{ marginBottom: "20px" }}
                       >
-                        <h5 className="card-title">{recipe.name}</h5>
+                        <h5 className="card-title mb-0">{recipe.name}</h5>
+                        <p className="mb-0 pb-0">
+                          {recipe.review &&
+                            recipe.review.length > 0 &&
+                            renderStarAverage(
+                              Math.round(calculateAverageRating(recipe.review))
+                            )}
+                        </p>
                         <p className="date-stamp">
                           {formatDate(recipe.createdAt)}
                         </p>
@@ -267,13 +326,15 @@ export default function UserDetailsGrid({ isGridView }) {
                         className="card-body"
                         style={{ marginBottom: "20px" }}
                       >
-                        <h5 className="card-title">
+                        <h5 className="card-title mb-0">
                           <LongText content={review.review} limit={100} />
                         </h5>
+                        {renderStars(review.rating)}
                         <p className="date-stamp">
                           {formatDate(review.createdAt)} <br />
                           on {review?.recipe?.name}
                         </p>
+    
                       </div>
 
                       <div className="card-body">

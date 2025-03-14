@@ -6,16 +6,51 @@ import ReactPaginate from "react-paginate";
 
 export default function Favorites() {
   const { id } = useParams();
-  const { data, isSuccess, isLoading, error } = useGetUserQuery(id);
+  const { data, isSuccess, isLoading, error, refetch } = useGetUserQuery(id);
   const [user, setUser] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(5);
+
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return totalRating / reviews.length;
+  };
+
+  const renderStarAverage = (rating) => {
+    const totalStars = 5;
+    let stars = [];
+
+    for (let i = 0; i < totalStars; i++) {
+      if (i < rating) {
+        stars.push(
+          <span key={i} className="star-rating">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="star-rating-empty">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      }
+    }
+
+    return stars;
+  };
 
   useEffect(() => {
     if (isSuccess) {
       setUser(data);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (user) {
+      refetch();
+    }
+  },[user, refetch]);
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
@@ -71,14 +106,21 @@ export default function Favorites() {
                   </div>
                   <div className="col-md-8">
                     <div className="card-body">
-                      <h4 className="card-title">
+                      <h4 className="card-title mb-0">
                         <Link
-                          className={"link-style"}
+                          className="link-style"
                           to={`/recipes/${fav.recipeId}`}
                         >
                           {fav.recipe.name}
                         </Link>
                       </h4>
+                      <p className="mb-0 pb-0">
+                          {fav.recipe.review &&
+                            fav.recipe.review.length > 0 &&
+                            renderStarAverage(
+                              Math.round(calculateAverageRating(fav.recipe.review))
+                            )}
+                        </p>
                       <p className="card-text">{fav.recipe.description}</p>
                     </div>
                   </div>

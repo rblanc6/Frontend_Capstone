@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 
 export default function MyRecipes() {
   const { id } = useParams();
-  const { data, isSuccess, isLoading, error } = useGetUserQuery(id);
+  const { data, isSuccess, isLoading, error, refetch } = useGetUserQuery(id);
   const [user, setUser] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(5);
@@ -15,6 +15,41 @@ export default function MyRecipes() {
       setUser(data);
     }
   }, [data, isSuccess]);
+
+  useEffect(() => {
+    if (user) {
+      refetch();
+    }
+  },[user, refetch]);
+
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return totalRating / reviews.length;
+  };
+
+  const renderStarAverage = (rating) => {
+    const totalStars = 5;
+    let stars = [];
+
+    for (let i = 0; i < totalStars; i++) {
+      if (i < rating) {
+        stars.push(
+          <span key={i} className="star-rating">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="star-rating-empty">
+            <i className="bi bi-star-fill"></i>
+          </span>
+        );
+      }
+    }
+
+    return stars;
+  };
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
@@ -72,14 +107,21 @@ export default function MyRecipes() {
                   </div>
                   <div className="col-md-8">
                     <div className="card-body">
-                      <h4 className="card-title">
+                      <h4 className="card-title mb-0">
                         <Link
-                          className={"link-style"}
+                          className="link-style"
                           to={`/recipes/${recipe.id}`}
                         >
                           {recipe.name}
-                        </Link>
-                      </h4>
+                        </Link></h4>
+                        <p className="mb-0 pb-0">
+                          {recipe.review &&
+                            recipe.review.length > 0 &&
+                            renderStarAverage(
+                              Math.round(calculateAverageRating(recipe.review))
+                            )}
+                        </p>
+                      
                       <p className="card-text">{recipe.description}</p>
                     </div>
                   </div>
