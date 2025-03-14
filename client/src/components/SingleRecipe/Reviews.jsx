@@ -38,7 +38,12 @@ export default function ReviewSection() {
       setRecipeArr(data);
     }
   }, [data, isSuccess]);
-  // console.log("Recipe array", recipeArr);
+
+  useEffect(() => {
+    if (authUser) {
+      refetch();
+    }
+  }, [authUser, refetch]);
 
   useEffect(() => {
     const storedUser = window.sessionStorage.getItem("user");
@@ -88,7 +93,6 @@ export default function ReviewSection() {
         ...prevRecipeArr,
         review: [newReview, ...prevRecipeArr.review],
       }));
-      refetch();
       setReview("");
       setRating(0);
       setSuccessMessage(true);
@@ -128,7 +132,6 @@ export default function ReviewSection() {
             : rev
         ),
       }));
-      refetch();
       setComment("");
       setCommentSuccessMessage((prevState) => ({
         ...prevState,
