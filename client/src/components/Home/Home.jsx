@@ -143,17 +143,11 @@ export default function Home() {
             </Carousel>
           </div>)}
           <div>
-            <p className="lead">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              commodo dignissim lorem non consequat. Duis pharetra euismod
-              dignissim.
+            <p className="fs-5 mt-4 mb-2 fw-semibold">
+              Weekly Challenge: &quot;One Ingredient, Three Dishes!&quot;
             </p>
-            <p>
-              Donec libero libero, sagittis non arcu et, aliquam sagittis
-              ligula. Vivamus ornare augue id magna luctus, nec aliquet erat
-              laoreet. Aliquam erat volutpat. Praesent vitae turpis nec dui
-              ultricies rhoncus nec sit amet leo. Vestibulum ante ipsum primis
-              in faucibus orci luctus et ultrices posuere cubilia curae.
+            <p className="fst-italic">
+            &quot;This week, we challenge you to get creative with a single ingredient. Pick one ingredient you already have in your kitchen (think: eggs, avocado, potatoes, or chicken) and create THREE unique dishes using it! Share your results with us on social media using #OneIngredientThreeDishes, and tag us for a chance to be featured on our page!&quot;
             </p>
           </div>
 

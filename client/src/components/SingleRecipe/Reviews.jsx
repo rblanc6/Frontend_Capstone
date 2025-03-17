@@ -201,8 +201,6 @@ export default function ReviewSection() {
     setCurrentCommentId(null);
   };
 
-  console.log("are there reviews", recipeArr?.review);
-
   return (
     <>
       <div className="container">

@@ -44,7 +44,7 @@ export default function SingleRecipe() {
       setRecipeArr(data);
     }
   }, [data, isSuccess]);
-  console.log("Recipe array", recipeArr);
+  // console.log("Recipe array", recipeArr);
 
   const [allRecipesArr, setAllRecipesArr] = useState([]);
   useEffect(() => {
