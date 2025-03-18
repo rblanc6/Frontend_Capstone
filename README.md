@@ -14,15 +14,16 @@ A central space for all things food, offering the essence of a community-driven 
 
 ### Built with:
 
-- [![JavaScript][JavaScript.js]][JavaScript-url]
-- [![React][React.js]][React-url]
-- ![ReactRouter][ReactRouter.js]
-- ![Redux][Redux.js]
-- ![CSS][CSS.js]
-- ![Axios][Axios.js]
-- ![Node][Node.js]
-- [![Bootstrap][Bootstrap.js]][Bootstrap-url]
+- [![Visual Studio Code]][VSC-url]
+- [![React]][React-url]
+- [![React Router]][ReactRouter-url]
+- [![Redux]][Redux-url]
+- [![Vite]][Vite-url]
+- [![Bootstrap]][Bootstrap-url]
+- [![JavaScript]][JavaScript-url]
 
+<!-- - ![CSS][CSS.js]
+- ![Axios][Axios.js] -->
 ### Getting Started:
 
 Prerequisites
@@ -42,22 +43,34 @@ Installation
    ```sh
    npm install
    ```
-3. Change git remote url to avoid accidental pushes to the base project
-   ```sh
-   git remote set-url origin github_username/Frontend_Capstone
-   git remote -v # confirm the changes
-   ```
+3. Run the development server
+    ```sh
+    npm run dev
+    ```
+
 
 <!-- Links -->
-
-[JavaScript.js]: https://img.shields.io/badge/JavaScript-20232A?style=for-the-badge&logo=javascript&logoColor=F7DF1E
-[JavaScript-url]: https://www.javascript.com
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[Visual Studio Code]: https://custom-icon-badges.demolab.com/badge/Visual%20Studio%20Code-0078d7.svg?logo=vsc&logoColor=white
+[VSC-url]:https://code.visualstudio.com/
+[JavaScript]: https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000
+[JavaScript-url]: https://www.javascript.com/
+[React]: https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB
 [React-url]: https://reactjs.org/
-[ReactRouter.js]: https://img.shields.io/badge/ReactRouter-20232A?style=for-the-badge&logo=reactrouter&logoColor=CA4245
-[Redux.js]: https://img.shields.io/badge/Redux-20232A?style=for-the-badge&logo=redux&logoColor=764ABC
-[CSS.js]: https://img.shields.io/badge/CSS-20232A?style=for-the-badge&logo=css&logoColor=663399
-[Axios.js]: https://img.shields.io/badge/Axios-20232A?style=for-the-badge&logo=axios&logoColor=5A29E4
-[Node.js]: https://img.shields.io/badge/Node.js-20232A?style=for-the-badge&logo=nodedotjs&logoColor=5FA04E
-[Bootstrap.js]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[React Router]: https://img.shields.io/badge/React_Router-CA4245?logo=react-router&logoColor=white
+[ReactRouter-url]: https://reactrouter.com/
+[Redux]: https://img.shields.io/badge/Redux-764ABC?logo=redux&logoColor=fff
+[Redux-url]: https://redux.js.org/
+[Bootstrap]:https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=fff
 [Bootstrap-url]: https://getbootstrap.com
+[Vite]: https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=fff
+[Vite-url]: https://vite.dev/
+
+
+
+
+
+<!-- [CSS.js]: https://img.shields.io/badge/CSS-20232A?style=for-the-badge&logo=css&logoColor=663399
+[Axios.js]: https://img.shields.io/badge/Axios-20232A?style=for-the-badge&logo=axios&logoColor=5A29E4 -->
+
+
+

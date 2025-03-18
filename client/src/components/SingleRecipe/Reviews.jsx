@@ -14,6 +14,7 @@ import EditReviewForm from "./EditReview";
 import EditCommentForm from "./EditComment";
 import { format } from "date-fns";
 
+
 export default function ReviewSection() {
   const { id } = useParams();
   const { data, isSuccess, refetch } = useGetRecipeQuery(id);
@@ -40,10 +41,10 @@ export default function ReviewSection() {
   }, [data, isSuccess]);
 
   useEffect(() => {
-    if (authUser) {
+    if (authUser || role === "ADMIN") {
       refetch();
     }
-  }, [authUser, refetch]);
+  }, [authUser, role, refetch]);
 
   useEffect(() => {
     const storedUser = window.sessionStorage.getItem("user");
@@ -96,6 +97,7 @@ export default function ReviewSection() {
       setReview("");
       setRating(0);
       setSuccessMessage(true);
+      refetch();
     } catch (error) {
       if (error?.data?.message) {
         setErrorMessage(error.data.message);
@@ -137,6 +139,7 @@ export default function ReviewSection() {
         ...prevState,
         [reviewId]: "Thanks for your comment!",
       }));
+      refetch();
     } catch (error) {
       console.error("Error posting comment:", error);
       setErrorMessage(
