@@ -8,7 +8,6 @@ export default function Login({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  // const [successMessage, setSuccessMessage] = useState(null);
   const [loginUser] = useLoginMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
