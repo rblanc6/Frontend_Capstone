@@ -53,6 +53,7 @@ export default function SingleRecipe() {
     }
   }, [allRecipes, recipesSuccess]);
 
+  // Delete a logged in user's recipe
   const handleDeleteClick = async (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
@@ -71,7 +72,8 @@ export default function SingleRecipe() {
       console.log("Deletion cancelled.");
     }
   };
-
+  
+  // Delete a recipe as an admin
   const handleDeleteAdminClick = async (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
@@ -136,6 +138,7 @@ export default function SingleRecipe() {
     }
   }, [favoriteRecipes, isFavoriteRecipesFetched, id]);
 
+  // Toggle the favorite option on a recipe
   const handleFavorite = async () => {
     try {
       if (isFavorite) {
@@ -186,8 +189,6 @@ export default function SingleRecipe() {
   const favoriteCount = Array.isArray(recipeArr?.favoritedBy)
     ? recipeArr.favoritedBy.length
     : 0;
-
-  // const favoriteCount = recipeArr?.favoritedBy.length;
 
   return (
     <>{isLoading ? (

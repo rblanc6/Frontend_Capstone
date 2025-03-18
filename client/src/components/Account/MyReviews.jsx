@@ -44,8 +44,6 @@ export default function MyReviews() {
     }
   }
 
-  console.log(data);
-
   return (
     <>
       <div className="container">

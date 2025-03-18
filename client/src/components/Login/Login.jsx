@@ -26,11 +26,11 @@ export default function Login({ setToken }) {
         sessionStorage.setItem("token", result.token);
         sessionStorage.setItem("role", result.role);
         console.log("User data from API:", result.user);
-        dispatch(confirmLogin({id: result.user.id}));
-        console.log('User dispatched:', {
+        dispatch(confirmLogin({ id: result.user.id }));
+        console.log("User dispatched:", {
           id: result.user.id,
         });
-        
+
         if (result.role === "ADMIN") {
           navigate("/admin");
         } else {
@@ -44,54 +44,52 @@ export default function Login({ setToken }) {
     }
   }
   return (
-      <div className="container">
-        <h2>Log In</h2>
-        <form onSubmit={handleSubmit}>
-          <table>
-            <tbody>
-              <tr>
-                <td width="150px">
-                  <label>Email: </label>
-                </td>
-                <td>
-                  <input
-                  
-                    className="form-control"
-                    value={email}
-                    type="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td width="150px">
-                  <label>Password: </label>
-                </td>
-                <td>
-                  <input
-                    className="form-control"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={2}>
-                  <button className="button-details">Submit</button>
-                  {error && (
+    <div className="container">
+      <h2>Log In</h2>
+      <form onSubmit={handleSubmit}>
+        <table>
+          <tbody>
+            <tr>
+              <td width="150px">
+                <label>Email: </label>
+              </td>
+              <td>
+                <input
+                  className="form-control"
+                  value={email}
+                  type="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </td>
+            </tr>
+            <tr>
+              <td width="150px">
+                <label>Password: </label>
+              </td>
+              <td>
+                <input
+                  className="form-control"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={2}>
+                <button className="button-details">Submit</button>
+                {error && (
                   <div className="alert alert-danger mt-3" role="alert">
                     {error}
                   </div>
                 )}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </form>
-      </div>
-    
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
   );
 }

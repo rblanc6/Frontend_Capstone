@@ -22,6 +22,7 @@ export default function StarRating({ initialRating = 0, onRatingChange }) {
     setHoveredRating(rating);
   };
 
+  // Fill stars based on users rating input
   const renderStars = () => {
     const totalStars = 5;
     const stars = [];

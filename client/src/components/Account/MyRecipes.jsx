@@ -20,7 +20,7 @@ export default function MyRecipes() {
     if (user) {
       refetch();
     }
-  },[user, refetch]);
+  }, [user, refetch]);
 
   const calculateAverageRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
@@ -47,7 +47,6 @@ export default function MyRecipes() {
         );
       }
     }
-
     return stars;
   };
 
@@ -57,8 +56,6 @@ export default function MyRecipes() {
   const indexOfLastRecipe = (currentPage + 1) * itemsPerPage;
   const indexOfFirstRecipe = indexOfLastRecipe - itemsPerPage;
   const myRecipes = user?.recipes?.slice(indexOfFirstRecipe, indexOfLastRecipe);
-
-  console.log(data);
 
   return (
     <>
@@ -75,11 +72,7 @@ export default function MyRecipes() {
 
           {myRecipes?.map((recipe) => {
             return (
-              <div
-                key={recipe.id}
-                className="card mb-3"
-                // style={{ maxWidth: "540px" }}
-              >
+              <div key={recipe.id} className="card mb-3">
                 <div className="row g-0">
                   <div className="col-md-4">
                     {recipe.photo ? (
@@ -113,15 +106,16 @@ export default function MyRecipes() {
                           to={`/recipes/${recipe.id}`}
                         >
                           {recipe.name}
-                        </Link></h4>
-                        <p className="mb-0 pb-0">
-                          {recipe.review &&
-                            recipe.review.length > 0 &&
-                            renderStarAverage(
-                              Math.round(calculateAverageRating(recipe.review))
-                            )}
-                        </p>
-                      
+                        </Link>
+                      </h4>
+                      <p className="mb-0 pb-0">
+                        {recipe.review &&
+                          recipe.review.length > 0 &&
+                          renderStarAverage(
+                            Math.round(calculateAverageRating(recipe.review))
+                          )}
+                      </p>
+
                       <p className="card-text">{recipe.description}</p>
                     </div>
                   </div>

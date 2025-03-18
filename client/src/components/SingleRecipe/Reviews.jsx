@@ -14,7 +14,6 @@ import EditReviewForm from "./EditReview";
 import EditCommentForm from "./EditComment";
 import { format } from "date-fns";
 
-
 export default function ReviewSection() {
   const { id } = useParams();
   const { data, isSuccess, refetch } = useGetRecipeQuery(id);
@@ -65,6 +64,7 @@ export default function ReviewSection() {
     setRating(value);
   };
 
+  // Reformating the time and date stamp to our selected format
   function formatDate(dateString) {
     try {
       const date = new Date(dateString);
@@ -77,6 +77,8 @@ export default function ReviewSection() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState(false);
+
+  // Add/post a review and update associated metadata
   async function postReview(event) {
     event.preventDefault();
     try {
@@ -114,6 +116,7 @@ export default function ReviewSection() {
     }
   };
 
+  // Add/post a comment and update associated metadata
   async function postComment(event, reviewId) {
     event.preventDefault();
     try {

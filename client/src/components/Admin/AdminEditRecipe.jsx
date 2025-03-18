@@ -42,8 +42,6 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
 
   const handleCategoryChange = (e) => {
     const { value, checked } = e.target;
-    // console.log(value);
-    // console.log(checked);
     const numValue = +value;
     let temp = [...selectedCategory];
     const found = temp.indexOf(numValue);
@@ -74,16 +72,12 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
 
   useEffect(() => {
     if (currentRecipe) {
-      // console.log("Current Recipe Ingredients: ", currentRecipe.ingredient);
-
       const filteredIngredients = currentRecipe.ingredient.filter(
         (ingredient) => !removedIngredientIds.includes(ingredient.id)
       );
-
       const filteredInstructions = currentRecipe.instructions.filter(
         (instruction) => !removedInstructionIds.includes(instruction.id)
       );
-
       setRecipe({
         name: currentRecipe.name,
         description: currentRecipe.description,
@@ -102,7 +96,6 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
         photo: currentRecipe.photo,
         creatorId: currentRecipe.creatorId,
       });
-
       setSelectedCategory(currentRecipe.categories?.map((cat) => cat.id) || []);
     }
   }, [currentRecipe, removedIngredientIds, removedInstructionIds]);
@@ -197,8 +190,6 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("Form submitted with selected categories:", selectedCategory);
-
     const updatedIngredients = recipe.ingredients.filter(
       (ing) => !removedIngredientIds.includes(ing.id)
     );

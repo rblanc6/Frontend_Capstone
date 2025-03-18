@@ -37,8 +37,6 @@ export default function Home() {
     }
   }, [data, isSuccess]);
 
-  console.log(featuredRecipes);
-
   const calculateAverageRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
@@ -64,11 +62,8 @@ export default function Home() {
         );
       }
     }
-
     return stars;
   };
-
-  console.log("REVIEW", data?.recipe);
 
   return (
     <>

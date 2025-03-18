@@ -93,7 +93,6 @@ export default function MyComments() {
                 </div>
               </div>
             </div>
-            // </div>
           );
         })}
         {Math.ceil(user?.favorites?.length) > 5 ? (

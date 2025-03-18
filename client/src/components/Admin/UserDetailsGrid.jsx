@@ -54,8 +54,6 @@ export default function UserDetailsGrid({ isGridView }) {
     );
   };
 
-  console.log(userDetails.comments);
-
   function formatDate(dateString) {
     try {
       const date = new Date(dateString);
@@ -113,7 +111,6 @@ export default function UserDetailsGrid({ isGridView }) {
         );
       }
     }
-
     return stars;
   };
 
@@ -136,7 +133,6 @@ export default function UserDetailsGrid({ isGridView }) {
         ); // Empty star
       }
     }
-
     return stars;
   };
 

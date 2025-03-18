@@ -31,7 +31,6 @@ export default function Admin() {
       const sortedUsers = [...data].sort((a, b) =>
         a.firstName.localeCompare(b.firstName)
       );
-
       setUserArr(sortedUsers);
     }
   }, [data, isSuccess]);
@@ -41,13 +40,9 @@ export default function Admin() {
       user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
-
     const isRoleMatch = selectedRole ? user.role === selectedRole : true;
-
     return isSearchMatch && isRoleMatch;
   });
-
-  console.log("Filtered Users Count:", filterUsers.length);
 
   const handleRoleChange = (e) => {
     setSelectedRole(e.target.value);
@@ -94,7 +89,6 @@ export default function Admin() {
           a.firstName.localeCompare(b.firstName)
         );
       });
-
       setEditUser(null);
     } catch (error) {
       console.error("Update failed:", error);
@@ -138,8 +132,7 @@ export default function Admin() {
         <div className="container">
           <h3>Admin Dashboard</h3>
           <hr />
-          {/* <p style={{ wordWrap: "break-word" }}>Token: {token}</p> */}
-
+          
           <h1 className="display-6">User List</h1>
           {error && (
             <div className="alert alert-danger" role="alert">

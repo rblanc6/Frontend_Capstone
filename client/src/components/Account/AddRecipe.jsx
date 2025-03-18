@@ -11,7 +11,7 @@ export default function AddRecipe() {
   const navigate = useNavigate();
   const { data: category, isSuccess: categorySuccess } =
     useGetCategoriesQuery();
-  const [postRecipe, { isLoading, error }] = usePostRecipeMutation();
+  const [postRecipe, { isLoading }] = usePostRecipeMutation();
   const [categories, setCategories] = useState([]);
   const { data: unit, isSuccess: unitsSuccess } = useGetIngredientUnitsQuery();
   const [units, setUnits] = useState([]);
@@ -309,7 +309,17 @@ export default function AddRecipe() {
         </div>
 
         <button className="button-details" type="submit" disabled={isLoading}>
-          {isLoading ? <><span className="spinner-border spinner-border-sm text-light" aria-hidden="true"></span> <span role="status">Loading...</span></> : "Submit Recipe"}
+          {isLoading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm text-light"
+                aria-hidden="true"
+              ></span>{" "}
+              <span role="status">Loading...</span>
+            </>
+          ) : (
+            "Submit Recipe"
+          )}
         </button>
       </form>
 

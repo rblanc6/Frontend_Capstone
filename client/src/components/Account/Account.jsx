@@ -44,7 +44,7 @@ export default function Account() {
 
     return stars;
   };
-  
+
   const handleClickEdit = (user) => {
     setEditUser(user.id);
     setFormData({
@@ -333,7 +333,9 @@ export default function Account() {
                           {fav.recipe.review &&
                             fav.recipe.review.length > 0 &&
                             renderStarAverage(
-                              Math.round(calculateAverageRating(fav.recipe.review))
+                              Math.round(
+                                calculateAverageRating(fav.recipe.review)
+                              )
                             )}
                         </p>
                         <p className="card-text">{fav.recipe.description}</p>

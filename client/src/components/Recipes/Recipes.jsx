@@ -24,6 +24,7 @@ export default function Recipes() {
     return totalRating / reviews.length;
   };
 
+  // Define recipe filters
   const applyFilter = (data, searchTerm, categories, minRating) => {
     return data
       .filter((recipe) => {
@@ -64,7 +65,7 @@ export default function Recipes() {
       setRecipeArr(data);
       refetch();
     }
-  }, [data, isSuccess]);
+  }, [data, isSuccess, refetch]);
 
   const updateSearch = (e) => {
     setRecipeFilter({
@@ -104,8 +105,6 @@ export default function Recipes() {
   const currentItems = getCurrentPageItems(filteredRecipes);
   const pageCount = Math.ceil(filteredRecipes.length / itemsPerPage);
 
-  console.log(currentItems);
-
   const renderStarAverage = (rating) => {
     const totalStars = 5;
     let stars = [];
@@ -125,7 +124,6 @@ export default function Recipes() {
         );
       }
     }
-
     return stars;
   };
 
