@@ -21,6 +21,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
     data: currentRecipe,
     error: fetchError,
     isLoading,
+    refetch,
   } = useGetRecipeQuery(id);
 
   useEffect(() => {
@@ -208,7 +209,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
     const newIngredients = updatedIngredients.filter((ing) => !ing.id);
     const existingIngredients = updatedIngredients.filter((ing) => ing.id);
     const newInstructionsArray = updatedInstructions;
-const existingInstructionsArray = [];
+    const existingInstructionsArray = [];
 
     console.log("Existing Instructions (frontend):", existingInstructionsArray);
     console.log("new console", recipe.instructions);
@@ -217,7 +218,6 @@ const existingInstructionsArray = [];
       .filter((cat) => !selectedCategory.includes(cat.id))
       .map((cat) => cat.id);
 
-  
     const updatedData = {
       name: recipe.name,
       description: recipe.description,
@@ -235,7 +235,7 @@ const existingInstructionsArray = [];
     if (recipe.photo) {
       updatedData.photo = recipe.photo;
     }
-    console.log("New Instructions Array (Frontend):", newInstructionsArray)
+    console.log("New Instructions Array (Frontend):", newInstructionsArray);
     try {
       const { data } = await updateRecipe({
         id: id,
@@ -244,7 +244,7 @@ const existingInstructionsArray = [];
 
       if (data) {
         alert("Recipe updated successfully!");
-        onCancel();
+        refetch(), onCancel();
       }
     } catch (error) {
       setError(error.message || "Error updating recipe");
