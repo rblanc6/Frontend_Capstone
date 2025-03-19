@@ -67,7 +67,6 @@ export default function ReviewSection() {
     setRating(value);
   };
 
-
   // Format the date
   function formatDate(dateString) {
     try {
@@ -81,7 +80,6 @@ export default function ReviewSection() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState(false);
-
 
   // Function to post a new review
   async function postReview(event) {
@@ -123,7 +121,6 @@ export default function ReviewSection() {
       setActiveReviewId((prevId) => (prevId === reviewId ? null : reviewId));
     }
   };
-
 
   // Function to post a new comment for a review
   async function postComment(event, reviewId) {
@@ -326,7 +323,7 @@ export default function ReviewSection() {
                         </div>
                         <div className="ms-auto p-0">
                           {isCreator && (
-                            <span>
+                            <span className="comment-actions">
                               <i
                                 className="bi bi-pencil-square"
                                 onClick={() => handleEditReview(rev.id)}
@@ -339,7 +336,7 @@ export default function ReviewSection() {
                             </span>
                           )}
                           {role === "ADMIN" && !isCreator && (
-                            <span>
+                            <span className="comment-actions">
                               <i
                                 className="bi bi-pencil-square"
                                 onClick={() => handleEditReview(rev.id)}
@@ -415,7 +412,7 @@ export default function ReviewSection() {
 
                   {rev.comments?.length > 0 ? (
                     <div className="card-footer">
-                      <h6>Comments:</h6>
+                      <h6 className="mt-2">Comments:</h6>
                       <ul className="list-group list-group-flush">
                         {rev.comments?.map((comment) => {
                           const isCommentCreator =
