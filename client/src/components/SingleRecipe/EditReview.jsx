@@ -59,7 +59,7 @@ export default function EditReviewForm({
 
       if (data) {
         alert("Review updated successfully!");
-        
+
         // Update the recipe array with the new review
         setRecipeArr((prevRecipeArr) => ({
           ...prevRecipeArr,
@@ -104,9 +104,9 @@ export default function EditReviewForm({
                 <h5>Edit Review</h5>
               </label>
               <br />
-              <input
+              <textarea
                 className="form-control"
-                type="text"
+                rows="5"
                 name="review"
                 value={rev.review}
                 onChange={handleChange}

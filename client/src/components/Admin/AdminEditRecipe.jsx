@@ -76,8 +76,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
   const [removedInstructionIds, setRemovedInstructionIds] = useState([]);
 
   useEffect(() => {
-    if (currentRecipe) {
-
+    if (currentRecipe && recipe.ingredients.length === 0) {
       // Filter out removed ingredients and instructions
       const filteredIngredients = currentRecipe.ingredient.filter(
         (ingredient) => !removedIngredientIds.includes(ingredient.id)
@@ -145,12 +144,15 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
     if (removedIngredient.id) {
       setRemovedIngredientIds((prev) => [...prev, removedIngredient.id]);
     }
-    const newIngredients = [...recipe.ingredients];
-    newIngredients.splice(index, 1);
-    setRecipe((prevState) => ({
-      ...prevState,
-      ingredients: newIngredients,
-    }));
+    setRecipe((prevState) => {
+      const newIngredients = prevState.ingredients.filter(
+        (_, i) => i !== index
+      );
+      return {
+        ...prevState,
+        ingredients: newIngredients,
+      };
+    });
   };
 
   const handleInstructionChange = (index, e) => {
@@ -214,7 +216,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
       .filter((cat) => !selectedCategory.includes(cat.id))
       .map((cat) => cat.id);
 
-      // Prepare data for update
+    // Prepare data for update
     const updatedData = {
       name: recipe.name,
       description: recipe.description,
@@ -303,7 +305,10 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
             </label>
             <br />
             {recipe.ingredients.map((ingredient, index) => (
-              <div className="input-group mb-2" key={index}>
+              <div
+                className="input-group mb-2"
+                key={ingredient.id || `ingredient-${index}`}
+              >
                 <input
                   type="text"
                   name="name"
@@ -356,7 +361,10 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
             </label>
             <br />
             {recipe.instructions.map((instruction, index) => (
-              <div className="input-group mb-2" key={instruction.id || index}>
+              <div
+                className="input-group mb-2"
+                key={instruction.id || `instruction-${index}`}
+              >
                 <textarea
                   name="instructions"
                   className="form-control"

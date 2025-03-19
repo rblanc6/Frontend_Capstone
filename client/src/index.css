@@ -393,3 +393,7 @@ li.comment-section {
 .spinner-border {
   color: #de296c !important;
 }
+
+.edit-comment {
+  width: 100%;
+}
