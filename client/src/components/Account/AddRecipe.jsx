@@ -188,6 +188,7 @@ export default function AddRecipe() {
           <textarea
             className="form-control"
             name="description"
+            rows="5"
             required
             value={recipeData.description}
             onChange={handleInputChange}
