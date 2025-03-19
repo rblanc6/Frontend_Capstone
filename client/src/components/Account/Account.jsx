@@ -48,6 +48,7 @@ export default function Account() {
     return stars;
   };
 
+
   // Trigger the edit mode and populate form with current user data
   const handleClickEdit = (user) => {
     setEditUser(user.id);

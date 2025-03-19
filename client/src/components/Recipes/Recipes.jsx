@@ -23,6 +23,7 @@ export default function Recipes() {
     return totalRating / reviews.length;
   };
 
+
   // Function to filter recipes based on search, category, and rating
   const applyFilter = (data, searchTerm, categories, minRating) => {
     return data
@@ -109,6 +110,7 @@ export default function Recipes() {
   const currentItems = getCurrentPageItems(filteredRecipes);
   const pageCount = Math.ceil(filteredRecipes.length / itemsPerPage);
 
+
   // Function to render star rating display based on average rating
   const renderStarAverage = (rating) => {
     const totalStars = 5;
@@ -129,7 +131,6 @@ export default function Recipes() {
         );
       }
     }
-
     return stars;
   };
 

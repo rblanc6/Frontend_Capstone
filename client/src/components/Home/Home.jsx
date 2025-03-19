@@ -41,6 +41,7 @@ export default function Home() {
     }
   }, [data, isSuccess]);
 
+
   // Function to calculate the average rating of user reviews
   const calculateAverageRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
@@ -68,7 +69,6 @@ export default function Home() {
         );
       }
     }
-
     return stars;
   };
 

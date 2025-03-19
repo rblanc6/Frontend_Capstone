@@ -52,7 +52,6 @@ export default function MyRecipes() {
         );
       }
     }
-
     return stars;
   };
 
@@ -80,11 +79,7 @@ export default function MyRecipes() {
 
           {myRecipes?.map((recipe) => {
             return (
-              <div
-                key={recipe.id}
-                className="card mb-3"
-                // style={{ maxWidth: "540px" }}
-              >
+              <div key={recipe.id} className="card mb-3">
                 <div className="row g-0">
                   <div className="col-md-4">
                     {recipe.photo ? (

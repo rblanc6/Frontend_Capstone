@@ -77,11 +77,11 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
 
   useEffect(() => {
     if (currentRecipe) {
+
       // Filter out removed ingredients and instructions
       const filteredIngredients = currentRecipe.ingredient.filter(
         (ingredient) => !removedIngredientIds.includes(ingredient.id)
       );
-
       const filteredInstructions = currentRecipe.instructions.filter(
         (instruction) => !removedInstructionIds.includes(instruction.id)
       );
@@ -194,6 +194,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     // Filter out removed ingredients and instructions
     const updatedIngredients = recipe.ingredients.filter(
       (ing) => !removedIngredientIds.includes(ing.id)

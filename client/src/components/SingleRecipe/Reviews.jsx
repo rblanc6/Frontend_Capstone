@@ -67,6 +67,7 @@ export default function ReviewSection() {
     setRating(value);
   };
 
+
   // Format the date
   function formatDate(dateString) {
     try {
@@ -80,6 +81,7 @@ export default function ReviewSection() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState(false);
+
 
   // Function to post a new review
   async function postReview(event) {
@@ -121,6 +123,7 @@ export default function ReviewSection() {
       setActiveReviewId((prevId) => (prevId === reviewId ? null : reviewId));
     }
   };
+
 
   // Function to post a new comment for a review
   async function postComment(event, reviewId) {

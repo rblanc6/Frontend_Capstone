@@ -32,6 +32,8 @@ export default function Admin() {
       const sortedUsers = [...data].sort(
         (a, b) => a.firstName.localeCompare(b.firstName) // Sort users by first name
       );
+
+
       setUserArr(sortedUsers); // Update the user list with sorted users
     }
   }, [data, isSuccess]);
@@ -88,7 +90,6 @@ export default function Admin() {
           a.firstName.localeCompare(b.firstName) // Re-sort updated user list
         );
       });
-
       setEditUser(null);
     } catch (error) {
       console.error("Update failed:", error);
@@ -135,8 +136,7 @@ export default function Admin() {
         <div className="container">
           <h3>Admin Dashboard</h3>
           <hr />
-          {/* <p style={{ wordWrap: "break-word" }}>Token: {token}</p> */}
-
+          
           <h1 className="display-6">User List</h1>
           {error && (
             <div className="alert alert-danger" role="alert">

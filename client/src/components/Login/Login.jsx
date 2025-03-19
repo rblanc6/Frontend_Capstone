@@ -25,7 +25,7 @@ export default function Login({ setToken }) {
         sessionStorage.setItem("token", result.token);
         sessionStorage.setItem("role", result.role);
         dispatch(confirmLogin({ id: result.user.id }));
-
+        
         // Redirect based on user role
         if (result.role === "ADMIN") {
           navigate("/admin");
