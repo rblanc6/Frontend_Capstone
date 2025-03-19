@@ -265,7 +265,7 @@ export default function Recipes() {
                     <div className="card-body" style={{ marginBottom: "20px" }}>
                       <h5 className="card-title">{recipe.name}</h5>
                       <p className="card-text">
-                        <LongText content={recipe.description} limit={120} />
+                        <LongText content={recipe.description} limit={85} />
                       </p>
                       <p className="mb-0 pb-0">
                         {recipe.review &&
