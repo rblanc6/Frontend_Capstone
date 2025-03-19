@@ -48,7 +48,7 @@ export default function EditCommentForm({
         body: updatedData,
       });
       if (data) {
-        alert("Comment updated successfully!")
+        alert("Comment updated successfully!");
         // Update the comment in the parent state (setRecipeArr)
         setRecipeArr((prevRecipeArr) => ({
           ...prevRecipeArr,
@@ -96,9 +96,9 @@ export default function EditCommentForm({
                 <h5>Edit Comment</h5>
               </label>
               <br />
-              <input
+              <textarea
                 className="form-control"
-                type="text"
+                rows="5"
                 name="comment"
                 value={com.comment}
                 onChange={handleChange}
