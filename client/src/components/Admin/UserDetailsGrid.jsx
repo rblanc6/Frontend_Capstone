@@ -57,6 +57,7 @@ export default function UserDetailsGrid({ isGridView }) {
     );
   };
 
+
   // Format the date
   function formatDate(dateString) {
     try {
@@ -120,7 +121,6 @@ export default function UserDetailsGrid({ isGridView }) {
         );
       }
     }
-
     return stars;
   };
 
@@ -144,7 +144,6 @@ export default function UserDetailsGrid({ isGridView }) {
         ); // Empty star
       }
     }
-
     return stars;
   };
 

@@ -99,7 +99,7 @@ export default function Recipes() {
     setItemOffset(newOffset);
   };
 
-   // Apply all filters to recipe data
+  // Apply all filters to recipe data
   const filteredRecipes = applyFilter(
     recipeArr,
     recipeFilter.recipeSearch,
@@ -129,8 +129,45 @@ export default function Recipes() {
         );
       }
     }
-
     return stars;
+  };
+
+  //Truncate recipe descriptions to show less text in the recipe cards
+  const LongText = ({ content, limit }) => {
+    const [showAll, setShowAll] = useState(false);
+
+    const showMore = () => setShowAll(true);
+    const showLess = () => setShowAll(false);
+
+    if (content.length <= limit) {
+      return <div>{content}</div>;
+    }
+    if (showAll) {
+      return (
+        <div>
+          {content}
+          <span
+            onClick={showLess}
+            style={{ color: "#de296c", marginLeft: "4px" }}
+          >
+            <small>Read less</small>
+          </span>
+        </div>
+      );
+    }
+
+    const toShow = content.substring(0, limit) + "...";
+    return (
+      <div>
+        {toShow}
+        <span
+          onClick={showMore}
+          style={{ color: "#de296c", marginLeft: "4px" }}
+        >
+          <small>Read more</small>
+        </span>
+      </div>
+    );
   };
 
   return (
@@ -185,10 +222,10 @@ export default function Recipes() {
                   onChange={updateRating}
                 >
                   <option value={0}>All Ratings</option>
-                  <option value={1}>1 Star</option>
-                  <option value={2}>2 Stars</option>
-                  <option value={3}>3 Stars</option>
-                  <option value={4}>4 Stars</option>
+                  <option value={1}>1+ Stars</option>
+                  <option value={2}>2+ Stars</option>
+                  <option value={3}>3+ Stars</option>
+                  <option value={4}>4+ Stars</option>
                   <option value={5}>5 Stars</option>
                 </select>
               </p>
@@ -227,7 +264,9 @@ export default function Recipes() {
 
                     <div className="card-body" style={{ marginBottom: "20px" }}>
                       <h5 className="card-title">{recipe.name}</h5>
-                      <p className="card-text">{recipe.description}</p>
+                      <p className="card-text">
+                        <LongText content={recipe.description} limit={85} />
+                      </p>
                       <p className="mb-0 pb-0">
                         {recipe.review &&
                           recipe.review.length > 0 &&

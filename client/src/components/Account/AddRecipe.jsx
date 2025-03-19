@@ -11,7 +11,7 @@ export default function AddRecipe() {
   const navigate = useNavigate();
   const { data: category, isSuccess: categorySuccess } =
     useGetCategoriesQuery();
-  const [postRecipe, { isLoading, error }] = usePostRecipeMutation();
+  const [postRecipe, { isLoading }] = usePostRecipeMutation();
   const [categories, setCategories] = useState([]);
   const { data: unit, isSuccess: unitsSuccess } = useGetIngredientUnitsQuery();
   const [units, setUnits] = useState([]);

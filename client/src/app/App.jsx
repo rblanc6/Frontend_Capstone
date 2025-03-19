@@ -32,12 +32,12 @@ function App() {
         <Route path="/image" element={<ImageUpload />}></Route>
         <Route
           path="/register"
-          element={<Register token={token} setToken={setToken} />}
-        ></Route>
+          element={<Register token={token} setToken={setToken} />}>
+        </Route>
         <Route
           path="/login"
-          element={<Login token={token} setToken={setToken} />}
-        ></Route>
+          element={<Login token={token} setToken={setToken} />}>
+        </Route>
         <Route path="/account" element={<ProtectedRoute />}>
           <Route path="/account" element={<Account />} />
         </Route>
@@ -52,12 +52,10 @@ function App() {
         </Route>
         <Route
           path="/admin-user-details/:id"
-          element={<ProtectedRoute requiredRole="ADMIN" />}
-        >
+          element={<ProtectedRoute requiredRole="ADMIN" />}>
           <Route
             path="/admin-user-details/:id"
-            element={<AdminUserDetails />}
-          />
+            element={<AdminUserDetails />} />
         </Route>
         <Route path="/new-recipe" element={<ProtectedRoute />}>
           <Route path="/new-recipe" element={<AddRecipe />}></Route>

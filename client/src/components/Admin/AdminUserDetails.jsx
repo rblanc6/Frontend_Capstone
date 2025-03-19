@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ToggleDetails from "./UserDetailsToggle";
 import UserDetailsGrid from "./UserDetailsGrid";
 import UserDetailsList from "./UserDetailsList";
