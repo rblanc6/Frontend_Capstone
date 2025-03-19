@@ -26,39 +26,34 @@ export default function Admin() {
   const [currentPage, setCurrentPage] = useState(0);
   const usersPerPage = 20;
 
+  // Handle sorting after data fetch
   useEffect(() => {
     if (isSuccess) {
-      const sortedUsers = [...data].sort((a, b) =>
-        a.firstName.localeCompare(b.firstName)
+      const sortedUsers = [...data].sort(
+        (a, b) => a.firstName.localeCompare(b.firstName) // Sort users by first name
       );
-
-      setUserArr(sortedUsers);
+      setUserArr(sortedUsers); // Update the user list with sorted users
     }
   }, [data, isSuccess]);
 
+  // Filter users based on search term and role
   const filterUsers = userArr.filter((user) => {
     const isSearchMatch =
       user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
-
     const isRoleMatch = selectedRole ? user.role === selectedRole : true;
-
     return isSearchMatch && isRoleMatch;
   });
 
-  console.log("Filtered Users Count:", filterUsers.length);
-
   const handleRoleChange = (e) => {
-    setSelectedRole(e.target.value);
-    console.log("Selected Role:", e.target.value); // Log role selection
+    setSelectedRole(e.target.value); // Update selected role
   };
 
-  const token = window.sessionStorage.getItem("token");
-  console.log("Here is my token", token);
-
+  const token = window.sessionStorage.getItem("token"); // Get session token
   const [expandUser, setExpandUser] = useState(null);
 
+  // Toggle user details view
   const toggleUserDetails = (userId) => {
     if (expandUser === userId) {
       setExpandUser(null);
@@ -78,20 +73,19 @@ export default function Admin() {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value }); // Update form data based on input
   };
 
+  // Handle saving updated user info
   const handleSave = async () => {
-    console.log("Form Data before saving:", formData);
     try {
-      await updateUser({ id: editUser, ...formData }).unwrap();
+      await updateUser({ id: editUser, ...formData }).unwrap();  // Send update request
       setUserArr((prev) => {
         const updatedUsers = prev.map((user) =>
           user.id === editUser ? { ...user, ...formData } : user
         );
         return updatedUsers.sort((a, b) =>
-          a.firstName.localeCompare(b.firstName)
+          a.firstName.localeCompare(b.firstName) // Re-sort updated user list
         );
       });
 
@@ -101,12 +95,13 @@ export default function Admin() {
     }
   };
 
+  // Handle deleting a user
   const handleDeleteUser = async (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
         await deleteUser({ id });
-        const updatedUsers = userArr.filter((item) => item.id !== id);
-        setUserArr(updatedUsers);
+        const updatedUsers = userArr.filter((item) => item.id !== id); // Remove deleted user from the list
+        setUserArr(updatedUsers); // Update the user list
         alert("User deleted.");
         console.log(`Deleting item with ID: ${id}`);
       } catch (error) {
@@ -118,10 +113,12 @@ export default function Admin() {
     }
   };
 
+   // Calculate pagination indexes
   const indexOfLastUser = (currentPage + 1) * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filterUsers.slice(indexOfFirstUser, indexOfLastUser);
 
+  // Handle page change in pagination
   const handlePageClick = (event) => {
     setCurrentPage(event.selected);
   };

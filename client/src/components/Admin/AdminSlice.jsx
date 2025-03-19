@@ -9,8 +9,7 @@ const usersApi = api.injectEndpoints({
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+           Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
         },
         transformResponse: (response) => response.data.users,
         transformErrorResponse: (response) => response.data.error,
@@ -25,8 +24,7 @@ const usersApi = api.injectEndpoints({
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+           Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
         },
         transformResponse: (response) => response.data,
         transformErrorResponse: (response) => response.data.error,
@@ -41,8 +39,7 @@ const usersApi = api.injectEndpoints({
         body: JSON.stringify({ firstName, lastName, email, role }),
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+           Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
         },
         transformResponse: (response) => response.data,
         transformErrorResponse: (response) => response.data.error,
@@ -56,8 +53,7 @@ const usersApi = api.injectEndpoints({
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer ${window.localStorage.getItem("token")}`,
-          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+           Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
         },
         transformResponse: (response) => response.data.users,
         transformErrorResponse: (response) => response.data.error,

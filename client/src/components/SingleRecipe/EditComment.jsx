@@ -1,17 +1,24 @@
 import { useState, useEffect } from "react";
-import { useEditCommentMutation, useGetCommentQuery } from "./SingleRecipeSlice";
+import {
+  useEditCommentMutation,
+  useGetCommentQuery,
+} from "./SingleRecipeSlice";
 
-export default function EditCommentForm({ commentId, onCancel, setIsEditingComment, setRecipeArr }) {
+export default function EditCommentForm({
+  commentId,
+  onCancel,
+  setIsEditingComment,
+  setRecipeArr,
+}) {
   const [editComment, { isLoading }] = useEditCommentMutation();
-
-  const { data: currentComment, error: fetchError } = useGetCommentQuery(commentId);
-
+  const { data: currentComment, error: fetchError } =
+    useGetCommentQuery(commentId);
   const [com, setCom] = useState({
     comment: "",
   });
-
   const [error, setError] = useState(null);
 
+  // Populate comment input when currentComment data is fetched
   useEffect(() => {
     if (currentComment && currentComment.comment) {
       setCom({
@@ -20,9 +27,7 @@ export default function EditCommentForm({ commentId, onCancel, setIsEditingComme
     }
   }, [currentComment]);
 
-  console.log("COMMENT FROM EDIT FORM",currentComment);
-  console.log("INDIVIDUAL COMMENT",commentId);
-
+  // Handle changes in the input field and update local state
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCom((prevState) => ({
@@ -31,24 +36,20 @@ export default function EditCommentForm({ commentId, onCancel, setIsEditingComme
     }));
   };
 
-
+  // Handle form submission to update the comment
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const updatedData = {
       comment: com.comment,
     };
-
-     console.log(updatedData);
-
     try {
       const { data } = await editComment({
         id: commentId,
         body: updatedData,
       });
-
       if (data) {
-        alert("Comment updated successfully!");
+        alert("Comment updated successfully!")
+        // Update the comment in the parent state (setRecipeArr)
         setRecipeArr((prevRecipeArr) => ({
           ...prevRecipeArr,
           review: prevRecipeArr.review.map((rev) =>
@@ -75,45 +76,51 @@ export default function EditCommentForm({ commentId, onCancel, setIsEditingComme
     setIsEditingComment(false);
   };
 
-  if (isLoading) return <><div className="spinner-border spinner-border-sm m-3" role="status">
-  <span className="visually-hidden">Loading...</span>
-</div></>;
-  if (fetchError) return <p>{fetchError.message || "Error fetching comment"}</p>;
+  if (isLoading)
+    return (
+      <>
+        <div className="spinner-border spinner-border-sm m-3" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </>
+    );
+  if (fetchError)
+    return <p>{fetchError.message || "Error fetching comment"}</p>;
   return (
-    <><div className="edit-comment">
-      <div>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>
-              <h5>Edit Comment</h5>
-            </label>
-            <br />
-            <input
-              className="form-control"
-              type="text"
-              name="comment"
-              value={com.comment}
-              onChange={handleChange}
-            />
-          </div>
-          
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="button-details mt-4"
-          >
-            {isLoading ? "Updating..." : "Update Comment"}
-          </button>
-          &nbsp;
-          <button
-            type="button"
-            className="button-details mt-4"
-            onClick={handleCancelClick}
-          >
-            Cancel
-          </button>
-        </form>
-      </div>
+    <>
+      <div className="edit-comment">
+        <div>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>
+                <h5>Edit Comment</h5>
+              </label>
+              <br />
+              <input
+                className="form-control"
+                type="text"
+                name="comment"
+                value={com.comment}
+                onChange={handleChange}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="button-details mt-4"
+            >
+              {isLoading ? "Updating..." : "Update Comment"}
+            </button>
+            &nbsp;
+            <button
+              type="button"
+              className="button-details mt-4"
+              onClick={handleCancelClick}
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
       </div>
     </>
   );

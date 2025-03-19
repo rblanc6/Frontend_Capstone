@@ -15,6 +15,8 @@ export default function Register() {
   const dispatch = useDispatch();
   const [registerUser] = useRegisterMutation();
   const [error, setError] = useState(null);
+
+  // Updates form state when user inputs data in the form
   const change = (e) => {
     setForm((prev) => ({
       ...prev,
@@ -26,8 +28,10 @@ export default function Register() {
   const submit = async (e) => {
     e.preventDefault();
     try {
+      // Attempt to register the user with the form data
       const response = await registerUser(form).unwrap();
       console.log(response);
+        // Dispatch action confirming login and navigate to the account page
       dispatch(confirmLogin());
         navigate("/account");
     } catch (error) {

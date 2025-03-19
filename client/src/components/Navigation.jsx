@@ -14,32 +14,38 @@ export default function NavBar({ token }) {
   const dispatch = useDispatch();
   const role = window.sessionStorage.getItem("role");
 
+  // Check to see if token is expired
   const checkTokenExpiration = (token) => {
     try {
       const decodedToken = jwtDecode(token);
-      const currentTime = Date.now() / 1000; 
+      const currentTime = Date.now() / 1000;
       console.log("Current Time:", currentTime);
-    console.log("Token Expiration Time:", decodedToken.exp);
-      return decodedToken.exp < currentTime; 
+      console.log("Token Expiration Time:", decodedToken.exp);
+      return decodedToken.exp < currentTime;
     } catch (error) {
       console.error("Error decoding token:", error);
-      return true; 
+      return true;
     }
   };
 
+  // Function for logout, removing token and role
   const logout = () => {
     window.sessionStorage.removeItem("token");
     window.sessionStorage.removeItem("role");
     dispatch(confirmLogout());
     navigate("/");
   };
- 
+
   useEffect(() => {
+    // Retrieve the token from session storage
     const token = window.sessionStorage.getItem("token");
+    // Check if the token exists and is expired
     if (token && checkTokenExpiration(token)) {
       dispatch(confirmLogout());
+      // Remove the token and role from sessionStorage
       window.sessionStorage.removeItem("token");
       window.sessionStorage.removeItem("role");
+      // Log that the token expired and the user was logged out
       console.log("Token expired, user logged out.");
     }
   }, [dispatch]);
