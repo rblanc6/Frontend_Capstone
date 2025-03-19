@@ -15,8 +15,9 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [units, setUnits] = useState([]);
-
   const { id } = useParams();
+
+  // Fetch user data and set up necessary states
   const {
     data: currentRecipe,
     error: fetchError,
@@ -24,6 +25,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
     refetch,
   } = useGetRecipeQuery(id);
 
+  // Update categories and units with the state on successful data fetch
   useEffect(() => {
     if (categorySuccess) {
       setCategories(category);
@@ -36,14 +38,13 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
     }
   }, [unit, unitsSuccess]);
 
+  // Update selected categories whenever they change
   useEffect(() => {
     console.log("Selected Categories on load:", selectedCategory);
   }, [selectedCategory]);
 
   const handleCategoryChange = (e) => {
     const { value, checked } = e.target;
-    // console.log(value);
-    // console.log(checked);
     const numValue = +value;
     let temp = [...selectedCategory];
     const found = temp.indexOf(numValue);
@@ -55,6 +56,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
     setSelectedCategory(temp);
   };
 
+  // Initialize the recipe form state with current recipe values
   const [recipe, setRecipe] = useState({
     name: "",
     description: "",
@@ -69,13 +71,13 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
   const [updateRecipe, { isLoading: isUpdating, error: updateError }] =
     useUpdateRecipeMutation();
 
+  // States for removed ingredients and instructions
   const [removedIngredientIds, setRemovedIngredientIds] = useState([]);
   const [removedInstructionIds, setRemovedInstructionIds] = useState([]);
 
   useEffect(() => {
     if (currentRecipe) {
-      // console.log("Current Recipe Ingredients: ", currentRecipe.ingredient);
-
+      // Filter out removed ingredients and instructions
       const filteredIngredients = currentRecipe.ingredient.filter(
         (ingredient) => !removedIngredientIds.includes(ingredient.id)
       );
@@ -84,6 +86,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
         (instruction) => !removedInstructionIds.includes(instruction.id)
       );
 
+      // Update the form with current recipe details
       setRecipe({
         name: currentRecipe.name,
         description: currentRecipe.description,
@@ -102,11 +105,12 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
         photo: currentRecipe.photo,
         creatorId: currentRecipe.creatorId,
       });
-
+      // Set selected categories based on current recipe
       setSelectedCategory(currentRecipe.categories?.map((cat) => cat.id) || []);
     }
   }, [currentRecipe, removedIngredientIds, removedInstructionIds]);
 
+  // Handle input field changes (name, description)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRecipe((prevState) => ({
@@ -114,6 +118,8 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
       [name]: value,
     }));
   };
+
+  // Handle ingredient input changes (name, quantity, unit)
   const handleIngredientChange = (index, e) => {
     const { name, value } = e.target;
     const newIngredients = [...recipe.ingredients];
@@ -123,6 +129,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
       ingredients: newIngredients,
     }));
   };
+
   const handleAddIngredient = () => {
     setRecipe((prevState) => ({
       ...prevState,
@@ -145,16 +152,6 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
       ingredients: newIngredients,
     }));
   };
-
-  // const handleInstructionChange = (index, e) => {
-  //   const { value } = e.target;
-  //   const newInstructions = [...recipe.instructions];
-  //   newInstructions[index] = { instruction: value };
-  //   setRecipe((prevState) => ({
-  //     ...prevState,
-  //     instructions: newInstructions,
-  //   }));
-  // };
 
   const handleInstructionChange = (index, e) => {
     const { value } = e.target;
@@ -197,8 +194,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("Form submitted with selected categories:", selectedCategory);
-
+    // Filter out removed ingredients and instructions
     const updatedIngredients = recipe.ingredients.filter(
       (ing) => !removedIngredientIds.includes(ing.id)
     );
@@ -206,18 +202,18 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
       (inst) => !removedInstructionIds.includes(inst.id)
     );
 
+    // Separate new and existing ingredients and instructions
     const newIngredients = updatedIngredients.filter((ing) => !ing.id);
     const existingIngredients = updatedIngredients.filter((ing) => ing.id);
     const newInstructionsArray = updatedInstructions;
     const existingInstructionsArray = [];
 
-    console.log("Existing Instructions (frontend):", existingInstructionsArray);
-    console.log("new console", recipe.instructions);
-
+    // Determine removed categories
     const removedCategoryIds = currentRecipe.categories
       .filter((cat) => !selectedCategory.includes(cat.id))
       .map((cat) => cat.id);
 
+    // Prepare data for update
     const updatedData = {
       name: recipe.name,
       description: recipe.description,
@@ -235,13 +231,14 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
     if (recipe.photo) {
       updatedData.photo = recipe.photo;
     }
-    console.log("New Instructions Array (Frontend):", newInstructionsArray);
     try {
+      // Perform update mutation
       const { data } = await updateRecipe({
         id: id,
         updatedData: updatedData,
       });
 
+      // On successful update, refetch and cancel editing
       if (data) {
         alert("Recipe updated successfully!");
         refetch(), onCancel();

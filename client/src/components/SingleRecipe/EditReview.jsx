@@ -10,7 +10,6 @@ export default function EditReviewForm({
   setActiveReviewId,
 }) {
   const [editReview, { isLoading }] = useEditReviewMutation();
-
   const { data: currentReview, error: fetchError } =
     useGetReviewQuery(reviewId);
 
@@ -18,21 +17,18 @@ export default function EditReviewForm({
     review: "",
     rating: 0,
   });
-
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (currentReview) {
       setRev({
-        review: currentReview.review,
-        rating: currentReview.rating,
+        review: currentReview.review, // Set current review text
+        rating: currentReview.rating, // Set current rating
       });
     }
   }, [currentReview]);
 
-  console.log("REVIEW FROM EDIT FORM", currentReview);
-  console.log("INDIVIDUAL REVIEW", reviewId);
-
+  // Handle changes in review input
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRev((prevState) => ({
@@ -48,16 +44,13 @@ export default function EditReviewForm({
     }));
   };
 
+  // Handle form submission to update the review
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const updatedData = {
       review: rev.review,
       rating: rev.rating,
     };
-
-    console.log(updatedData);
-
     try {
       const { data } = await editReview({
         id: reviewId,
@@ -66,6 +59,8 @@ export default function EditReviewForm({
 
       if (data) {
         alert("Review updated successfully!");
+        
+        // Update the recipe array with the new review
         setRecipeArr((prevRecipeArr) => ({
           ...prevRecipeArr,
           review: prevRecipeArr.review.map((rev) =>
@@ -90,9 +85,14 @@ export default function EditReviewForm({
     setActiveReviewId(null);
   };
 
-  if (isLoading) return <><div className="spinner-border spinner-border-sm m-3" role="status">
-  <span className="visually-hidden">Loading...</span>
-</div></>;
+  if (isLoading)
+    return (
+      <>
+        <div className="spinner-border spinner-border-sm m-3" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </>
+    );
   if (fetchError) return <p>{fetchError.message || "Error fetching review"}</p>;
   return (
     <>

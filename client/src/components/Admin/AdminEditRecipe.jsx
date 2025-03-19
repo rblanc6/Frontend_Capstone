@@ -15,8 +15,9 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [units, setUnits] = useState([]);
-
   const { id } = useParams();
+
+  // Fetch user data and set up necessary states
   const {
     data: currentRecipe,
     error: fetchError,
@@ -24,6 +25,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
     refetch,
   } = useGetRecipeQuery(id);
 
+  // Update categories and units with the state on successful data fetch
   useEffect(() => {
     if (categorySuccess) {
       setCategories(category);
@@ -36,6 +38,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
     }
   }, [unit, unitsSuccess]);
 
+  // Update selected categories whenever they change
   useEffect(() => {
     console.log("Selected Categories on load:", selectedCategory);
   }, [selectedCategory]);
@@ -53,6 +56,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
     setSelectedCategory(temp);
   };
 
+  // Initialize the recipe form state with current recipe values
   const [recipe, setRecipe] = useState({
     name: "",
     description: "",
@@ -67,17 +71,22 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
   const [updateRecipe, { isLoading: isUpdating, error: updateError }] =
     useUpdateRecipeAsAdminMutation();
 
+  // States for removed ingredients and instructions
   const [removedIngredientIds, setRemovedIngredientIds] = useState([]);
   const [removedInstructionIds, setRemovedInstructionIds] = useState([]);
 
   useEffect(() => {
     if (currentRecipe) {
+
+      // Filter out removed ingredients and instructions
       const filteredIngredients = currentRecipe.ingredient.filter(
         (ingredient) => !removedIngredientIds.includes(ingredient.id)
       );
       const filteredInstructions = currentRecipe.instructions.filter(
         (instruction) => !removedInstructionIds.includes(instruction.id)
       );
+
+      // Update the form with current recipe details
       setRecipe({
         name: currentRecipe.name,
         description: currentRecipe.description,
@@ -96,10 +105,13 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
         photo: currentRecipe.photo,
         creatorId: currentRecipe.creatorId,
       });
+
+      // Set selected categories based on current recipe
       setSelectedCategory(currentRecipe.categories?.map((cat) => cat.id) || []);
     }
   }, [currentRecipe, removedIngredientIds, removedInstructionIds]);
 
+  // Handle input field changes (name, description)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRecipe((prevState) => ({
@@ -107,6 +119,8 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
       [name]: value,
     }));
   };
+
+  // Handle ingredient input changes (name, quantity, unit)
   const handleIngredientChange = (index, e) => {
     const { name, value } = e.target;
     const newIngredients = [...recipe.ingredients];
@@ -138,16 +152,6 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
       ingredients: newIngredients,
     }));
   };
-
-  // const handleInstructionChange = (index, e) => {
-  //   const { value } = e.target;
-  //   const newInstructions = [...recipe.instructions];
-  //   newInstructions[index] = { ...newInstructions[index], instruction: value };
-  //   setRecipe((prevState) => ({
-  //     ...prevState,
-  //     instructions: newInstructions,
-  //   }));
-  // };
 
   const handleInstructionChange = (index, e) => {
     const { value } = e.target;
@@ -190,6 +194,8 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Filter out removed ingredients and instructions
     const updatedIngredients = recipe.ingredients.filter(
       (ing) => !removedIngredientIds.includes(ing.id)
     );
@@ -197,15 +203,18 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
       (inst) => !removedInstructionIds.includes(inst.id)
     );
 
+    // Separate new and existing ingredients and instructions
     const newIngredients = updatedIngredients.filter((ing) => !ing.id);
     const existingIngredients = updatedIngredients.filter((ing) => ing.id);
     const newInstructionsArray = updatedInstructions;
     const existingInstructionsArray = [];
 
+    // Determine removed categories
     const removedCategoryIds = currentRecipe.categories
       .filter((cat) => !selectedCategory.includes(cat.id))
       .map((cat) => cat.id);
 
+      // Prepare data for update
     const updatedData = {
       name: recipe.name,
       description: recipe.description,
@@ -225,11 +234,13 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
     }
 
     try {
+      // Perform update mutation
       const { data } = await updateRecipe({
         id: id,
         updatedData: updatedData,
       });
 
+      // On successful update, refetch and cancel editing
       if (data) {
         alert("Recipe updated successfully!");
         refetch();

@@ -16,6 +16,7 @@ import { format } from "date-fns";
 
 export default function ReviewSection() {
   const { id } = useParams();
+  // Fetch user data and set up necessary states
   const { data, isSuccess, refetch } = useGetRecipeQuery(id);
   const [addReview] = usePostReviewMutation();
   const [addComment] = usePostCommentMutation();
@@ -33,21 +34,23 @@ export default function ReviewSection() {
   const role = window.sessionStorage.getItem("role");
 
   const [recipeArr, setRecipeArr] = useState([]);
+  // When recipe data is available, update recipeArr state
   useEffect(() => {
     if (isSuccess && data) {
       setRecipeArr(data);
     }
   }, [data, isSuccess]);
 
+  // Refetch data if user is authenticated or admin
   useEffect(() => {
     if (authUser || role === "ADMIN") {
       refetch();
     }
   }, [authUser, role, refetch]);
 
+  // Retrieve and parse user data from sessionStorage if it exists
   useEffect(() => {
     const storedUser = window.sessionStorage.getItem("user");
-
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
@@ -64,7 +67,8 @@ export default function ReviewSection() {
     setRating(value);
   };
 
-  // Reformating the time and date stamp to our selected format
+
+  // Format the date
   function formatDate(dateString) {
     try {
       const date = new Date(dateString);
@@ -78,12 +82,13 @@ export default function ReviewSection() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState(false);
 
-  // Add/post a review and update associated metadata
+
+  // Function to post a new review
   async function postReview(event) {
     event.preventDefault();
     try {
-      setErrorMessage("");
-      const user = auth;
+      setErrorMessage(""); // Clear any previous error messages
+      const user = auth; // Get authenticated user details
       const newReview = await addReview({
         review,
         rating,
@@ -92,14 +97,16 @@ export default function ReviewSection() {
         firstName: user.firstName,
         lastName: user.lastName,
       }).unwrap();
+
+      // Update state with new review
       setRecipeArr((prevRecipeArr) => ({
         ...prevRecipeArr,
         review: [newReview, ...prevRecipeArr.review],
       }));
-      setReview("");
-      setRating(0);
+      setReview(""); // Clear review input
+      setRating(0); // Reset the rating
       setSuccessMessage(true);
-      refetch();
+      refetch(); // Refetch data to update reviews
     } catch (error) {
       if (error?.data?.message) {
         setErrorMessage(error.data.message);
@@ -112,15 +119,17 @@ export default function ReviewSection() {
   const [activeReviewId, setActiveReviewId] = useState(null);
   const handleButtonClick = (reviewId) => {
     if (!isEditingReview) {
+      // Toggle review edit state
       setActiveReviewId((prevId) => (prevId === reviewId ? null : reviewId));
     }
   };
 
-  // Add/post a comment and update associated metadata
+
+  // Function to post a new comment for a review
   async function postComment(event, reviewId) {
     event.preventDefault();
     try {
-      const user = auth;
+      const user = auth; // Get authenticated user details
       const newComment = await addComment({
         comment,
         review: reviewId,
@@ -129,6 +138,7 @@ export default function ReviewSection() {
         lastName: user.lastName,
       }).unwrap();
 
+      // Update recipe state with the new comment
       setRecipeArr((prevRecipeArr) => ({
         ...prevRecipeArr,
         review: prevRecipeArr.review.map((rev) =>
@@ -137,12 +147,12 @@ export default function ReviewSection() {
             : rev
         ),
       }));
-      setComment("");
+      setComment(""); // Clear comment input
       setCommentSuccessMessage((prevState) => ({
         ...prevState,
         [reviewId]: "Thanks for your comment!",
       }));
-      refetch();
+      refetch(); // Refetch data to update comments
     } catch (error) {
       console.error("Error posting comment:", error);
       setErrorMessage(
@@ -156,6 +166,7 @@ export default function ReviewSection() {
     setActiveReviewId(null);
   };
 
+  // Function to delete a review
   const handleDeleteReview = (id) => {
     if (window.confirm("Are you sure you want to delete this review?")) {
       deleteReview({ id });
@@ -180,6 +191,7 @@ export default function ReviewSection() {
     setActiveReviewId(null);
   };
 
+  // Function to delete a comment
   const handleDeleteComment = (id) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
       deleteComment({ id });

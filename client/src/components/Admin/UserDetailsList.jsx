@@ -11,17 +11,15 @@ export default function UserDetailsList({ isListView }) {
   const [recipePage, setRecipePage] = useState(0);
   const [reviewPage, setReviewPage] = useState(0);
   const [commentPage, setCommentPage] = useState(0);
-
   const itemsPerPage = 5;
 
   useEffect(() => {
     if (isSuccess) {
-      setUserDetails(data);
+      setUserDetails(data); // Update the user details state with fetched data
     }
   }, [data, isSuccess]);
 
-  console.log(userDetails?.comments);
-
+  // Format the date
   function formatDate(dateString) {
     try {
       const date = new Date(dateString);
@@ -32,10 +30,12 @@ export default function UserDetailsList({ isListView }) {
     }
   }
 
+  // Handlers for page change in pagination
   const handleRecipePageChange = ({ selected }) => setRecipePage(selected);
   const handleReviewPageChange = ({ selected }) => setReviewPage(selected);
   const handleCommentPageChange = ({ selected }) => setCommentPage(selected);
 
+  // Paginate recipes, reviews, and comments
   const paginatedRecipes = Array.isArray(userDetails.recipes)
     ? userDetails.recipes.slice(
         recipePage * itemsPerPage,

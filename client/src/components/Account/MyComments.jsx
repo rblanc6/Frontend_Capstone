@@ -7,26 +7,31 @@ import { format } from "date-fns";
 
 export default function MyComments() {
   const { id } = useParams();
+  // Fetch user data and set up necessary states
   const { data, isSuccess, refetch } = useGetUserQuery(id);
   const [user, setUser] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(5);
 
+  // Update user data when data is successfully fetched
   useEffect(() => {
     if (isSuccess) {
       setUser(data);
     }
-  }, [data]);
+  }, [data, isSuccess]);
 
+  // Refetch data if the user state changes
   useEffect(() => {
     if (user) {
       refetch();
     }
   }, [user, refetch]);
 
+  // Handle page change for pagination
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
   };
+  // Calculate the slice for the current page’s favorites
   const indexOfLastComment = (currentPage + 1) * itemsPerPage;
   const indexOfFirstComment = indexOfLastComment - itemsPerPage;
   const currentComments = user?.comments?.slice(
@@ -34,6 +39,7 @@ export default function MyComments() {
     indexOfLastComment
   );
 
+  // Format the date
   function formatDate(dateString) {
     try {
       const date = new Date(dateString);
@@ -43,8 +49,6 @@ export default function MyComments() {
       return "Invalid Date";
     }
   }
-
-  console.log(data);
 
   return (
     <>

@@ -6,6 +6,7 @@ import { format } from "date-fns";
 
 export default function Account() {
   const { id } = useParams();
+  // Fetch user data and set up necessary states
   const { data, isSuccess, isLoading, error, refetch } = useGetUserQuery(id);
   const [user, setUser] = useState("");
   const [updateUser] = useUpdateUserMutation();
@@ -16,12 +17,14 @@ export default function Account() {
     email: "",
   });
 
+  // Function to calculate the average rating of user reviews
   const calculateAverageRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
     return totalRating / reviews.length;
   };
 
+  // Function to render star rating display based on average rating
   const renderStarAverage = (rating) => {
     const totalStars = 5;
     let stars = [];
@@ -45,6 +48,8 @@ export default function Account() {
     return stars;
   };
 
+
+  // Trigger the edit mode and populate form with current user data
   const handleClickEdit = (user) => {
     setEditUser(user.id);
     setFormData({
@@ -54,18 +59,21 @@ export default function Account() {
     });
   };
 
+  // Update user data when data is successfully fetched
   useEffect(() => {
     if (isSuccess) {
       setUser(data);
     }
-  }, [data]);
+  }, [data, isSuccess]);
 
+  // Refetch data if the user state changes
   useEffect(() => {
     if (user) {
       refetch();
     }
   }, [user, refetch]);
 
+  // Format the date
   function formatDate(dateString) {
     try {
       const date = new Date(dateString);
@@ -76,10 +84,12 @@ export default function Account() {
     }
   }
 
+  // Handle changes to the form data
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Save the updated user information
   const handleSave = async () => {
     try {
       await updateUser({ id: editUser, ...formData }).unwrap();

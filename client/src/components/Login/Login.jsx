@@ -8,7 +8,6 @@ export default function Login({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  // const [successMessage, setSuccessMessage] = useState(null);
   const [loginUser] = useLoginMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -16,28 +15,24 @@ export default function Login({ setToken }) {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
+      // Call login API with email and password
       const result = await loginUser({ email, password }).unwrap();
-      console.log("This is the loginUser result", result);
-      console.log(result.role);
       if (result.error) {
         console.error(error);
         setError(error.data.message);
       } else {
+        // Store token and role in sessionStorage
         sessionStorage.setItem("token", result.token);
         sessionStorage.setItem("role", result.role);
-        console.log("User data from API:", result.user);
         dispatch(confirmLogin({ id: result.user.id }));
-        console.log("User dispatched:", {
-          id: result.user.id,
-        });
-
+        
+        // Redirect based on user role
         if (result.role === "ADMIN") {
           navigate("/admin");
         } else {
           navigate("/account");
         }
       }
-      // setSuccessMessage(result.message);
     } catch (error) {
       setError(error.data.message);
       console.error(error);
