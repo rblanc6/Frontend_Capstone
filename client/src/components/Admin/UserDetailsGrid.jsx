@@ -12,11 +12,14 @@ export default function UserDetailsGrid({ isGridView }) {
   const [reviewPage, setReviewPage] = useState(0);
   const [commentPage, setCommentPage] = useState(0);
   const itemsPerPage = 6;
+
   useEffect(() => {
     if (isSuccess) {
-      setUserDetails(data);
+      setUserDetails(data); // Update the user details state with fetched data
     }
   }, [data, isSuccess]);
+
+  // Handling long texts with "Read More"/"Read Less" functionality
   const LongText = ({ content, limit }) => {
     const [showAll, setShowAll] = useState(false);
 
@@ -54,8 +57,7 @@ export default function UserDetailsGrid({ isGridView }) {
     );
   };
 
-  console.log(userDetails.comments);
-
+  // Format the date
   function formatDate(dateString) {
     try {
       const date = new Date(dateString);
@@ -65,10 +67,13 @@ export default function UserDetailsGrid({ isGridView }) {
       return "Invalid Date";
     }
   }
+
+  // Handlers for page change in pagination
   const handleRecipePageChange = ({ selected }) => setRecipePage(selected);
   const handleReviewPageChange = ({ selected }) => setReviewPage(selected);
   const handleCommentPageChange = ({ selected }) => setCommentPage(selected);
 
+  // Paginate recipes, reviews, and comments
   const paginatedRecipes = Array.isArray(userDetails.recipes)
     ? userDetails.recipes.slice(
         recipePage * itemsPerPage,
@@ -88,12 +93,14 @@ export default function UserDetailsGrid({ isGridView }) {
       )
     : [];
 
+  // Function to calculate the average rating of user reviews
   const calculateAverageRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
     return totalRating / reviews.length;
   };
 
+  // Function to render star rating display based on average rating
   const renderStarAverage = (rating) => {
     const totalStars = 5;
     let stars = [];
@@ -117,6 +124,7 @@ export default function UserDetailsGrid({ isGridView }) {
     return stars;
   };
 
+  // Render stars for ratings
   const renderStars = (rating) => {
     const totalStars = 5;
     let stars = [];
@@ -334,7 +342,6 @@ export default function UserDetailsGrid({ isGridView }) {
                           {formatDate(review.createdAt)} <br />
                           on {review?.recipe?.name}
                         </p>
-    
                       </div>
 
                       <div className="card-body">

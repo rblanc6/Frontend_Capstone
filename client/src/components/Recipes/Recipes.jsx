@@ -6,7 +6,6 @@ import ReactPaginate from "react-paginate";
 export default function Recipes() {
   const { data, isSuccess, isLoading, error, refetch } = useGetRecipesQuery();
   const { data: categoryList } = useGetCategoriesQuery();
-  console.log(data);
   const [recipeFilter, setRecipeFilter] = useState({
     recipeSearch: "",
     category: "",
@@ -14,16 +13,17 @@ export default function Recipes() {
   });
   const navigate = useNavigate();
   const [recipeArr, setRecipeArr] = useState([]);
-
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 12;
 
+  // Function to calculate the average rating of user reviews
   const calculateAverageRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
     return totalRating / reviews.length;
   };
 
+  // Function to filter recipes based on search, category, and rating
   const applyFilter = (data, searchTerm, categories, minRating) => {
     return data
       .filter((recipe) => {
@@ -50,6 +50,7 @@ export default function Recipes() {
       });
   };
 
+  // Function to get recipes for the current page
   const getCurrentPageItems = (filteredRecipes) => {
     const endOffset = itemOffset + itemsPerPage;
     return filteredRecipes.slice(itemOffset, endOffset);
@@ -61,11 +62,12 @@ export default function Recipes() {
 
   useEffect(() => {
     if (isSuccess) {
-      setRecipeArr(data);
+      setRecipeArr(data); // Set the recipes data to recipeArr
       refetch();
     }
-  }, [data, isSuccess]);
+  }, [data, refetch, isSuccess]);
 
+  // Update search term in filter state
   const updateSearch = (e) => {
     setRecipeFilter({
       ...recipeFilter,
@@ -74,6 +76,7 @@ export default function Recipes() {
     setItemOffset(0);
   };
 
+  // Update selected category in filter state
   const updateCategory = (e) => {
     setRecipeFilter({
       ...recipeFilter,
@@ -82,6 +85,7 @@ export default function Recipes() {
     setItemOffset(0);
   };
 
+  // Update minimum rating in filter state
   const updateRating = (e) => {
     setRecipeFilter({
       ...recipeFilter,
@@ -95,6 +99,7 @@ export default function Recipes() {
     setItemOffset(newOffset);
   };
 
+   // Apply all filters to recipe data
   const filteredRecipes = applyFilter(
     recipeArr,
     recipeFilter.recipeSearch,
@@ -104,8 +109,7 @@ export default function Recipes() {
   const currentItems = getCurrentPageItems(filteredRecipes);
   const pageCount = Math.ceil(filteredRecipes.length / itemsPerPage);
 
-  console.log(currentItems);
-
+  // Function to render star rating display based on average rating
   const renderStarAverage = (rating) => {
     const totalStars = 5;
     let stars = [];

@@ -16,9 +16,10 @@ export default function AddRecipe() {
   const { data: unit, isSuccess: unitsSuccess } = useGetIngredientUnitsQuery();
   const [units, setUnits] = useState([]);
 
+  // When categories are fetched, update the state
   useEffect(() => {
     if (categorySuccess) {
-      setCategories(category);
+      setCategories(category); // Update categories when data is fetched successfully
     }
   }, [category, categorySuccess]);
 
@@ -39,6 +40,7 @@ export default function AddRecipe() {
     });
   };
 
+  // Define state for recipe form data
   const [recipeData, setRecipeData] = useState({
     name: "",
     description: "",
@@ -50,6 +52,7 @@ export default function AddRecipe() {
 
   const [successMessage, setSuccessMessage] = useState("");
 
+  // Handle generic input changes (e.g., recipe name, description)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setRecipeData((prevData) => ({
@@ -58,12 +61,14 @@ export default function AddRecipe() {
     }));
   };
 
+  // When ingredient units are fetched, update the state
   useEffect(() => {
     if (unitsSuccess) {
-      setUnits(unit);
+      setUnits(unit); // Update units when data is fetched successfully
     }
-  }, [unit]);
+  }, [unit, unitsSuccess]);
 
+  // Handle ingredient changes (name, quantity, unit)
   const handleIngredientChange = (index, e) => {
     const { name, value } = e.target;
     const updatedIngredients = [...recipeData.ingredients];
@@ -75,6 +80,7 @@ export default function AddRecipe() {
     }));
   };
 
+  // Handle instruction changes
   const handleInstructionChange = (index, e) => {
     const { value } = e.target;
     const updatedInstructions = [...recipeData.instructions];
@@ -85,6 +91,7 @@ export default function AddRecipe() {
     }));
   };
 
+  // Add new ingredient input fields to the form
   const addIngredient = () => {
     setRecipeData((prevData) => ({
       ...prevData,
@@ -95,6 +102,7 @@ export default function AddRecipe() {
     }));
   };
 
+  // Remove an ingredient input field from the form
   const removeIngredient = (index) => {
     setRecipeData((prevData) => ({
       ...prevData,
@@ -102,6 +110,7 @@ export default function AddRecipe() {
     }));
   };
 
+  // Add new instruction input field to the form
   const addInstruction = () => {
     setRecipeData((prevData) => ({
       ...prevData,
@@ -109,6 +118,7 @@ export default function AddRecipe() {
     }));
   };
 
+  // Remove an instruction input field from the form
   const removeInstruction = (index) => {
     setRecipeData((prevData) => ({
       ...prevData,
@@ -116,10 +126,12 @@ export default function AddRecipe() {
     }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted");
 
+    // Prepare the body for the recipe creation request
     const body = {
       name: recipeData.name,
       description: recipeData.description,
@@ -140,6 +152,7 @@ export default function AddRecipe() {
     }
   };
 
+  // Handle image upload success, save photo URL to the recipe data
   const handleImageUploadSuccess = (url) => {
     setRecipeData((prevData) => ({
       ...prevData,
@@ -309,7 +322,17 @@ export default function AddRecipe() {
         </div>
 
         <button className="button-details" type="submit" disabled={isLoading}>
-          {isLoading ? <><span className="spinner-border spinner-border-sm text-light" aria-hidden="true"></span> <span role="status">Loading...</span></> : "Submit Recipe"}
+          {isLoading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm text-light"
+                aria-hidden="true"
+              ></span>{" "}
+              <span role="status">Loading...</span>
+            </>
+          ) : (
+            "Submit Recipe"
+          )}
         </button>
       </form>
 

@@ -6,17 +6,20 @@ import ReactPaginate from "react-paginate";
 
 export default function Favorites() {
   const { id } = useParams();
+  // Fetch user data and set up necessary states
   const { data, isSuccess, isLoading, error, refetch } = useGetUserQuery(id);
   const [user, setUser] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(5);
 
+  // Function to calculate the average rating of user reviews
   const calculateAverageRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
     return totalRating / reviews.length;
   };
 
+  // Function to render star rating display based on average rating
   const renderStarAverage = (rating) => {
     const totalStars = 5;
     let stars = [];
@@ -40,29 +43,31 @@ export default function Favorites() {
     return stars;
   };
 
+  // Update user data when data is successfully fetched
   useEffect(() => {
     if (isSuccess) {
       setUser(data);
     }
-  }, [data]);
+  }, [data, isSuccess]);
 
+  // Refetch data if the user state changes
   useEffect(() => {
     if (user) {
       refetch();
     }
-  },[user, refetch]);
+  }, [user, refetch]);
 
+  // Handle page change for pagination
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
   };
+  // Calculate the slice for the current page’s favorites
   const indexOfLastFavorite = (currentPage + 1) * itemsPerPage;
   const indexOfFirstFavorite = indexOfLastFavorite - itemsPerPage;
   const currentFavorites = user?.favorites?.slice(
     indexOfFirstFavorite,
     indexOfLastFavorite
   );
-
-  console.log(data);
 
   return (
     <>
@@ -115,12 +120,14 @@ export default function Favorites() {
                         </Link>
                       </h4>
                       <p className="mb-0 pb-0">
-                          {fav.recipe.review &&
-                            fav.recipe.review.length > 0 &&
-                            renderStarAverage(
-                              Math.round(calculateAverageRating(fav.recipe.review))
-                            )}
-                        </p>
+                        {fav.recipe.review &&
+                          fav.recipe.review.length > 0 &&
+                          renderStarAverage(
+                            Math.round(
+                              calculateAverageRating(fav.recipe.review)
+                            )
+                          )}
+                      </p>
                       <p className="card-text">{fav.recipe.description}</p>
                     </div>
                   </div>
