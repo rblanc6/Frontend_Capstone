@@ -295,6 +295,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
             <textarea
               className="form-control"
               name="description"
+              rows="5"
               value={recipe.description}
               onChange={handleChange}
             />
@@ -368,6 +369,7 @@ export default function AdminEditRecipeForm({ onCancel, setIsEditing }) {
                 <textarea
                   name="instructions"
                   className="form-control"
+                  rows="3"
                   value={instruction.instruction}
                   onChange={(e) => handleInstructionChange(index, e)}
                 />

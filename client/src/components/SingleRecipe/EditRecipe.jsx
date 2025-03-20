@@ -146,7 +146,9 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
       setRemovedIngredientIds((prev) => [...prev, removedIngredient.id]);
     }
     setRecipe((prevState) => {
-      const newIngredients = prevState.ingredients.filter((_, i) => i !== index);
+      const newIngredients = prevState.ingredients.filter(
+        (_, i) => i !== index
+      );
       return {
         ...prevState,
         ingredients: newIngredients,
@@ -291,6 +293,7 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
             <textarea
               className="form-control"
               name="description"
+              rows="5"
               value={recipe.description}
               onChange={handleChange}
             />
@@ -301,7 +304,10 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
             </label>
             <br />
             {recipe.ingredients.map((ingredient, index) => (
-              <div className="input-group mb-2" key={ingredient.id || `ingredient-${index}`}>
+              <div
+                className="input-group mb-2"
+                key={ingredient.id || `ingredient-${index}`}
+              >
                 <input
                   type="text"
                   name="name"
@@ -354,10 +360,14 @@ export default function EditRecipeForm({ onCancel, setIsEditing }) {
             </label>
             <br />
             {recipe.instructions.map((instruction, index) => (
-              <div className="input-group mb-2" key={instruction.id || `instruction-${index}`}>
+              <div
+                className="input-group mb-2"
+                key={instruction.id || `instruction-${index}`}
+              >
                 <textarea
                   name="instructions"
                   className="form-control"
+                  rows="3"
                   value={instruction.instruction}
                   onChange={(e) => handleInstructionChange(index, e)}
                 />

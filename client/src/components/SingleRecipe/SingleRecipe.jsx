@@ -277,7 +277,7 @@ export default function SingleRecipe() {
 
                 <div className="card-body">
                   <div className="d-flex mb-0">
-                    <div className="p-0">
+                    <div className="p-0" style={{maxWidth: "80%"}}>
                       <figure>
                         <blockquote className="blockquote">
                           <h2>{recipeArr.name}</h2>
