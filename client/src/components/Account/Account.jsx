@@ -258,7 +258,7 @@ export default function Account() {
               {Array.isArray(user?.recipes) && user.recipes.length > 0 ? (
                 user?.recipes?.slice(0, 3).map((rec) => (
                   <div className="col-4" key={rec.id}>
-                    <div className="card h-100" style={{ padding: "0" }}>
+                    <div className="card h-100 p-0">
                       {rec.photo ? (
                         <img
                           src={rec.photo}
@@ -353,7 +353,7 @@ export default function Account() {
               {Array.isArray(user?.favorites) && user.favorites.length > 0 ? (
                 user?.favorites?.slice(0, 3).map((fav) => (
                   <div className="col-md-4" key={fav.id}>
-                    <div className="card h-100" style={{ padding: "0" }}>
+                    <div className="card h-100 p-0">
                       {fav?.recipe?.photo ? (
                         <img
                           src={fav.recipe.photo}
