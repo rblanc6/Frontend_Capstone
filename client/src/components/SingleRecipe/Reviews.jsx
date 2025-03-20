@@ -328,7 +328,7 @@ export default function ReviewSection() {
                                 className="bi bi-pencil-square"
                                 onClick={() => handleEditReview(rev.id)}
                               ></i>
-                              <br />
+                              &nbsp;
                               <i
                                 className="bi bi-trash"
                                 onClick={() => handleDeleteReview(rev.id)}
