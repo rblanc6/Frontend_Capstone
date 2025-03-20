@@ -242,7 +242,7 @@ export default function ReviewSection() {
                 <textarea
                   className="form-control"
                   id="exampleFormControlTextarea1"
-                  rows="3"
+                  rows="5"
                   name="review"
                   value={review}
                   onChange={(e) => setReview(e.target.value)}
@@ -316,7 +316,7 @@ export default function ReviewSection() {
                     <div className="card-body">
                       <div className="d-flex mb-0">
                         <div className="p-0">
-                          <h6 className="card-title">{rev.review}</h6>{" "}
+                          <p className="card-title">{rev.review}</p>{" "}
                           <p className="star-rating">
                             {renderStars(rev.rating)}{" "}
                           </p>
