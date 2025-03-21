@@ -192,6 +192,8 @@ export default function SingleRecipe() {
     return stars;
   };
 
+  // Round quantity to nearest fraction
+
   // Calculate avg. rating based off review ratings
   const averageRating = calculateAverageRating(recipeArr?.review);
 
@@ -368,7 +370,7 @@ export default function SingleRecipe() {
                       {recipeArr?.ingredient?.map((ing) => {
                         return (
                           <li key={ing.id} className="list-group-item">
-                            {ing.quantity} {ing.unit.name} of{" "}
+                           {ing.quantity} {ing.unit.name} of{" "}
                             {ing.ingredient.name}{" "}
                           </li>
                         );

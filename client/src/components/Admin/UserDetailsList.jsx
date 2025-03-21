@@ -121,10 +121,10 @@ export default function UserDetailsList({ isListView }) {
                 paginatedRecipes.length > 0 ? (
                   paginatedRecipes.map((recipe, index) => (
                     <tr key={index}>
-                      <td>{recipe.name}</td>
-                      <td>{recipe.description}</td>
-                      <td>{formatDate(recipe.createdAt)}</td>
-                      <td style={{ minWidth: "150px", textAlign: "right" }}>
+                      <td className="p-3">{recipe.name}</td>
+                      <td className="p-3">{recipe.description}</td>
+                      <td className="p-3"><small>{formatDate(recipe.createdAt)}</small></td>
+                      <td  className="p-3" style={{ minWidth: "150px", textAlign: "right" }}>
                         <Link
                           to={`/recipes/${recipe.id}`}
                           className="button-details"
@@ -176,14 +176,14 @@ export default function UserDetailsList({ isListView }) {
                 paginatedReviews.length > 0 ? (
                   paginatedReviews.map((review, index) => (
                     <tr key={index}>
-                      <td>
+                      <td className="p-3">
                         <p>{review.review}</p>
                         <p className="date-stamp">
                           {formatDate(review.createdAt)} on{" "}
                           {review?.recipe?.name}
                         </p>
                       </td>
-                      <td style={{ minWidth: "150px", textAlign: "right" }}>
+                      <td  className="p-3" style={{ minWidth: "150px", textAlign: "right" }}>
                         <Link
                           to={`/recipes/${review.recipe.id}`}
                           className="button-details"
@@ -235,7 +235,7 @@ export default function UserDetailsList({ isListView }) {
                 paginatedComments.length > 0 ? (
                   paginatedComments.map((comment, index) => (
                     <tr key={index}>
-                      <td>
+                      <td className="p-3">
                         <p>{comment.comment}</p>
                         <p className="date-stamp">
                           {formatDate(comment.createdAt)}
@@ -244,7 +244,7 @@ export default function UserDetailsList({ isListView }) {
                           on review: {comment.review.review}
                         </p>
                       </td>
-                      <td style={{ minWidth: "150px", textAlign: "right" }}>
+                      <td  className="p-3" style={{ minWidth: "150px", textAlign: "right" }}>
                         <Link
                           to={`/recipes/${comment.review.recipe.id}`}
                           className="button-details"

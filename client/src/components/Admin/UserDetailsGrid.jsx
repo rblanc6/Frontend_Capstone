@@ -31,7 +31,7 @@ export default function UserDetailsGrid({ isGridView }) {
     }
     if (showAll) {
       return (
-        <div>
+        <>
           {content}
           <span
             onClick={showLess}
@@ -39,13 +39,13 @@ export default function UserDetailsGrid({ isGridView }) {
           >
             <small>Read less</small>
           </span>
-        </div>
+        </>
       );
     }
 
     const toShow = content.substring(0, limit) + "...";
     return (
-      <div>
+      <>
         {toShow}
         <span
           onClick={showMore}
@@ -53,10 +53,9 @@ export default function UserDetailsGrid({ isGridView }) {
         >
           <small>Read more</small>
         </span>
-      </div>
+      </>
     );
   };
-
 
   // Format the date
   function formatDate(dateString) {
@@ -247,7 +246,9 @@ export default function UserDetailsGrid({ isGridView }) {
                         <p className="date-stamp">
                           {formatDate(recipe.createdAt)}
                         </p>
-                        <p className="card-text">{recipe.description}</p>
+                        <p className="card-text">
+                          <LongText content={recipe.description} limit={100} />
+                        </p>
                       </div>
 
                       <div className="card-body">
@@ -430,7 +431,7 @@ export default function UserDetailsGrid({ isGridView }) {
                         </h5>
                         <p className="date-stamp">
                           {formatDate(comment.createdAt)} <br />
-                          on {comment?.review?.review}
+                          on review: {comment?.review?.review}
                         </p>
                       </div>
 
