@@ -111,7 +111,7 @@ export default function Account() {
     }
     if (showAll) {
       return (
-        <div>
+        <>
           {content}
           <span
             onClick={showLess}
@@ -119,13 +119,13 @@ export default function Account() {
           >
             <small>Read less</small>
           </span>
-        </div>
+        </>
       );
     }
 
     const toShow = content.substring(0, limit) + "...";
     return (
-      <div>
+      <>
         {toShow}
         <span
           onClick={showMore}
@@ -133,7 +133,7 @@ export default function Account() {
         >
           <small>Read more</small>
         </span>
-      </div>
+      </>
     );
   };
 

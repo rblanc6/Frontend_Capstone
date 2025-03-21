@@ -23,8 +23,9 @@ const registerApi = api.injectEndpoints({
   }),
 });
 
-const storeToken = (state, { payload }) => {
+const storeUserAndToken = (state, { payload }) => {
   window.sessionStorage.setItem("token", payload.token);
+  window.sessionStorage.setItem("user", JSON.stringify(payload.user)); 
 };
 
 const registerSlice = createSlice({
@@ -32,7 +33,7 @@ const registerSlice = createSlice({
   initialState: {},
   reducers: {},
   extraReducers: (builder) => {
-    builder.addMatcher(api.endpoints.register.matchFulfilled, storeToken);
+    builder.addMatcher(api.endpoints.register.matchFulfilled, storeUserAndToken);
   },
 });
 

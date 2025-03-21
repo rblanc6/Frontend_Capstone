@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "./RegisterSlice";
 import { confirmLogin } from "../../app/confirmLoginSlice";
 import { useDispatch } from "react-redux";
+import { useGetUserQuery } from "../Account/AccountSlice";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -15,6 +16,7 @@ export default function Register() {
   const dispatch = useDispatch();
   const [registerUser] = useRegisterMutation();
   const [error, setError] = useState(null);
+  const { refetch } = useGetUserQuery();
 
   // Updates form state when user inputs data in the form
   const change = (e) => {
@@ -31,12 +33,13 @@ export default function Register() {
       // Attempt to register the user with the form data
       const response = await registerUser(form).unwrap();
       console.log(response);
-        // Dispatch action confirming login and navigate to the account page
-      dispatch(confirmLogin());
-        navigate("/account");
+      // Dispatch action confirming login and navigate to the account page
+      dispatch(confirmLogin(response.user));
+      refetch();
+      navigate("/account");
     } catch (error) {
-        console.error("error response", error);
-        setError(error.data.message)
+      console.error("error response", error);
+      setError(error.data.message);
       // }
     }
   };
