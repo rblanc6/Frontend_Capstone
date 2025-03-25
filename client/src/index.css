@@ -398,3 +398,55 @@ li.comment-section {
 .edit-comment {
   width: 100%;
 }
+
+.controls {
+  margin-left: 8px;
+}
+
+.single-recipe {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.single-recipe .d-flex {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .single-recipe {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    padding-right: 0;
+    gap: 8px;
+  }
+
+  .single-recipe .d-flex {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    width: auto;
+  }
+
+  .single-recipe .d-flex i,
+  .single-recipe .d-flex button {
+    flex-shrink: 0;
+  }
+
+  .single-recipe .d-flex button {
+    margin-top: 5px;
+  }
+
+  .single-recipe .d-flex span {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-right: 0;
+    width: 100%;
+  }
+}
