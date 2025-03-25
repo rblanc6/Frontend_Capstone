@@ -33,7 +33,6 @@ export default function Admin() {
         (a, b) => a.firstName.localeCompare(b.firstName) // Sort users by first name
       );
 
-
       setUserArr(sortedUsers); // Update the user list with sorted users
     }
   }, [data, isSuccess]);
@@ -81,13 +80,13 @@ export default function Admin() {
   // Handle saving updated user info
   const handleSave = async () => {
     try {
-      await updateUser({ id: editUser, ...formData }).unwrap();  // Send update request
+      await updateUser({ id: editUser, ...formData }).unwrap(); // Send update request
       setUserArr((prev) => {
         const updatedUsers = prev.map((user) =>
           user.id === editUser ? { ...user, ...formData } : user
         );
-        return updatedUsers.sort((a, b) =>
-          a.firstName.localeCompare(b.firstName) // Re-sort updated user list
+        return updatedUsers.sort(
+          (a, b) => a.firstName.localeCompare(b.firstName) // Re-sort updated user list
         );
       });
       setEditUser(null);
@@ -114,7 +113,7 @@ export default function Admin() {
     }
   };
 
-   // Calculate pagination indexes
+  // Calculate pagination indexes
   const indexOfLastUser = (currentPage + 1) * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filterUsers.slice(indexOfFirstUser, indexOfLastUser);
@@ -136,7 +135,7 @@ export default function Admin() {
         <div className="container">
           <h3>Admin Dashboard</h3>
           <hr />
-          
+
           <h1 className="display-6">User List</h1>
           {error && (
             <div className="alert alert-danger" role="alert">
@@ -151,30 +150,37 @@ export default function Admin() {
               justifyContent: "space-between",
             }}
           >
-            <span>
-              Search by name or email:
-              <input
-                className="form-control"
-                type="text"
-                size="40"
-                placeholder="Search Users..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </span>
-            <br />
-            <span>
-              Filter by role:
-              <select
-                className="form-select"
-                value={selectedRole}
-                onChange={handleRoleChange}
-              >
-                <option value="">All Roles</option>
-                <option value="ADMIN">Admin</option>
-                <option value="USER">User</option>
-              </select>
-            </span>
+            <form>
+              <label>
+                <p>
+                  Search by name or email:
+                  <input
+                    className="form-control"
+                    type="text"
+                    size="40"
+                    placeholder="Search Users..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />{" "}
+                </p>
+              </label>
+              &nbsp;&nbsp;&nbsp;
+              <label>
+                <p>
+                  {" "}
+                  Filter by role:
+                  <select
+                    className="form-select"
+                    value={selectedRole}
+                    onChange={handleRoleChange}
+                  >
+                    <option value="">All Roles</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="USER">User</option>
+                  </select>
+                </p>
+              </label>
+            </form>
           </div>
           <table className="table table-striped">
             <tbody>

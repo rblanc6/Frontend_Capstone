@@ -50,6 +50,14 @@ export default function NavBar({ token }) {
     }
   }, [dispatch]);
 
+  // Function to collapse the navbar when a link is clicked
+  const collapseNavbar = () => {
+    const navbarCollapse = document.getElementById("navbarSupportedContent");
+    if (navbarCollapse.classList.contains("show")) {
+      navbarCollapse.classList.remove("show"); // Collapse the navbar
+    }
+  };
+
   return (
     <>
       <nav className="navbar fixed-top navbar-expand-md bg-body-tertiary">
@@ -76,19 +84,34 @@ export default function NavBar({ token }) {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link to="/recipes" className="nav-link" href="#">
+                <Link
+                  to="/recipes"
+                  className="nav-link"
+                  onClick={collapseNavbar}
+                  href="#"
+                >
                   Recipes
                 </Link>
               </li>
               {!auth && (
                 <>
                   <li className="nav-item">
-                    <Link to="/register" className="nav-link" href="#">
+                    <Link
+                      to="/register"
+                      className="nav-link"
+                      onClick={collapseNavbar}
+                      href="#"
+                    >
                       Register
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to="/login" className="nav-link" href="#">
+                    <Link
+                      to="/login"
+                      className="nav-link"
+                      onClick={collapseNavbar}
+                      href="#"
+                    >
                       Login
                     </Link>
                   </li>
@@ -112,6 +135,7 @@ export default function NavBar({ token }) {
                         <Link
                           to="/new-recipe"
                           className="dropdown-item"
+                          onClick={collapseNavbar}
                           href="#"
                         >
                           Share Recipe
@@ -121,6 +145,7 @@ export default function NavBar({ token }) {
                         <Link
                           to="/my-recipes"
                           className="dropdown-item"
+                          onClick={collapseNavbar}
                           href="#"
                         >
                           My Recipes
@@ -130,6 +155,7 @@ export default function NavBar({ token }) {
                         <Link
                           to="/favorites"
                           className="dropdown-item"
+                          onClick={collapseNavbar}
                           href="#"
                         >
                           My Favorites
@@ -139,12 +165,24 @@ export default function NavBar({ token }) {
                         <hr className="dropdown-divider"></hr>
                       </li>
                       <li>
-                        <Link to="/account" className="dropdown-item" href="#">
+                        <Link
+                          to="/account"
+                          className="dropdown-item"
+                          onClick={collapseNavbar}
+                          href="#"
+                        >
                           Account Details
                         </Link>
                       </li>
                       <li>
-                        <Link to="/" onClick={logout} className="dropdown-item">
+                        <Link
+                          to="/"
+                          onClick={() => {
+                            logout();
+                            collapseNavbar();
+                          }}
+                          className="dropdown-item"
+                        >
                           Logout
                         </Link>
                       </li>
@@ -156,7 +194,11 @@ export default function NavBar({ token }) {
             <ul className="navbar-nav mb-2 mb-lg-0 justify-content-end">
               <li className="nav-item">
                 {role === "ADMIN" && (
-                  <Link to="/admin" className="nav-link">
+                  <Link
+                    to="/admin"
+                    className="nav-link"
+                    onClick={collapseNavbar}
+                  >
                     <i className="bi bi-person-fill-gear"></i> Admin Dash
                   </Link>
                 )}
