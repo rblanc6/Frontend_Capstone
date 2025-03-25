@@ -142,14 +142,7 @@ export default function Admin() {
               Error loading users...
             </div>
           )}
-          <div
-            className="mb-3"
-            style={{
-              display: "flex",
-              gap: "15px",
-              justifyContent: "space-between",
-            }}
-          >
+          <div className="mb-3">
             <form>
               <label>
                 <p>

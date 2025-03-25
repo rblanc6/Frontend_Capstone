@@ -55,7 +55,6 @@ export default function SingleRecipe() {
     }
   }, [allRecipes, recipesSuccess]);
 
-
   // Handle recipe deletion for non-admin users
   const handleDeleteClick = async (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
@@ -75,7 +74,6 @@ export default function SingleRecipe() {
       console.log("Deletion cancelled.");
     }
   };
-
 
   // Handle recipe deletion for admin users
   const handleDeleteAdminClick = async (id) => {
@@ -143,7 +141,6 @@ export default function SingleRecipe() {
     }
   }, [favoriteRecipes, isFavoriteRecipesFetched, id]);
 
-
   // Handle adding/removing a recipe from favorites
   const handleFavorite = async () => {
     try {
@@ -200,9 +197,6 @@ export default function SingleRecipe() {
   const favoriteCount = Array.isArray(recipeArr?.favoritedBy)
     ? recipeArr.favoritedBy.length
     : 0;
-    
-    console.log("loggg", recipeArr?.instructions);
-
 
   return (
     <>
@@ -217,7 +211,7 @@ export default function SingleRecipe() {
           <p>{error && "Error loading recipe..."}</p>
 
           {isEditing ? (
-            <div className="card" style={{ minWidth: "42rem", margin: "auto" }}>
+            <div className="card">
               {recipeArr?.photo ? (
                 <img
                   src={recipeArr.photo}
@@ -253,10 +247,7 @@ export default function SingleRecipe() {
             </div>
           ) : (
             <>
-              <div
-                className="card"
-                style={{ minWidth: "42rem", margin: "auto" }}
-              >
+              <div className="card">
                 {recipeArr?.photo ? (
                   <img
                     src={recipeArr.photo}
@@ -282,7 +273,7 @@ export default function SingleRecipe() {
 
                 <div className="card-body">
                   <div className="d-flex mb-0">
-                    <div className="p-0" style={{maxWidth: "80%"}}>
+                    <div className="p-0">
                       <figure>
                         <blockquote className="blockquote">
                           <h2>{recipeArr.name}</h2>
@@ -293,20 +284,20 @@ export default function SingleRecipe() {
                         </figcaption>
                       </figure>
                     </div>
-                    <div className="ms-auto p-0">
-                      <span className="h5">
+                    <div className="ms-auto p-0 d-flex flex-wrap align-items-start single-recipe">
+                      <span>
                         {isCreator && (
                           <>
                             <i
                               className="bi bi-pencil-square btn btn-outline-dark controls"
                               onClick={handleEditClick}
                             ></i>
-                            &nbsp;&nbsp;
+                            
                             <i
                               className="bi bi-trash btn btn-outline-dark controls"
                               onClick={() => handleDeleteClick(recipeArr.id)}
                             ></i>
-                            &nbsp;&nbsp;
+                            
                           </>
                         )}
 
@@ -316,30 +307,27 @@ export default function SingleRecipe() {
                               className="bi bi-pencil-square btn btn-outline-dark controls"
                               onClick={handleAdminEditClick}
                             ></i>
-                            &nbsp;&nbsp;
                             <i
                               className="bi bi-trash btn btn-outline-dark controls"
                               onClick={() =>
                                 handleDeleteAdminClick(recipeArr.id)
                               }
                             ></i>
-                            &nbsp;&nbsp;
+                            
                           </>
                         )}
                         {auth && (
                           <button
                             onClick={handleFavorite}
-                            className="btn btn-outline-danger favorite"
+                            className="btn btn-outline-danger favorite controls"
                           >
                             {" "}
-                            <span>
-                              {isFavorite ? (
-                                <i className="bi bi-heart-fill favorite"></i>
-                              ) : (
-                                <i className="bi bi-heart"></i>
-                              )}{" "}
-                              {favoriteCount}
-                            </span>
+                            {isFavorite ? (
+                              <i className="bi bi-heart-fill favorite"></i>
+                            ) : (
+                              <i className="bi bi-heart"></i>
+                            )}{" "}
+                            {favoriteCount}
                           </button>
                         )}
                       </span>
@@ -373,7 +361,7 @@ export default function SingleRecipe() {
                       {recipeArr?.ingredient?.map((ing) => {
                         return (
                           <li key={ing.id} className="list-group-item">
-                           {ing.quantity} {ing.unit.name} of{" "}
+                            {ing.quantity} {ing.unit.name} of{" "}
                             {ing.ingredient.name}{" "}
                           </li>
                         );
@@ -384,7 +372,6 @@ export default function SingleRecipe() {
                     <h5>Instructions</h5>
                     <ol className="list-group list-group-flush list-group-numbered">
                       {recipeArr?.instructions?.map((inst) => {
-                        console.log(inst);
                         return (
                           <li key={inst.id} className="list-group-item">
                             {" "}
