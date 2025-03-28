@@ -14,7 +14,7 @@ function ImageUpload({ onUploadSuccess }) {
       const data = new FormData();
       data.append("my_file", file);
       const res = await axios.post(
-        "https://backend-capstone-2-f5zh.onrender.com/api/recipes/upload",
+        "https://racipe-hub.onrender.com/api/recipes/upload",
         data
       );
       setRes(res.data);
