@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getLogin } from "../app/confirmLoginSlice";
-import logo from "../logos/logo.jpg";
+import logo from "../Logos/logo.jpg";
 import { useDispatch } from "react-redux";
 import { confirmLogout } from "../app/confirmLoginSlice";
 import { useNavigate } from "react-router-dom";
